@@ -1,0 +1,265 @@
+---
+title: "Analiza wątku"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+```{r include=FALSE}
+library(tidytext)
+library(dplyr)
+library(textstem)
+library(tidyr)
+library(ggplot2)
+library(tm)
+library(stringr)
+library(quanteda)
+library(e1071)
+library(gmodels)
+library(caret)
+library(topicmodels)
+library(kableExtra)
+library(proxy)
+library(dendextend)
+library(knitr)
+
+url <- "https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/Around_the_World_in_Eighty_Days.txt"
+
+eighty_days <- readLines(url) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 0:(length(.) - 1), text = ., stringsAsFactors = FALSE)
+
+eighty_days <- eighty_days[-1, ] 
+
+url2 <- "https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/All_around_the_moon.txt"
+
+all_moon <- readLines(url2) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 1:length(.), text = ., stringsAsFactors = FALSE)
+
+clean_text <- function(df) {
+  df$text <- str_remove_all(df$text, "[[:punct:]]")
+  df$text <- str_remove_all(df$text, "\"") 
+  df$text <- str_remove_all(df$text, "'")
+  df$text <- str_replace_all(df$text, "(\\b)'(\\w+)'(\\b)", "\\1\\2\\3")
+  df$text <- str_remove_all(df$text, "\\d+")
+  return(df)
+}
+
+eighty_days <- clean_text(eighty_days)
+all_moon <- clean_text(all_moon)
+
+eighty_days_tokens <- eighty_days %>%
+  unnest_tokens(word, text)
+
+all_moon_tokens <- all_moon %>%
+  unnest_tokens(word, text)
+
+stopwords <- get_stopwords(source = "smart") #wybieram smart ponieważ zaiwera najwięcej stop wordów
+stopwords <- data.frame(Word = c(stopwords[[1]], 'passepartout', 'phileas', 'fogg', 'foggs', 'auouda','aouda' ,'francis', 'ardan', 'captain', 'barbican', 'mnicholl', 'mr', 'passepartouts', 'marston', 'fix'))
+
+eighty_days_tidy <- anti_join(eighty_days_tokens, stopwords, by = c("word" = "Word"))
+all_moon_tidy <- anti_join(all_moon_tokens, stopwords, by = c("word" = "Word"))
+
+eighty_days_lem <- eighty_days_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+all_moon_lem <- all_moon_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+eighty_days_text <- books_list <- eighty_days_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+  
+all_moon_text <- books_list <- all_moon_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+
+books_docs <- rbind(eighty_days_text, all_moon_text)
+```
+
+## Przygotowanie danych
+
+Korpus:
+
+```{r}
+books_list <- list(books_docs$text)[[1]]
+books_corpus <- VCorpus(VectorSource(books_list))
+```
+
+Macierz wystąpień:
+
+```{r}
+dtm_tf <- DocumentTermMatrix(books_corpus, 
+                                control = list(
+                                                bounds = list(global = c(2, Inf)), # oznacza, że terminy muszą mieć co najmniej 2 znaki
+                                                weighting = weightTf))
+
+dtm_tf
+
+```
+
+Macierz wystąpień została zredukowana do słówm które mają co najmniej dwa znaki z kilku powodów:
+
+-   redukcja szumu - macierz zawierała wiele słów, które występowały rzadko i nie wnosiły istotnej informacji do analizy,
+
+-   skrócenie czasu obliczeń
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## LDA - budowa
+
+```{r}
+lda <- LDA(dtm_tf, 2, control = list(seed = 1652))
+str(lda)
+```
+
+Model LDA:
+
+-   został skonfigurowany dla 2 tematów,
+
+-   Wartość parametru alfa, kontrolującego proporcje tematów w poszczególnych dokumentach, wynosi 0.033,
+
+-   zbiór dokumentów składa się z jak dotychczas 62 dokumentów (rozdziałów z dwóch książek)
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+[**Dane potrzebne do klasyfikacji w następnym rozdziale**]{.underline}
+
+-   **Wyodrębnione termy tematów**, które zostaną użyte jako klasy:
+
+```{r}
+tematy_term <- terms(lda)
+tematy <- topics(lda)
+
+tematy_term
+```
+
+-   zmienna, która zawiera przypisane wątki w odpowiendnie kolejnośći
+
+```{r}
+tematy <- topics(lda)
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Termy charakterystyczne dla obu wątków
+
+```{r}
+tematy_termy8 <- terms(lda, 8)
+
+kable(tematy_termy8, format = "html", align = "c", caption = "Termy w poszczególnych tematach") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+-   **Wątek pierwszy**
+
+W temacie 1 występują słowa takie jak "day", "make", "hour", "time", "leave", "train", "master" i "man". "Train" wskazuje na środek transportu, a "leave" sugeruje opuszczenie miejsca i rozpoczęcie podróży. "Master" może odnosić się do głównego bohatera, który zarządza swoją podróżą. Temat ten skupia się na aspektach organizacji, czasu i podróży. Połączenie słów określających czas ('day', 'hour', 'time) wraz ze słowami 'make' i 'leave' może sugerować napięcie fabuły, w której bohaterzy się spieszą.
+
+-   **Wątek drugi**
+
+W temacie 2 wsytępują słowa takie jak "moon", "projectile", "earth", "time", "great", "cry", "friend" i "point". Słowa te wskazują, że temat ten może dotyczyć podróży kosmicznych, eksploracji kosmosu, badań związanych z Księżycem, ziemią, istonością czasu, przyjaźni itp. "Moon" wskazuje na Księżyc jako ważny element w tej tematyce, a "earth" sugeruje porównanie między Ziemią a Księżycem. "Great" może odnosić się do niesamowitych i ekscytujących doświadczeń związanych z badaniami kosmicznymi. Temat ten skupia się na aspektach kosmosu, nauki i eksploracji.
+
+-   **Porównanie**
+
+Należy zauważyć, że słowo 'time' jest charakterystyczne zarówno dla pierwszego jak i drugiego wątku, jednak w pierwszym czas ma większe znaczenie, ze względu na dodatkowe słowa, takie jak 'hour', 'day'.
+
+Pomimo faktu, że reszta słów się różni, można wyciągnąc wniosek, że obie książki mogą eksplorować tematy podróży, odkrywania nieznanych miejsc i pokonywania wyzwań. Temat 1 może skupiać się na podróży dookół Ziemi (train), podczas gdy temat 2 może dotyczyć podróży kosmicznych (projectile), zwłaszcza w kontekście Księżyca.
+
+```{r}
+tematy_termy8_string <- apply(tematy_termy8, 2, paste, collapse = " / ")
+
+tematy8_df <- tibble(Dokument = 1:62, "Część tekstu" = paste0(substr(books_list, 1, 100), "[...]"), Wątek = tematy, Książka = c(rep("W 80 dni dookoła świata", 37), rep("Wokół księżyca", 25)), Termy = tematy_termy8_string[tematy])
+
+kable(tematy8_df, format = "html", align = "c", table.attr = "class='table table-striped'", row.names = FALSE, caption = "Przypisane wątki do konkretnych dokumentów") %>%
+  kable_styling()
+```
+
+Można zauważyć, że w procesie analizy wątku do powieści "W 80 dni dookoła świata" został przypisany pierwszy wątek, natomiast do "Wokół księżyca" drugi, z wyjątkiem dokumentu 60, któremu został przypisany piewrszy wątek. Możliwe, że na przykład w tym rodziale (tj. 24, przedostatni) czas ma większe znaczenie niż zwykle, co jest bardziej charakterystyczne dla pierwszego wątku.
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Wizualizacja wartości beta i gamma
+
+[**Wartość beta (eksponenta)**]{.underline}
+
+-   wartość beta w macierzy lda\@beta reprezentuje prawdopodobieństwo przynależności danego słowa (reprezentowanego przez wiersz) do każdego z tematów (reprezentowanych przez kolumny). Im wyższa wartość beta dla danego słowa i tematu, tym większe prawdopodobieństwo, że dane słowo jest silnie związane z danym tematem.
+
+[**Wartość gamma**]{.underline}
+
+-   wartość gamma odnosi się do rozkładu tematów w danym dokumencie, reprezentuje proporcje przypisane do poszczególnych tematów dla danego dokumentu. Dla każdego dokumentu w korpusie, wartość gamma dla każdego tematu wskazuje, jak bardzo ten temat jest obecny w danym dokumencie.
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+### Beta
+
+```{r}
+beta_df <- data_frame(term = lda@terms, wątek1 = exp(lda@beta[1, ]), wątek2 = exp(lda@beta[2, ]))
+```
+
+```{r}
+beta_tidy <- beta_df %>% 
+  pivot_longer(-term, names_to = "watek", values_to = "beta")
+
+beta_top <- beta_tidy %>% 
+  group_by(watek) %>% 
+  top_n(8, beta) %>% 
+  ungroup() %>% 
+  arrange(watek, -beta)
+```
+
+```{r}
+beta_top %>% 
+ggplot(aes(beta, tidytext::reorder_within(term, beta, watek), fill = watek)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_manual(values = c("steelblue", "lightgreen")) +
+  facet_wrap(vars(watek), scales = "free_y") +
+  labs(x = "Termy") +
+  tidytext::scale_y_reordered() +
+  labs(x = expression(beta), y = NULL) +
+  theme_bw()
+```
+
+Wspomniane i zinterpretowane już wcześniej słowa charaktertystyczne dla obu wątków na wykresie powyżej zostały ponownie przedstawione, wraz z ich wartością beta. Można zauważyć, że w przypadku drugiego wątku wymienione słowa są z nim bardziej związane aniżeli słowa wymienione dla wątku pierwszego. Słowo najbardziej charakterystyczne dla wątku pierwszego - 'day' przyjmuje wartość około 0.0076, podczas gdy wyższe wartości przyjmują słowa 'moon', 'projectile' i 'earth' dla wątku drugiego.
+
+Ponadto słowo 'moon' zdecydowanie wyróżnie się na tle innych, osiągając wartość beta na poziomie około 0.014, osiągając przy tym największe prawdopodobieństwo przynależności do wątku drugiego.
+
+Ciekawą słowem do intepretacji jest słowo 'time', istotne dla obu wątków. Okazuje się, charakteryzuje się niższym prawdopdobieństwem przynależności do wątku pierwszego (beta = 0.006) aniżeli drugiego (beta = 0.007).
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+### Gamma
+
+```{r}
+gamma_df <- data_frame(dokument = lda@documents, wątek1 = lda@gamma[, 1], wątek2 = lda@gamma[, 2])
+```
+
+```{r}
+gamma_tidy <- gamma_df %>% 
+  pivot_longer(-dokument, names_to = "watek", values_to = "gamma")
+
+gamma_tidy %>% 
+  ggplot(aes(dokument, gamma, fill = watek)) + 
+  geom_col(position = "stack") +
+  scale_fill_manual(values = c("steelblue", "lightgreen")) +
+  geom_hline(yintercept = 0.5, linetype = 2) +
+  coord_flip() +
+  labs(fill = "Wątki") +
+  labs(x = "Dokument", y = "Gamma", title = "Rozkład tematów w rozdziałach") +
+  theme_bw()
+```
+
+Na wykresie powyżej przedstawiony został rozkład wątków w poszczególnych rozdziałach. Na pierwszy rzut oka widać, że dominuje wątek 1, większość rozdziałów przynależy do niego w 100%. W przypadku drugiego wątku wiele dokumentów zostało do niego przypisanych nie na 100%. Ponadto, zauważono wcześniej przynależność dokumentu 60 (który jest przedostatnim rozdziałem drugiej książki) do wątku pierwszego, dokładniejsza analiza ukazuje, że niewiele brakowało, aby został przypisany do wątku drugiego.

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Grupowanie</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">O analizie</a>
+</li>
+<li>
+  <a href="preprocessing.html">Przygotowanie</a>
+</li>
+<li>
+  <a href="chmury.html">Chmury</a>
+</li>
+<li>
+  <a href="macierze_wystapien.html">Macierze wystąpień</a>
+</li>
+<li>
+  <a href="sentyment.html">Analiza sentymentu</a>
+</li>
+<li>
+  <a href="watek.html">Analiza wątku</a>
+</li>
+<li>
+  <a href="grupowanie.html">Grupowanie</a>
+</li>
+<li>
+  <a href="klasyfikacja.html">Klasyfikacja</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Grupowanie</h1>
+
+</div>
+
+
+<p>Do grupowania została wybrana metoda niehierarchiczna k-means.
+Początkowe założenie dotyczyło wyodrębnienia dwóch grup z uwagi na
+charakter danych (dwie różne książki), jednakże zdecydowano się porównać
+z większa ilością.</p>
+<div id="normalizacja-macierzy-dtm" class="section level2">
+<h2>Normalizacja macierzy DTM</h2>
+<pre class="r"><code>dtm_norm_m &lt;- as.matrix(dtm_tf)
+
+dtm_norm &lt;- t(scale(t(dtm_norm_m),
+                            center=FALSE,
+                            scale=sqrt(rowSums(dtm_norm_m^2))))</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="grupowanie-k-means" class="section level2">
+<h2>Grupowanie k-means</h2>
+<pre class="r"><code>km2 &lt;- kmeans(dtm_norm, 2)
+km3 &lt;- kmeans(dtm_norm, 3)
+km4 &lt;- kmeans(dtm_norm, 4)</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="wizualizacja" class="section level2">
+<h2>Wizualizacja</h2>
+<p>Dla dwóch grup</p>
+<pre class="r"><code>cluster_df &lt;- data.frame(Dokument = rownames(dtm_norm), Cluster = km2$cluster)
+
+ggplot(cluster_df, aes(x = reorder(Dokument, as.numeric(Dokument)), y = Cluster, color = factor(Cluster))) +
+  geom_point(size = 3) +
+  scale_color_discrete(name = &quot;Cluster&quot;) +
+  labs(x = &quot;Dokument&quot;, y = &quot;Cluster&quot;, title = &quot;Wyniki grupowania k-means dla dwóch grup&quot;) +
+  theme_bw() + 
+  scale_y_continuous(limits = c(0.5, 2.5), breaks = c(1, 2), expand = c(0, 0.5))</code></pre>
+<p><img src="grupowanie_files/figure-html/unnamed-chunk-4-1.png" width="1056" /></p>
+<p>Dla trzech grup</p>
+<pre class="r"><code>cluster_df3 &lt;- data.frame(Dokument = rownames(dtm_norm), Cluster = km3$cluster)
+
+ggplot(cluster_df3, aes(x = reorder(Dokument, as.numeric(Dokument)), y = Cluster, color = factor(Cluster))) +
+  geom_point(size = 3) +
+  scale_color_discrete(name = &quot;Cluster&quot;) +
+  labs(x = &quot;Dokument&quot;, y = &quot;Cluster&quot;, title = &quot;Wyniki grupowania k-means dla tzech grup&quot;) +
+  theme_bw() + 
+  scale_y_continuous(limits = c(0.5, 3.5), breaks = c(1, 2), expand = c(0, 0.5))</code></pre>
+<p><img src="grupowanie_files/figure-html/unnamed-chunk-5-1.png" width="1056" /></p>
+<p>Dla czterech grup</p>
+<pre class="r"><code>cluster_df4 &lt;- data.frame(Dokument = rownames(dtm_norm), Cluster = km4$cluster)
+
+ggplot(cluster_df4, aes(x = reorder(Dokument, as.numeric(Dokument)), y = Cluster, color = factor(Cluster))) +
+  geom_point(size = 3) +
+  scale_color_discrete(name = &quot;Cluster&quot;) +
+  labs(x = &quot;Dokument&quot;, y = &quot;Cluster&quot;, title = &quot;Wyniki grupowania k-means dla czterech grup&quot;) +
+  theme_bw() + 
+  scale_y_continuous(limits = c(0.5, 4.5), breaks = c(1, 2), expand = c(0, 0.5))</code></pre>
+<p><img src="grupowanie_files/figure-html/unnamed-chunk-6-1.png" width="1056" /></p>
+<p>Biorąc pod uwagę podział dokumentów na 1-37 dla pierwszej książki i
+38-62 dla drugiej książki, na podstawie wykresów można wnioskować, że
+podział na dwie grupy jest najrozsądniejszy. Dzieli wspomniane powieści
+na dwie grupy, poprawnie przypisując dokumenty (za jednym wyjątkiem).
+Należy zwrócić uwagę na podobieństwo, wręcz identyczność przypisania
+dokumentów do grup jak w przypadku analizy wątku za pomocą LDA.</p>
+<p>Pomimo wybrania grupowania na 2 grupy, na podstawie wszystkich
+wykresów można zauważyć, że to powieść “W 80 dni dookoła świata” zostaje
+poddana dalszym podziałom, podczas gdy “Wokół księżyca” pozostaje jedną
+grupą poza wspomnianym już niejednokrotnie dokumentem 60, czyli
+przeodstatnim rozdziałem, w każdej kombinacji należy do innej grupy.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

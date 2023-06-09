@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Chmury</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">O analizie</a>
+</li>
+<li>
+  <a href="preprocessing.html">Przygotowanie</a>
+</li>
+<li>
+  <a href="chmury.html">Chmury</a>
+</li>
+<li>
+  <a href="macierze_wystapien.html">Macierze wystąpień</a>
+</li>
+<li>
+  <a href="sentyment.html">Analiza sentymentu</a>
+</li>
+<li>
+  <a href="watek.html">Analiza wątku</a>
+</li>
+<li>
+  <a href="grupowanie.html">Grupowanie</a>
+</li>
+<li>
+  <a href="klasyfikacja.html">Klasyfikacja</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Chmury</h1>
+
+</div>
+
+
+<div id="niezależne" class="section level2">
+<h2>Niezależne</h2>
+<div id="słowa-dla-powieści-w-80-dni-dookoła-świata"
+class="section level3">
+<h3>Słowa dla powieści “W 80 dni dookoła świata”</h3>
+<pre class="r"><code>termy &lt;- unlist(eighty_days_lem$word_lemma)
+unikaty &lt;- unique(termy)
+
+bow &lt;- sapply(unikaty, function(x) sum(termy == x[1]))
+bow_sort &lt;- sort(bow, decreasing = T)
+
+color &lt;- brewer.pal(8, &quot;Dark2&quot;)
+
+wordcloud(names(bow_sort), bow_sort, max.words = 50, colors = color, random.color = FALSE, random.order = FALSE, scale = c(3,.3))</code></pre>
+<p><img src="chmury_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Analizując najczęściej występujące słowa w książce “W 80 dni dookoła
+świata”, możemy wyciągnąć kilka wniosków:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Czas</strong>: Słowa takie jak “day”, “time”, “hour”,
+“minute” i “oclock” wskazują na duże znaczenie czasu w narracji. Czas
+jest istotnym elementem podróży i akcji książki.</p></li>
+<li><p><strong>Podróż</strong>: Słowa takie jak “leave”, “train”,
+“steamer”, “mile”, “journey”, “sea” i “station” odnoszą się do podróży,
+zarówno lądowych, jak i morskich. Podróżowanie jest centralnym tematem
+książki.</p></li>
+<li><p><strong>Postacie</strong>: Słowa takie jak “master”, “sir”,
+“man”, “passenger”, “gentleman” i “detective” sugerują obecność różnych
+postaci w książce. Zwracają uwagę na różne role i charaktery
+występujących bohaterów.</p></li>
+<li><p><strong>Miejsca</strong>: Słowa takie jak “London”, “Bombay”,
+“Hong Kong” i “Indian” wskazują na różne lokalizacje, które odwiedzane
+są w trakcie podróży. Książka przenosi czytelnika przez różne miejsca na
+całym świecie.</p></li>
+<li><p><strong>Akcja i napięcie</strong>: Słowa takie jak “reply”,
+“find”, “think”, “ask” i “lose” wskazują na dynamiczną akcję, wątki
+detektywistyczne i napięcie w narracji.</p></li>
+</ol>
+<p>Interpretując te wnioski, można stwierdzić, że książka “W 80 dni
+dookoła świata” skupia się na podróży głównego bohatera, przez różne
+miejsca, z naciskiem na element czasu i dynamiczną akcję. Postacie,
+którymi podróżnik spotyka w trakcie swojej podróży, odgrywają istotną
+rolę w rozwinięciu fabuły. Książka przedstawia zróżnicowane lokalizacje
+i kultury, co dodaje jej różnorodności i interesującej atmosfery.</p>
+</div>
+<div id="słowa-dla-powieści-wokół-księżyca" class="section level3">
+<h3>Słowa dla powieści “Wokół księżyca”</h3>
+<pre class="r"><code>termy2 &lt;- unlist(all_moon_lem$word_lemma)
+unikaty2 &lt;- unique(termy2)
+
+bow2 &lt;- sapply(unikaty2, function(x) sum(termy2 == x[1])) 
+bow_sort2 &lt;- sort(bow2, decreasing = T)
+
+color2 &lt;- brewer.pal(8, &quot;Dark2&quot;)
+wordcloud(names(bow_sort2), bow_sort2, max.words = 50, colors = color2, random.color = FALSE, random.order = FALSE)</code></pre>
+<p><img src="chmury_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Analizując najczęściej występujące słowa w książce “Wokół księżyca”,
+możemy wyciągnąć następujące wnioski:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Księżyc</strong>: Słowa takie jak “moon”, “lunar”,
+“surface”, “crater”, “atmosphere” i “projectile” odnoszą się
+bezpośrednio do księżyca. Wskazują one na to, że księżyc jest kluczowym
+elementem tej książki.</p></li>
+<li><p><strong>Podróż kosmiczna</strong>: Słowa takie jak “traveller”,
+“space”, “velocity”, “distance” i “companion” sugerują obecność tematyki
+podróży kosmicznej. Książka skupia się na eksploracji kosmosu i podróży
+w przestrzeni międzyplanetarnej.</p></li>
+<li><p><strong>Czas i pomiar</strong>: Słowa takie jak “time”, “hour”,
+“moment” i “minute” wskazują na znaczenie czasu i pomiaru czasu w
+narracji. Jest to istotne w kontekście podróży kosmicznej i poruszania
+się w przestrzeni.</p></li>
+<li><p><strong>Przyjaźń</strong>: Słowo “friend” sugeruje obecność
+wątków związanych z przyjaźnią. Relacje międzyludzkie mogą odgrywać
+istotną rolę w rozwoju fabuły.</p></li>
+<li><p><strong>Odkrywanie i obserwacja</strong>: Słowa takie jak
+“observe”, “find” i “discover” wskazują na aktywność badawczą i
+odkrywczą. Książka skupia się na eksploracji nowych miejsc i odkrywaniu
+nieznanych tajemnic.</p></li>
+</ol>
+<p>Interpretując te wnioski, można stwierdzić, że książka “Wokół
+księżyca” skupia się na podróży kosmicznej, odkrywaniu i eksploracji
+kosmosu. Księżyc jest centralnym tematem książki, a postacie podróżujące
+na pokładzie rakiety mają okazję obserwować i odkrywać różne aspekty
+księżycowego krajobrazu. Przyjaźń i relacje międzyludzkie mogą odgrywać
+istotną rolę w rozwoju fabuły. Czas jest istotnym elementem podróży
+kosmicznej, a pomiar czasu i obserwacja mają duże znaczenie w
+narracji.</p>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+</div>
+<div id="przecięcia" class="section level2">
+<h2>Przecięcia</h2>
+<div id="słowa-wspólne-dla-obu-powieści" class="section level3">
+<h3>Słowa wspólne dla obu powieści</h3>
+<pre class="r"><code># Znalezienie elementów, które występują w obu wektorach
+slowa &lt;- intersect(termy, termy2) 
+
+# Wyznaczenie czestosci słów
+czestosci_temat1 &lt;- table(termy)[slowa] #wektor zawierajacy liczby wystąpień elementów z wektora slowa w wektorze slowa_temat
+czestosci_temat2 &lt;- table(termy2)[slowa]
+
+# Obliczenie sumy czestosci słów
+czestosci_suma &lt;- czestosci_temat1 + czestosci_temat2
+
+color3 &lt;- brewer.pal(8, &quot;Dark2&quot;)
+wordcloud(slowa, czestosci_suma, max.words = 50, colors = color3, random.color = FALSE, random.order = FALSE, scale = c(3,.3))</code></pre>
+<p><img src="chmury_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br />
+Z chmury dotyczącej wspólnych słów występujących w książkach “W 80 dni
+dookoła świata” i “Wokół księżyca”, można wyciągnąć kilka wniosków:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Księżyc</strong>: Słowo “moon” jest jednym z najczęściej
+występujących słów. Wskazuje to na to, że księżyc jest istotnym
+elementem obu książek. Może odnosić się zarówno do podróży kosmicznej w
+“Wokół księżyca”, jak i do klimatycznych opisów w “W 80 dni dookoła
+świata”.</p></li>
+<li><p><strong>Czas</strong>: Słowa takie jak “time”, “hour”, “day” i
+“minute” sugerują, że czas jest ważnym aspektem obu książek. W “W 80 dni
+dookoła świata” dotyczy on planowania podróży, natomiast w “Wokół
+księżyca” odnosi się do pomiaru czasu podróży kosmicznej.</p></li>
+<li><p><strong>Wielkość i odległość</strong>: Słowa takie jak “great”,
+“long”, “mile”, “thousand” i “hundred” wskazują na znaczenie wielkości i
+odległości w obu książkach. Mogą odnosić się zarówno do długości podróży
+w “W 80 dni dookoła świata”, jak i do odległości kosmicznych w “Wokół
+księżyca”.</p></li>
+<li><p><strong>Podróżowanie i komunikacja</strong>: Słowa takie jak
+“make”, “reach”, “pass”, “train”, “steamer” i “lose” sugerują tematykę
+podróży i komunikacji, które są obecne w obu książkach. W “W 80 dni
+dookoła świata” odnoszą się do środków transportu i osiągania kolejnych
+miejsc, a w “Wokół księżyca” do podróży kosmicznej i dotarcia na
+księżyc.</p></li>
+</ol>
+<p>Interpretując te wnioski, można stwierdzić, że obie książki mają
+elementy podróży, czasu, odległości i wielkości. Można powiedzieć, że
+księżyc jest ważnym motywem zarówno w “W 80 dni dookoła świata”, jak i w
+“Wokół księżyca”. Podróżowanie i komunikacja są istotne w obu książkach,
+choć w różny sposób. Czas odgrywa ważną rolę w narracji obu dzieł.</p>
+<pre class="r"><code>eighty_moon &lt;- bow[&quot;moon&quot;] 
+moon_moon &lt;- bow2[&quot;moon&quot;]
+
+cat(&quot;Występowanie słowa &#39;moon&#39; w książce &#39;W 80 dni dookoła świata&#39;:&quot;, eighty_moon, &quot;\n&quot;,
+    &quot;Występowanie słowa &#39;moon&#39; w książce &#39;Wokół księżyca&#39;:&quot;, moon_moon, &quot;\n&quot;)</code></pre>
+<pre><code>## Występowanie słowa &#39;moon&#39; w książce &#39;W 80 dni dookoła świata&#39;: 5 
+##  Występowanie słowa &#39;moon&#39; w książce &#39;Wokół księżyca&#39;: 468</code></pre>
+<p>Należy jednak zauważyć, że słowa te są liczone wartością bezwzlędną,
+co może znacznie wpływać na intepretacje. Przykładowo wniosek o ważności
+księżyca w obu książkach jest oczywiście błędny, jednakże nie znając
+fabuły możemy uznać go za prawdziwy. Przy bliższej analizie mozemy
+zauważyć, że książka “W 80 dni dookoła świata” wspomina o księżycu,
+jednakże zaledwie kilka razy, nie może to mieć wpływu na fabułe.</p>
+</div>
+<div
+id="słowa-charakterystyczne-tylko-dla-powieści-w-80-dni-dookoła-świata"
+class="section level3">
+<h3>Słowa charakterystyczne tylko dla powieści “W 80 dni dookoła
+świata”</h3>
+<pre class="r"><code># Wyznaczenie słów występujących w termy, ale nie występujących w termy2
+slowa &lt;- setdiff(termy, termy2) #elementy z wektora termy, które nie występują w wektorze termy2
+
+# Wyznaczenie czestosci słów
+czestosci &lt;- table(termy)[slowa]
+
+color &lt;- brewer.pal(8, &quot;Dark2&quot;)
+wordcloud(slowa, czestosci, max.words = 50, colors = color, random.color = FALSE, random.order = FALSE, scale = c(4,.3))</code></pre>
+<p><img src="chmury_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Z powyższej chmury, przedstawiającej słowa charakterystyczne tylko
+dla książki “W 80 dni dookoła świata”, można wyciągnąć poniższe
+wnioski:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Lokalizacje</strong>: Słowa takie jak “hong”, “kong”,
+“bombay”, “yokohama”, “calcutta”, “liverpool” i “suez” wskazują na różne
+miejsca, które są odwiedzane w trakcie podróży głównych bohaterów. Są to
+miejsca, które mają znaczenie dla fabuły i odzwierciedlają różnorodność
+geograficzną podróży.</p></li>
+<li><p><strong>Postacie</strong>: Słowa takie jak “detective”,
+“servant”, “reform”, “parsee”, “robber”, “stuart”, “consul” i “priest”
+odnoszą się do różnych postaci, które pojawiają się w książce. Może to
+sugerować obecność wątków kryminalnych, relacji międzyludzkich i
+różnorodności społecznej.</p></li>
+<li><p><strong>Terminy podróżnicze</strong>: Słowa takie jak “pagoda”,
+“voyage”, “sacrifice”, “saturday” i “recognise” odnoszą się do terminów
+związanych z podróżami, kulturą i zdarzeniami w książce. Nadają one
+charakterystyczny wydźwięk narracji i odzwierciedlają specyficzny
+kontekst historii.</p></li>
+</ol>
+</div>
+<div id="słowa-charakterystyczne-tylko-dla-powieści-wokół-księżyca"
+class="section level3">
+<h3>Słowa charakterystyczne tylko dla powieści “Wokół księżyca”</h3>
+<pre class="r"><code># Wyznaczenie słów występujących w termy2, ale nie występujących w termy
+slowa2 &lt;- setdiff(termy2, termy)
+
+# Wyznaczenie czestosci słów
+czestosci2 &lt;- table(termy2)[slowa2]
+
+color &lt;- brewer.pal(8, &quot;Dark2&quot;)
+wordcloud(slowa2, czestosci2, max.words = 50, colors = color, random.color = FALSE, random.order = FALSE, scale = c(6,.4))</code></pre>
+<p><img src="chmury_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Analizując najczęściej występujące słowa charakterystyczne tylko dla
+książki “Wokół księżyca”, można wyciągnąć kilka dodatkowych wniosków
+dotyczących jej treści:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Przestrzeń kosmiczna</strong>: Słowa takie jak
+“projectile”, “lunar”, “crater”, “satellite”, “map”, “mare”,
+“hemisphere”, “diameter”, “gravity”, “eclipse”, “planet” sugerują
+obecność tematyki związanej z kosmosem i badaniem Księżyca.</p></li>
+<li><p><strong>Postacie i nazwiska</strong>: Słowa takie jak “barbican”,
+“ardans”, “boy”, “michael”, “selenites”, “susquehanna”, “captain”
+wskazują na różne postacie, być może kluczowe dla fabuły
+książki.</p></li>
+<li><p><strong>Zjawiska i terminy</strong> <strong>naukowe</strong>:
+Słowa takie jak “phenomenon”, “neutral”, “favorable”, “oxygen”,
+“gravity”, “comet”, “radiate”, “altitude”, “formation” odnoszą się do
+zjawisk i terminów naukowych związanych z kosmosem i
+eksploracją.</p></li>
+<li><p><strong>Elementy ilustracyjne i opisowe</strong>: Słowa takie jak
+“illustration”, “color”, “detect”, “ha”, “comparison”, “external”,
+“illustration” sugerują obecność opisów, ilustracji i porównań w
+książce, może to się wiązać z aspektem naukowym.</p></li>
+</ol>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+</div>
+<div id="podsumowanie" class="section level2">
+<h2>Podsumowanie</h2>
+<p>Porównując, analiza najczęściej występujących słów sugeruje, że w
+książkach “W 80 dni dookoła świata” i “Wokół księżyca” Juliusza Verne’a,
+znajdziemy pewne podobieństwa, ale również znaczące różnice, które
+wpływają na ich kontekst, tematykę itd.</p>
+<p><u><em>Podobieństwa</em></u>:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Podróż</strong>: Zarówno w “W 80 dni dookoła świata”, jak
+i w “Wokół księżyca”, podróż jest istotnym motywem. W obu książkach
+główni bohaterowie wyruszają w fascynujące podróże, odkrywając różne
+miejsca.</p></li>
+<li><p><strong>Różnorodność geograficzna</strong>: Obie książki oferują
+różnorodne lokalizacje. W “W 80 dni dookoła świata” podróżnik odwiedza
+miasta i kraje na różnych kontynentach, podczas gdy w “Wokół księżyca”
+różnorodność geograficzna dotyczy eksploracji księżyca i jego
+otoczenia.</p></li>
+<li><p><strong>Znaczenie czasu</strong>: Czas odgrywa ważną rolę zarówno
+w podróży Phileasa Fogga w “W 80 dni dookoła świata”, jak i w podróży
+kosmicznej bohaterów “Wokół księżyca”. Pomiar czasu, planowanie i
+wykorzystanie go są kluczowymi elementami w obu książkach.</p></li>
+</ol>
+<p><u><em>Różnice</em></u>:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Kontekst</strong>: “W 80 dni dookoła świata” to powieść
+przygodowa, skupiająca się na podróży lądowej i morskiej. Natomiast
+“Wokół księżyca” to science fiction, opowiadające o podróży kosmicznej i
+eksploracji księżyca.</p></li>
+<li><p><strong>Tematyka</strong>: “W 80 dni dookoła świata” porusza
+tematy związane z kulturą, społeczeństwem i różnicami między regionami,
+podczas gdy “Wokół księżyca” skupia się na tematach kosmicznych,
+naukowych i odkrywaniu przestrzeni kosmicznej.</p></li>
+<li><p><strong>Postacie</strong>: Postacie w obu książkach różnią się
+rolami. W “W 80 dni dookoła świata” mamy podróżnika i jego towarzysza
+(friend), a także tajemniczego detektywa. W “Wokół księżyca” pojawia się
+grupa podróżników (companion), każdy pełniący inną rolę (naukowiec,
+kapitan itd).</p></li>
+<li><p><strong>Atmosfera</strong>: “W 80 dni dookoła świata” ma często
+klimat przygodowy, pełen napięcia i ekscytacji, podczas gdy “Wokół
+księżyca” eksploruje naukową stronę podróży kosmicznej, skupiając się na
+obserwacjach i badaniach.</p></li>
+</ol>
+<p>Podsumowując, obie książki mają podróż jako istotny element fabuły,
+ale różnią się kontekstem, tematyką, postaciami i atmosferą.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

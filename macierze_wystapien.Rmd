@@ -1,0 +1,247 @@
+---
+title: "Macierze wystąpień"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+```{r include=FALSE}
+library(tidytext)
+library(dplyr)
+library(textstem)
+library(tidyr)
+library(tm)
+library(stringr)
+library(quanteda)
+library(e1071)
+library(gmodels)
+library(caret)
+library(topicmodels)
+library(kableExtra)
+library(proxy)
+library(dendextend)
+library(knitr)
+
+url <- "https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/Around_the_World_in_Eighty_Days.txt"
+
+eighty_days <- readLines(url) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 0:(length(.) - 1), text = ., stringsAsFactors = FALSE)
+
+eighty_days <- eighty_days[-1, ] 
+
+url2 <- "https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/All_around_the_moon.txt"
+
+all_moon <- readLines(url2) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 1:length(.), text = ., stringsAsFactors = FALSE)
+
+clean_text <- function(df) {
+  df$text <- str_remove_all(df$text, "[[:punct:]]")
+  df$text <- str_remove_all(df$text, "\"") 
+  df$text <- str_remove_all(df$text, "'")
+  df$text <- str_replace_all(df$text, "(\\b)'(\\w+)'(\\b)", "\\1\\2\\3")
+  df$text <- str_remove_all(df$text, "\\d+")
+  return(df)
+}
+
+eighty_days <- clean_text(eighty_days)
+all_moon <- clean_text(all_moon)
+
+eighty_days_tokens <- eighty_days %>%
+  unnest_tokens(word, text)
+
+all_moon_tokens <- all_moon %>%
+  unnest_tokens(word, text)
+
+stopwords <- get_stopwords(source = "smart") #wybieram smart ponieważ zaiwera najwięcej stop wordów
+stopwords <- data.frame(Word = c(stopwords[[1]], 'passepartout', 'phileas', 'fogg', 'foggs', 'auouda','aouda' ,'francis', 'ardan', 'captain', 'barbican', 'mnicholl', 'mr', 'passepartouts', 'marston', 'fix'))
+
+eighty_days_tidy <- anti_join(eighty_days_tokens, stopwords, by = c("word" = "Word"))
+all_moon_tidy <- anti_join(all_moon_tokens, stopwords, by = c("word" = "Word"))
+
+eighty_days_lem <- eighty_days_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+all_moon_lem <- all_moon_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+eighty_days_text <- books_list <- eighty_days_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+  
+all_moon_text <- books_list <- all_moon_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+
+books_docs <- rbind(eighty_days_text, all_moon_text)
+nrow(books_docs)
+```
+
+### Macierz dokument - feature DTM
+
+znana również jako macierz wystąpień terminów, jest strukturą danych używaną w analizie tekstu do reprezentacji tekstu jako macierzy numerycznej. DTM składa się z dokumentów jako wierszy i terminów (słów lub wyrażeń) jako kolumn.
+
+W DTM każda komórka reprezentuje liczbę lub wagę wystąpień danego terminu w danym dokumencie. Komórki zazwyczaj zawierają częstość wystąpień (np. liczba wystąpień termu w dokumencie) lub wagi (np. tf-idf), które odzwierciedlają znaczenie terminu w kontekście danego dokumentu lub zbioru dokumentów.
+
+DTM jest podstawowym narzędziem do analizy tekstu i umożliwia przeprowadzanie różnych operacji, takich jak analiza częstości słów, identyfikacja istotnych terminów, analiza klastrowania dokumentów, klasyfikacja tekstu, modelowanie tematyczne i wiele innych. DTM stanowi podstawę dla wielu technik analizy tekstu i jest szeroko stosowany w dziedzinie przetwarzania języka naturalnego i tekstowego.
+
+W celu utworzenia macierzy wystąpień z różnymi wagami przygotowano korpus:
+
+```{r}
+eighty_days_text_mw <- paste(eighty_days_lem$word_lemma, collapse = " ")
+
+all_moon_text_mw <- paste(all_moon_lem$word_lemma, collapse = " ")
+
+books <- data.frame(document = c("eighty_days", "all_moon"),
+                    text = c(eighty_days_text_mw, all_moon_text_mw),
+                    stringsAsFactors = FALSE)
+
+books_corpus_mw <- corpus(books)
+docnames(books_corpus_mw) <- c("Eighty_days", "All_moon")
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+### Częstość wystąpień
+
+```{r}
+dtm_tf_mw <- DocumentTermMatrix(books_corpus_mw)
+dtm_tf_mw
+
+dtm_tf_mw_matrix <- as.data.frame(as.matrix(dtm_tf_mw))
+```
+
+Na podstawie informacji o macierzy można powiedzieć, że istnieją dwa dokumenty, które mają znaczną liczbę unikalnych terminów (8901). Macierz jest względnie gęsta, a wagi terminów są obliczane na podstawie ich częstości w dokumentach.
+
+Naistotniejsze słowa:
+
+```{r}
+sum_tf <- rowSums(dtm_tf_mw_matrix)
+
+top_words_tf <- apply(dtm_tf_mw_matrix, 1, function(x) {
+  sorted <- names(sort(x, decreasing = TRUE))
+  head(sorted, 10)
+})
+
+kable(top_words_tf, format = "html", align = "c", caption = "Najistotniejsze słowa wg częstości wystąpień") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+### Wagi binarne
+
+oznaczają, że dla każdego terminu wystąpienie jest reprezentowane jako 0 (brak wystąpienia) lub 1 (wystąpienie), ignorując częstość wystąpienia. Jest to prosty sposób uwzględnienia obecności terminu w dokumencie bez uwzględniania liczby wystąpień.
+
+```{r warning=FALSE}
+# Tworzenie macierzy TDM z wagami binarnymi
+dtm_binary_mw <- DocumentTermMatrix(books_corpus_mw, control = list(weighting = weightBin))
+dtm_binary_mw
+
+dtm_binary_mw_matrix <- as.data.frame(as.matrix(dtm_binary_mw))
+```
+
+Na podstawie informacji o macierzy można powiedzieć, że istnieją dwa dokumenty, które mają znaczną liczbę unikalnych terminów (8901). Macierz jest względnie gęsta, a wagi terminów są binarne, co oznacza, że termy są traktowane jako obecne lub nieobecne w danym dokumencie.
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+### Wagi logarytmiczne
+
+można zastosować, aby uwzględnić częstość wystąpień terminów w sposób bardziej wyważony. Częstość wystąpień terminu w dokumencie jest logarytmem naturalnym (lub innym logarytmem) liczby wystąpień, co prowadzi do skoncentrowania się na istotnych różnicach w częstości wystąpień.
+
+```{r warning=FALSE}
+dtm_log_mw <- log2(as.matrix(dtm_tf_mw) + 1) #Przekształcenie macierzy tf na macierz z wagami logarytmicznymi
+
+dtm_log_mw_matrix <- as.data.frame(as.matrix(dtm_log_mw))
+```
+
+Najistotniejsze słowa:
+
+```{r}
+sum_log <- rowSums(dtm_log_mw_matrix)
+
+top_words_log <- apply(dtm_log_mw_matrix, 1, function(x) {
+  sorted <- names(sort(x, decreasing = TRUE))
+  head(sorted, 10)
+})
+
+kable(top_words_log, format = "html", align = "c", caption = "Najistotniejsze słowa wg wag logarytmicznych") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+### Wagi TF-IDF
+
+(Term Frequency-Inverse Document Frequency) to popularna metoda ważenia terminów, która uwzględnia zarówno częstość wystąpień terminu w dokumencie (TF) jak i jego znaczenie w kontekście całego korpusu dokumentów (IDF). Waga termu w dokumencie jest mnożona przez odwrotność częstości wystąpień termu w całym korpusie, co prowadzi do wyróżnienia istotnych terminów, które występują rzadziej w całym zbiorze dokumentów
+
+```{r warning=FALSE}
+dtm_tfidf_mw <- DocumentTermMatrix(books_corpus_mw, control = list(weighting = weightTfIdf))
+dtm_tfidf_mw
+
+dtm_tfidf_mw_matrix <- as.data.frame(as.matrix(dtm_tfidf_mw))
+```
+
+Macierz podobnie jak poprzednie zaiwera 2 dokumenty i 8901 termów. Jest stosunkowo rzadka, ponieważ tylko 35% z wszystkich możliwych wpisów ma wartość nieliczbową. Oznacza to, że większość miejsc w macierzy jest pusta lub zawiera zero. Terminy są ważone na podstawie częstości ich występowania w danym dokumencie oraz odwrotnej częstości ich występowania we wszystkich dokumentach. Ważenie tf-idf normalizuje wyniki, aby wyrównać wpływ popularnych terminów.
+
+Najistotniejsze słowa:
+
+```{r}
+sum_tfidf <- rowSums(dtm_tfidf_mw_matrix)
+
+top_words_tfidf <- apply(dtm_tfidf_mw_matrix, 1, function(x) {
+  sorted <- names(sort(x, decreasing = TRUE))
+  head(sorted, 10)
+})
+
+kable(top_words_tfidf, format = "html", align = "c", caption = "Najistotniejsze słowa wg wag TfI") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+### Porównanie 10 najistotniejszych słów dla różnych wag
+
+```{r}
+table_eighty_days <- data.frame(Słowa = seq(1,10),
+                                Częstość = top_words_tf[, "Eighty_days"],
+                                TfIdf = top_words_tfidf[, "Eighty_days"])
+
+table_all_moon <- data.frame(Słowa = seq(1,10),
+                             Częśotść = top_words_tf[, "All_moon"],
+                             TfIdf = top_words_tfidf[, "All_moon"])
+```
+
+Pod uwagę wzięte zostały częstość wys†epowania (tf), wagi logarytmiczna i tfidf. Waga binarna nie została wzięta pod uwagę gdyż nie da się wyodrębnić najpopularniejszych termów.
+
+-   ***"W 80 dnii dookoła świata"***
+
+```{r}
+kable(table_eighty_days, format = "html", align = "c", caption = "Najistotniejsze słowa wg częstości występowania oraz wag TfIdf") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+Najczęściej występujące słowa w powieści "W 80 dni dookoła ziemi" na podstawie macierzy wystąpień (częstość) oraz wag TfIdf mają zarówno podobne, jak i różne cechy. W obu przypadkach często występują słowa takie jak "day", "make" i "time", co wskazuje na ich znaczenie w treści powieści. Jednak w macierzy wag TfIdf pojawiają się również specyficzne słowa, takie jak "detective", "hong", "kong", "servant" i "reform", które mogą odzwierciedlać szczególne tematy, lokalizacje lub aspekty powieści. Takie różnice w słowach podkreślają istotne elementy, które można wyróżnić, analizując powieść z różnych perspektyw.
+
+-   ***"Wokół księżyca"***
+
+```{r}
+kable(table_all_moon, format = "html", align = "c", caption = "Najistotniejsze słowa wg częstości występowania oraz wag TfIdf") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+Najczęściej występujące słowa w powieści "Wokół księżyca" na podstawie macierzy wystąpień (częstość) oraz wag TfIdf wykazują podobne i różniące się cechy. W obu przypadkach często występują słowa takie jak "moon" i "projectile", co wskazuje na ich znaczenie w kontekście książki. Jednak w macierzy wag TfIdf pojawiają się również specyficzne słowa, takie jak "lunar", "crater", "satellite" i "mare", które odnoszą się do tematyki księżycowej, podróży kosmicznej i eksploracji. Słowa takie jak "earth", "great", "time" i "friend" są również obecne. Można zauważyć, że analiza słów na podstawie macierzy wag TfIdf uwydatnia specyficzne tematy i elementy związane z książką.

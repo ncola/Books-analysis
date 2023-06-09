@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Przygotowanie</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">O analizie</a>
+</li>
+<li>
+  <a href="preprocessing.html">Przygotowanie</a>
+</li>
+<li>
+  <a href="chmury.html">Chmury</a>
+</li>
+<li>
+  <a href="macierze_wystapien.html">Macierze wystąpień</a>
+</li>
+<li>
+  <a href="sentyment.html">Analiza sentymentu</a>
+</li>
+<li>
+  <a href="watek.html">Analiza wątku</a>
+</li>
+<li>
+  <a href="grupowanie.html">Grupowanie</a>
+</li>
+<li>
+  <a href="klasyfikacja.html">Klasyfikacja</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Przygotowanie</h1>
+
+</div>
+
+
+<pre class="r"><code>library(tidytext)
+library(dplyr)
+library(textstem)
+library(wordcloud)
+library(tidyr)
+library(ggplot2)
+library(tm)
+library(stringr)
+library(quanteda)
+library(e1071)
+library(gmodels)
+library(caret)
+library(topicmodels)
+library(kableExtra)
+library(proxy)
+library(dendextend)
+library(rmdformats)
+library(knitr)</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<div id="wczytanie-danych" class="section level1">
+<h1>Wczytanie danych</h1>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<p>Poddane analizie są książki Juliusza Verne’a:</p>
+<ul>
+<li><p>“W 80 dnii dookoła świata”</p></li>
+<li><p>“Wokół księżyca”</p></li>
+</ul>
+<p>Wczytywane są w podziale na rozdziały.</p>
+<pre class="r"><code>url &lt;- &quot;https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/Around_the_World_in_Eighty_Days.txt&quot;
+
+eighty_days &lt;- readLines(url) %&gt;%
+  paste(collapse = &quot; &quot;) %&gt;%
+  strsplit(split = &quot;(CHAPTER\\s+)&quot;, perl = TRUE) %&gt;%
+  unlist() %&gt;%
+  data.frame(chapter = 0:(length(.) - 1), text = ., stringsAsFactors = FALSE)
+
+eighty_days &lt;- eighty_days[-1, ]  # usunięcie pierwszego pustego wiersza
+
+
+wys &lt;- head(eighty_days$text,5)
+wyswietlenie &lt;- tibble(Chapter = 1:5, &quot;Część tekstu&quot; = paste0(substr(wys, 1, 250), &quot;[...]&quot;))
+kable(wyswietlenie, format = &quot;html&quot;, align = &quot;c&quot;, table.attr = &quot;class=&#39;table table-striped&#39;&quot;, row.names = FALSE, caption = &quot;W 80 dni dookoła świata w podziale na rozdziały&quot;) %&gt;%
+  kable_styling()</code></pre>
+<table class="table table-striped table" style="margin-left: auto; margin-right: auto;">
+<caption>
+W 80 dni dookoła świata w podziale na rozdziały
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Chapter
+</th>
+<th style="text-align:center;">
+Część tekstu
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+I. IN WHICH PHILEAS FOGG AND PASSEPARTOUT ACCEPT EACH OTHER, THE ONE AS
+MASTER, THE OTHER AS MAN Mr. Phileas Fogg lived, in 1872, at No. 7,
+Saville Row, Burlington Gardens, the house in which Sheridan died in
+1814. He was one of the most noticeable […]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+<ol start="2" style="list-style-type: upper-roman">
+<li>IN WHICH PASSEPARTOUT IS CONVINCED THAT HE HAS AT LAST FOUND HIS
+IDEAL “Faith,” muttered Passepartout, somewhat flurried, “I’ve seen
+people at Madame Tussaud’s as lively as my new master!” Madame Tussaud’s
+“people,” let it be said, are of wax,[…]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+<ol start="3" style="list-style-type: upper-roman">
+<li>IN WHICH A CONVERSATION TAKES PLACE WHICH SEEMS LIKELY TO COST
+PHILEAS FOGG DEAR Phileas Fogg, having shut the door of his house at
+half-past eleven, and having put his right foot before his left five
+hundred and seventy-five times, and his le[…]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+<ol start="4" style="list-style-type: upper-roman">
+<li>IN WHICH PHILEAS FOGG ASTOUNDS PASSEPARTOUT, HIS SERVANT Having won
+twenty guineas at whist, and taken leave of his friends, Phileas Fogg,
+at twenty-five minutes past seven, left the Reform Club. Passepartout,
+who had conscientiously studied t[…]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+V. IN WHICH A NEW SPECIES OF FUNDS, UNKNOWN TO THE MONEYED MEN, APPEARS
+ON ’CHANGE Phileas Fogg rightly suspected that his departure from London
+would create a lively sensation at the West End. The news of the bet
+spread through the Reform Club, an[…]
+</td>
+</tr>
+</tbody>
+</table></li>
+</ol></li>
+</ol></li>
+</ol>
+<pre class="r"><code>url2 &lt;- &quot;https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/All_around_the_moon.txt&quot;
+
+all_moon &lt;- readLines(url2) %&gt;%
+  paste(collapse = &quot; &quot;) %&gt;%
+  strsplit(split = &quot;(CHAPTER\\s+)&quot;, perl = TRUE) %&gt;%
+  unlist() %&gt;%
+  data.frame(chapter = 1:length(.), text = ., stringsAsFactors = FALSE)
+
+wys2 &lt;- head(all_moon$text,5)
+wyswietlenie2 &lt;- tibble(Chapter = 1:5, &quot;Część tekstu&quot; = paste0(substr(wys2, 1, 250), &quot;[...]&quot;))
+kable(wyswietlenie2, format = &quot;html&quot;, align = &quot;c&quot;, table.attr = &quot;class=&#39;table table-striped&#39;&quot;, row.names = FALSE, caption = &quot;W 80 dni dookoła świata w podziale na rozdziały&quot;) %&gt;%
+  kable_styling()</code></pre>
+<table class="table table-striped table" style="margin-left: auto; margin-right: auto;">
+<caption>
+W 80 dni dookoła świata w podziale na rozdziały
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Chapter
+</th>
+<th style="text-align:center;">
+Część tekstu
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+PRELIMINARY CHAPTER, RESUMING THE FIRST PART OF THE WORK AND SERVING AS
+AN INTRODUCTION TO THE SECOND. A few years ago the world was suddenly
+astounded by hearing of an experiment of a most novel and daring nature,
+altogether unprecedented in the […]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+<ol style="list-style-type: upper-roman">
+<li>FROM 10 P.M. TO 10 46’ 40’’. The moment that the great clock
+belonging to the works at Stony Hill had struck ten, Barbican, Ardan and
+M’Nicholl began to take their last farewells of the numerous friends
+surrounding them. The two dogs intended t[…]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+<ol start="2" style="list-style-type: upper-roman">
+<li>THE FIRST HALF HOUR. What had taken place within the Projectile?
+What effect had been produced by the frightful concussion? Had
+Barbican’s ingenuity been attended with a fortunate result? Had the
+shock been sufficiently deadened by the springs[…]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+<ol start="3" style="list-style-type: upper-roman">
+<li>THEY MAKE THEMSELVES AT HOME AND FEEL QUITE COMFORTABLE. This
+curious explanation given, and its soundness immediately recognized, the
+three friends were soon fast wrapped in the arms of Morpheus. Where in
+fact could they have found a spot mo[…]
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+<ol start="4" style="list-style-type: upper-roman">
+<li>A CHAP FOR THE CORNELL GIRLS. No incident worth recording occurred
+during the night, if night indeed it could be called. In reality there
+was now no night or even day in the Projectile, or rather, strictly
+speaking, it was always <em>night</em> on th[…]
+</td>
+</tr>
+</tbody>
+</table></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="przygotowanie-danych" class="section level1">
+<h1>Przygotowanie danych</h1>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<div id="wstępne-czyszczenie" class="section level2">
+<h2>Wstępne czyszczenie</h2>
+<p>Z tekstu usuwamy znaki interpunkcyjne, podwójne i pojedyńcze
+cudzysłowy, apostrofy i cyfry.</p>
+<pre class="r"><code>clean_text &lt;- function(df) {
+  df$text &lt;- str_remove_all(df$text, &quot;[[:punct:]]&quot;)
+  df$text &lt;- str_remove_all(df$text, &quot;\&quot;&quot;) 
+  df$text &lt;- str_remove_all(df$text, &quot;&#39;&quot;)
+  df$text &lt;- str_replace_all(df$text, &quot;(\\b)&#39;(\\w+)&#39;(\\b)&quot;, &quot;\\1\\2\\3&quot;)
+  df$text &lt;- str_remove_all(df$text, &quot;\\d+&quot;)
+  return(df)
+}
+
+eighty_days &lt;- clean_text(eighty_days)
+all_moon &lt;- clean_text(all_moon)</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="tokenizacja" class="section level2">
+<h2>Tokenizacja</h2>
+<pre class="r"><code>eighty_days_tokens &lt;- eighty_days %&gt;%
+  unnest_tokens(word, text)
+
+all_moon_tokens &lt;- all_moon %&gt;%
+  unnest_tokens(word, text)</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="usunięcie-stopwords" class="section level2">
+<h2>Usunięcie stopwords</h2>
+<pre class="r"><code>stopwords &lt;- get_stopwords(source = &quot;smart&quot;) #wybieram smart ponieważ zaiwera najwięcej stop wordów
+stopwords &lt;- data.frame(Word = c(stopwords[[1]], &#39;passepartout&#39;, &#39;phileas&#39;, &#39;fogg&#39;, &#39;foggs&#39;, &#39;auouda&#39;,&#39;aouda&#39; ,&#39;francis&#39;, &#39;ardan&#39;, &#39;captain&#39;, &#39;barbican&#39;, &#39;mnicholl&#39;, &#39;mr&#39;, &#39;passepartouts&#39;, &#39;marston&#39;, &#39;fix&#39;))
+
+eighty_days_tidy &lt;- anti_join(eighty_days_tokens, stopwords, by = c(&quot;word&quot; = &quot;Word&quot;))
+all_moon_tidy &lt;- anti_join(all_moon_tokens, stopwords, by = c(&quot;word&quot; = &quot;Word&quot;))</code></pre>
+<p>Do stop words dodane zostały postacie z książek (imiona, naziwska
+itd) ponieważ zajmowały zdecydowaną część chmury, nie wnosząc nic do
+analizy. Są to:</p>
+<ul>
+<li><p>fogg - Phileas Fogg (“W 80 dni dookoła świata”)</p></li>
+<li><p>phileas - Phileas Fogg (“W 80 dni dookoła świata”)</p></li>
+<li><p>passepartout - Jean Passepartout (oraz passepartouts ponieważ
+lemmatyzacja sobie nie poradziła) (“W 80 dni dookoła świata”)</p></li>
+<li><p>auouda - postać (zapisywana również aouda) (“W 80 dni dookoła
+świata”)</p></li>
+<li><p>francis - postać (“W 80 dni dookoła świata”)</p></li>
+<li><p>Ardan - Michel Ardan (“Wokół księżyca”)</p></li>
+<li><p>Barbican - Przedyent barbican (“Wokół księżyca”)</p></li>
+<li><p>mnicholl - Captain M’nicholl (“Wokół księżyca”)</p></li>
+<li><p>marston - J.K Marston, postac (“Wokół księżyca”)</p></li>
+<li><p>fix - postać (“Wokół księżyca”)</p></li>
+</ul>
+<pre class="r"><code>eighty_num &lt;- nrow(eighty_days_tokens)
+eighty_stop_num &lt;- nrow(eighty_days_tidy)
+eighty_per &lt;- (eighty_num - eighty_stop_num) / eighty_num * 100
+
+moon_num &lt;- nrow(all_moon_tokens)
+moon_stop_num &lt;- nrow(all_moon_tidy)
+moon_per &lt;- (moon_num - moon_stop_num) / moon_num * 100
+
+
+cat(&quot;&#39;W 80 dni dookoła świata&#39;\n&quot;,
+    &quot;Liczba tokenów przed usunięciem stopwords:&quot;, eighty_num, &quot;\n&quot;,
+    &quot;Liczba tokenów po usunięciu stopwords:&quot;, eighty_stop_num, &quot;\n&quot;,
+    &quot;% usuniętych:&quot;, sprintf(&quot;%.2f%%&quot;, eighty_per), &quot;\n\n&quot;,
+    &quot;&#39;Wokół księżyca&#39;\n&quot;,
+    &quot;Liczba tokenów przed usunięciem stopwords:&quot;, moon_num, &quot;\n&quot;,
+    &quot;Liczba tokenów po usunięciu stopwords:&quot;, moon_stop_num, &quot;\n&quot;,
+    &quot;% usuniętych:&quot;, sprintf(&quot;%.2f%%&quot;, moon_per), &quot;\n&quot;
+)</code></pre>
+<pre><code>## &#39;W 80 dni dookoła świata&#39;
+##  Liczba tokenów przed usunięciem stopwords: 62659 
+##  Liczba tokenów po usunięciu stopwords: 24361 
+##  % usuniętych: 61.12% 
+## 
+##  &#39;Wokół księżyca&#39;
+##  Liczba tokenów przed usunięciem stopwords: 97940 
+##  Liczba tokenów po usunięciu stopwords: 38626 
+##  % usuniętych: 60.56%</code></pre>
+<p>Można zauważyć, że w w powieści “80 dnii dookoła świata” zostało
+usunięte 61.12% tokenów, a w powieści “Wokół księżyca” 60.56% jako stop
+words.</p>
+<p>Ogólnie rzecz biorąc, usunięcie stopwords znacznie zmniejszyło liczbę
+tokenów w obu przypadkach. Pozwala to na bardziej precyzyjne
+analizowanie istotnych słów w tekście, eliminując słowa powszechnie
+używane, które nie niosą dużo informacji.</p>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="lemmatyzacja" class="section level2">
+<h2>Lemmatyzacja</h2>
+<p>Na tym etapie do wyboru mamy:</p>
+<ul>
+<li><p>lemmatyzacje,</p></li>
+<li><p>stemming.</p></li>
+</ul>
+<p>Do obróbki tokenów została wybrana lemmatyzacja, jako że sprowadza
+token do jego podstawej wersji, co uznałam za czytelniejsze. Ponadto
+lemmatyzacja jest bardziej zaawansowaną techniką, która uwzględnia
+morfologię języka i może generować bardziej dokładne wyniki. Jest
+szczególnie przydatna w przypadku analizy semantycznej, gdzie zachowanie
+znaczenia słowa jest ważne.</p>
+<pre class="r"><code>eighty_days_lem &lt;- eighty_days_tidy %&gt;%
+  mutate(word_lemma = lemmatize_words(word, language = &quot;english&quot;)) %&gt;%
+  select(chapter, word_lemma)
+
+all_moon_lem &lt;- all_moon_tidy %&gt;%
+  mutate(word_lemma = lemmatize_words(word, language = &quot;english&quot;)) %&gt;%
+  select(chapter, word_lemma)</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="złączenie-gotowych-tokenów" class="section level2">
+<h2>Złączenie gotowych tokenów</h2>
+<p>W celu utworzenia korpusu i dalszej analizy, oczyszczone tokeny
+zostały złączone z powrotem do ciągu tekstu jako konkretne
+rozdziały.</p>
+<pre class="r"><code>eighty_days_text &lt;- books_list &lt;- eighty_days_lem %&gt;%
+  group_by(chapter) %&gt;%
+  summarize(text = paste(word_lemma, collapse = &quot; &quot;)) %&gt;%
+  ungroup() 
+  
+all_moon_text &lt;- books_list &lt;- all_moon_lem %&gt;%
+  group_by(chapter) %&gt;%
+  summarize(text = paste(word_lemma, collapse = &quot; &quot;)) %&gt;%
+  ungroup() </code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="połączenie-książek" class="section level2">
+<h2>Połączenie książek</h2>
+<pre class="r"><code>books_docs &lt;- rbind(eighty_days_text, all_moon_text)
+nrow(books_docs)</code></pre>
+<pre><code>## [1] 62</code></pre>
+<p>Mamy 62 rozdziały (dokumety) z dwóch książek:</p>
+<ul>
+<li><p>wiersze 1:37 - “w 80 dni dookola swiata”,</p></li>
+<li><p>wiersze 38:62 - “wokół ksieżyca”</p></li>
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

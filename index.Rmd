@@ -1,0 +1,76 @@
+---
+title: "Analiza książek Verne'a"
+output: html_document
+---
+
+```{=html}
+<style type="text/css">
+.title {
+  display: none;
+}
+
+#getting-started img {
+  margin-right: 10px;
+}
+
+</style>
+```
+<div class="row" style="padding-top: 30px;">
+
+::: col-sm-6
+# **Analiza książek Juliusza Verne'a**
+
+Analiza dotyczy dwóch książek Juliusza Verne'a: "W 80 dni dookoła świata" oraz "Wokół księżyca". Książki są w języku angielskim jednak wszystkie opisy oraz interpretacje są w języku polskim.
+
+## Wykonane metody
+
+1.  Analiza chmur słów indywidualnie dla każdej książki oraz w połączeniu: słowa wspólne dla obu książek, charakterystyczne tylko dla jednej i charaktersytyczne tylko dla drugiej
+
+2.  Analiza macierzy wystąpień: macierz binarna, logarytmiczna oraz tf-idf
+
+3.  Analiza sentymentu: słowniki bing, afinn oraz nrc
+
+4.  Analiza wątku
+
+5.  Grupowanie
+
+6.  Klasyfikacja
+:::
+
+::: col-sm-6
+### 
+
+<a href = "https://crumplab.github.io"> ![](images/logo.png) </a>
+:::
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+# Podsumowanie analizy
+
+Podczas analizy dwóch książek, "W 80 dni dookoła świata" i "Wokół księżyca", przeprowadzono różne etapy analizy, w tym: analizę chmur słów, macierzy wystąpień, sentymentu, wątku, grupowanie oraz klasyfikacje.
+
+Z analizy chmur słów oraz analizy wątku wynikają podobne wnioski. Analizując chmury dla poszczególnych książek, można wyciągnąć wnioski dotyczące tematów dominujących w narracji. Na przykład, dla książki "W 80 dni dookoła świata" wnioski wskazywały na podróż, czas, postacie, miejsca i akcję jako główne tematy. Natomiast dla książki "Wokół księżyca" tematami dominującymi były podróż kosmiczna, Księżyc, czas, przyjaźń oraz odkrywanie i obserwacja.
+
+Podobnie, analiza wątku również identyfikuje kluczowe tematy występujące w tekście, ale bardziej w kontekście relacji między słowami i ich współwystępowania. Przy użyciu metody LDA (latent Dirichlet allocation), analiza wątku wyodrębnia grupy słów, które mają silne powiązania tematyczne. Analizując te wątki dla obu książek, można dojść do podobnych wniosków dotyczących dominujących tematów, takich jak podróż, czas, organizacja (w przypadku "W 80 dni dookoła świata") oraz podróż kosmiczna, eksploracja kosmosu, badania naukowe (w przypadku "Wokół księżyca").
+
+Analiza macierzy wystąpień (częstość) oraz wag Tf-Idf dostarczyła dodatkowego spojrzenia na dominujące słowa w książkach "W 80 dni dookoła świata" i "Wokół księżyca", jednakże nie wnosi nic nowego do ogólnego kontekstu.
+
+Analiza sentymentu wykazała, że "W 80 dni dookoła świata" prezentuje mieszane nastroje (z większą bądź mniejszą dynamiką w zależności od zastosowanego podejścia (słownika)), z początkowym entuzjazmem i pozytywnym zakończeniem, podczas gdy "Wokół księżyca" emanuje przeważnie pozytywnym sentymentem.
+
+Analiza grupowania za pomocą metody k-means sugeruje, że istnieje wyraźne rozróżnienie między dwoma książkami, "W 80 dni dookoła świata" i "Wokół księżyca". Książki zostały przypisane do dwóch grup, z większością dokumentów w każdej grupie poprawnie identyfikując konkretną książkę.
+
+Analiza ta przyniosła takie same wyniki co analiza wątków. Oznacza to, że dokumenty zostały przypisane do grup w sposób zgodny z tematami wyłonionymi w analizie wątków. Te wyniki potwierdzają, że istnieją dwie wyraźne kategorie lub tematy, które wyróżniają się między książkami "W 80 dni dookoła świata" a "Wokół księżyca". Dodatkowe grupowanie (po analizie wątku) nie było więc konieczne, jednak przyniosło dodatkowe informacje w trakcie testowania, tzn. przy zwiększaniu liczby grup, dokumenty należące do drugiej książki pozostawały w jednej grupie, a dokumenty z pierwszej dzieliły się na mniejsze, różne części.
+
+Ponadto rozdział przedostatni "Wokół księżyca jest wyjątkowy pod względem analizy:
+
+-   w analizie sentymentu w zależności od słownika na tym rozdziale zauważalne były największe różnice,
+
+-   w analizie wątku jako jedyny został zaklasyfikowany do innego wątku niż reszta,
+
+-   podobnie w procesie grupowania, niezależnie od ilości grup, rozdział ten nie należał do tej samej co reszta.
+
+W analizie klasyfikacji za pomocą Naiwnego klasyfikatora Bayesa'a z zastosowaniem trzech różnych wag (binarne, logarytmiczne, tf-idf) i wykorzystaniem wcześniej wyłonionych tematów/grup jako klas, najlepsze wyniki uzyskał klasyfikator oparty na wagach tf-idf.
+
+Wnioskując, analiza tych dwóch książek dostarczyła interesujących informacji dotyczących dominujących tematów, nastrojów oraz różnic pomiędzy nimi. Na podstawie tych wyników, można zalecić "W 80 dni dookoła świata" dla czytelników poszukujących historii podróży, czasu i przygód, natomiast "Wokół księżyca" może przyciągnąć tych, którzy interesują się podróżami kosmicznymi, eksploracją i badaniami naukowymi.
+
+Jednakże, analiza ta otwiera również drzwi do dalszych badań i eksploracji. Można dalej zgłębiać różnice w sentymentach, tematach i strukturach narracyjnych między tymi dwiema książkami, a także rozważać inne metody analizy, takie jak analiza stylu pisarskiego czy sieci semantyczne, aby uzyskać jeszcze głębsze zrozumienie zawartości i charakterystyk tych dzieł literackich.

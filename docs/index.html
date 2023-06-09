@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Analiza książek Verne’a</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">O analizie</a>
+</li>
+<li>
+  <a href="preprocessing.html">Przygotowanie</a>
+</li>
+<li>
+  <a href="chmury.html">Chmury</a>
+</li>
+<li>
+  <a href="macierze_wystapien.html">Macierze wystąpień</a>
+</li>
+<li>
+  <a href="sentyment.html">Analiza sentymentu</a>
+</li>
+<li>
+  <a href="watek.html">Analiza wątku</a>
+</li>
+<li>
+  <a href="grupowanie.html">Grupowanie</a>
+</li>
+<li>
+  <a href="klasyfikacja.html">Klasyfikacja</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Analiza książek Verne’a</h1>
+
+</div>
+
+
+<style type="text/css">
+.title {
+  display: none;
+}
+
+#getting-started img {
+  margin-right: 10px;
+}
+
+</style>
+<div class="row" style="padding-top: 30px;">
+
+<div id="analiza-książek-juliusza-vernea"
+class="section level1 col-sm-6">
+<h1><strong>Analiza książek Juliusza Verne’a</strong></h1>
+<p>Analiza dotyczy dwóch książek Juliusza Verne’a: “W 80 dni dookoła
+świata” oraz “Wokół księżyca”. Książki są w języku angielskim jednak
+wszystkie opisy oraz interpretacje są w języku polskim.</p>
+<div id="wykonane-metody" class="section level2">
+<h2>Wykonane metody</h2>
+<ol style="list-style-type: decimal">
+<li><p>Analiza chmur słów indywidualnie dla każdej książki oraz w
+połączeniu: słowa wspólne dla obu książek, charakterystyczne tylko dla
+jednej i charaktersytyczne tylko dla drugiej</p></li>
+<li><p>Analiza macierzy wystąpień: macierz binarna, logarytmiczna oraz
+tf-idf</p></li>
+<li><p>Analiza sentymentu: słowniki bing, afinn oraz nrc</p></li>
+<li><p>Analiza wątku</p></li>
+<li><p>Grupowanie</p></li>
+<li><p>Klasyfikacja</p></li>
+</ol>
+</div>
+</div>
+<div id="section" class="section level3 col-sm-6">
+<h3></h3>
+<p><a href = "https://crumplab.github.io"> <img src="images/logo.png" />
+</a></p>
+</div>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<div id="podsumowanie-analizy" class="section level1">
+<h1>Podsumowanie analizy</h1>
+<p>Podczas analizy dwóch książek, “W 80 dni dookoła świata” i “Wokół
+księżyca”, przeprowadzono różne etapy analizy, w tym: analizę chmur
+słów, macierzy wystąpień, sentymentu, wątku, grupowanie oraz
+klasyfikacje.</p>
+<p>Z analizy chmur słów oraz analizy wątku wynikają podobne wnioski.
+Analizując chmury dla poszczególnych książek, można wyciągnąć wnioski
+dotyczące tematów dominujących w narracji. Na przykład, dla książki “W
+80 dni dookoła świata” wnioski wskazywały na podróż, czas, postacie,
+miejsca i akcję jako główne tematy. Natomiast dla książki “Wokół
+księżyca” tematami dominującymi były podróż kosmiczna, Księżyc, czas,
+przyjaźń oraz odkrywanie i obserwacja.</p>
+<p>Podobnie, analiza wątku również identyfikuje kluczowe tematy
+występujące w tekście, ale bardziej w kontekście relacji między słowami
+i ich współwystępowania. Przy użyciu metody LDA (latent Dirichlet
+allocation), analiza wątku wyodrębnia grupy słów, które mają silne
+powiązania tematyczne. Analizując te wątki dla obu książek, można dojść
+do podobnych wniosków dotyczących dominujących tematów, takich jak
+podróż, czas, organizacja (w przypadku “W 80 dni dookoła świata”) oraz
+podróż kosmiczna, eksploracja kosmosu, badania naukowe (w przypadku
+“Wokół księżyca”).</p>
+<p>Analiza macierzy wystąpień (częstość) oraz wag Tf-Idf dostarczyła
+dodatkowego spojrzenia na dominujące słowa w książkach “W 80 dni dookoła
+świata” i “Wokół księżyca”, jednakże nie wnosi nic nowego do ogólnego
+kontekstu.</p>
+<p>Analiza sentymentu wykazała, że “W 80 dni dookoła świata” prezentuje
+mieszane nastroje (z większą bądź mniejszą dynamiką w zależności od
+zastosowanego podejścia (słownika)), z początkowym entuzjazmem i
+pozytywnym zakończeniem, podczas gdy “Wokół księżyca” emanuje przeważnie
+pozytywnym sentymentem.</p>
+<p>Analiza grupowania za pomocą metody k-means sugeruje, że istnieje
+wyraźne rozróżnienie między dwoma książkami, “W 80 dni dookoła świata” i
+“Wokół księżyca”. Książki zostały przypisane do dwóch grup, z
+większością dokumentów w każdej grupie poprawnie identyfikując konkretną
+książkę.</p>
+<p>Analiza ta przyniosła takie same wyniki co analiza wątków. Oznacza
+to, że dokumenty zostały przypisane do grup w sposób zgodny z tematami
+wyłonionymi w analizie wątków. Te wyniki potwierdzają, że istnieją dwie
+wyraźne kategorie lub tematy, które wyróżniają się między książkami “W
+80 dni dookoła świata” a “Wokół księżyca”. Dodatkowe grupowanie (po
+analizie wątku) nie było więc konieczne, jednak przyniosło dodatkowe
+informacje w trakcie testowania, tzn. przy zwiększaniu liczby grup,
+dokumenty należące do drugiej książki pozostawały w jednej grupie, a
+dokumenty z pierwszej dzieliły się na mniejsze, różne części.</p>
+<p>Ponadto rozdział przedostatni “Wokół księżyca jest wyjątkowy pod
+względem analizy:</p>
+<ul>
+<li><p>w analizie sentymentu w zależności od słownika na tym rozdziale
+zauważalne były największe różnice,</p></li>
+<li><p>w analizie wątku jako jedyny został zaklasyfikowany do innego
+wątku niż reszta,</p></li>
+<li><p>podobnie w procesie grupowania, niezależnie od ilości grup,
+rozdział ten nie należał do tej samej co reszta.</p></li>
+</ul>
+<p>W analizie klasyfikacji za pomocą Naiwnego klasyfikatora Bayesa’a z
+zastosowaniem trzech różnych wag (binarne, logarytmiczne, tf-idf) i
+wykorzystaniem wcześniej wyłonionych tematów/grup jako klas, najlepsze
+wyniki uzyskał klasyfikator oparty na wagach tf-idf.</p>
+<p>Wnioskując, analiza tych dwóch książek dostarczyła interesujących
+informacji dotyczących dominujących tematów, nastrojów oraz różnic
+pomiędzy nimi. Na podstawie tych wyników, można zalecić “W 80 dni
+dookoła świata” dla czytelników poszukujących historii podróży, czasu i
+przygód, natomiast “Wokół księżyca” może przyciągnąć tych, którzy
+interesują się podróżami kosmicznymi, eksploracją i badaniami
+naukowymi.</p>
+<p>Jednakże, analiza ta otwiera również drzwi do dalszych badań i
+eksploracji. Można dalej zgłębiać różnice w sentymentach, tematach i
+strukturach narracyjnych między tymi dwiema książkami, a także rozważać
+inne metody analizy, takie jak analiza stylu pisarskiego czy sieci
+semantyczne, aby uzyskać jeszcze głębsze zrozumienie zawartości i
+charakterystyk tych dzieł literackich.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

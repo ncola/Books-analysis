@@ -1,0 +1,174 @@
+---
+title: "Grupowanie"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+```{r include=FALSE}
+library(tidytext)
+library(dplyr)
+library(textstem)
+library(tidyr)
+library(ggplot2)
+library(tm)
+library(stringr)
+library(quanteda)
+library(e1071)
+library(gmodels)
+library(caret)
+library(topicmodels)
+library(kableExtra)
+library(proxy)
+library(dendextend)
+library(knitr)
+
+url <- "https://raw.githubusercontent.com/ncola/Verne-books-analysis-text-mining/main/Around_the_World_in_Eighty_Days.txt"
+
+eighty_days <- readLines(url) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 0:(length(.) - 1), text = ., stringsAsFactors = FALSE)
+
+eighty_days <- eighty_days[-1, ] 
+
+url2 <- "https://raw.githubusercontent.com/ncola/Verne-books-analysis-text-mining/main/All_around_the_moon.txt"
+
+all_moon <- readLines(url2) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 1:length(.), text = ., stringsAsFactors = FALSE)
+
+clean_text <- function(df) {
+  df$text <- str_remove_all(df$text, "[[:punct:]]")
+  df$text <- str_remove_all(df$text, "\"") 
+  df$text <- str_remove_all(df$text, "'")
+  df$text <- str_replace_all(df$text, "(\\b)'(\\w+)'(\\b)", "\\1\\2\\3")
+  df$text <- str_remove_all(df$text, "\\d+")
+  return(df)
+}
+
+eighty_days <- clean_text(eighty_days)
+all_moon <- clean_text(all_moon)
+
+eighty_days_tokens <- eighty_days %>%
+  unnest_tokens(word, text)
+
+all_moon_tokens <- all_moon %>%
+  unnest_tokens(word, text)
+
+stopwords <- get_stopwords(source = "smart") #wybieram smart ponieważ zaiwera najwięcej stop wordów
+stopwords <- data.frame(Word = c(stopwords[[1]], 'passepartout', 'phileas', 'fogg', 'foggs', 'auouda','aouda' ,'francis', 'ardan', 'captain', 'barbican', 'mnicholl', 'mr', 'passepartouts', 'marston', 'fix'))
+
+eighty_days_tidy <- anti_join(eighty_days_tokens, stopwords, by = c("word" = "Word"))
+all_moon_tidy <- anti_join(all_moon_tokens, stopwords, by = c("word" = "Word"))
+
+eighty_days_lem <- eighty_days_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+all_moon_lem <- all_moon_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+eighty_days_text <- books_list <- eighty_days_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+  
+all_moon_text <- books_list <- all_moon_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+
+
+books_docs <- rbind(eighty_days_text, all_moon_text)
+
+books_list <- list(books_docs$text)[[1]]
+books_corpus <- VCorpus(VectorSource(books_list))
+
+
+dtm_tf <- DocumentTermMatrix(books_corpus, 
+                                control = list(
+                                                bounds = list(global = c(2, Inf)), # oznacza, że terminy muszą mieć co najmniej 2 znaki
+                                                weighting = weightTf))
+```
+
+Do grupowania została wybrana metoda niehierarchiczna k-means. Początkowe założenie dotyczyło wyodrębnienia dwóch grup z uwagi na charakter danych (dwie różne książki), jednakże zdecydowano się porównać z większa ilością.
+
+## Normalizacja macierzy DTM
+
+```{r}
+dtm_norm_m <- as.matrix(dtm_tf)
+
+dtm_norm <- t(scale(t(dtm_norm_m),
+                            center=FALSE,
+                            scale=sqrt(rowSums(dtm_norm_m^2))))
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Grupowanie k-means
+
+```{r}
+km2 <- kmeans(dtm_norm, 2)
+km3 <- kmeans(dtm_norm, 3)
+km4 <- kmeans(dtm_norm, 4)
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Wizualizacja
+
+Dla dwóch grup
+
+```{r fig.height=3, fig.width=11}
+cluster_df <- data.frame(Dokument = rownames(dtm_norm), Cluster = km2$cluster)
+
+ggplot(cluster_df, aes(x = reorder(Dokument, as.numeric(Dokument)), y = Cluster, color = factor(Cluster))) +
+  geom_point(size = 3) +
+  scale_color_discrete(name = "Cluster") +
+  labs(x = "Dokument", y = "Cluster", title = "Wyniki grupowania k-means dla dwóch grup") +
+  theme_bw() + 
+  scale_y_continuous(limits = c(0.5, 2.5), breaks = c(1, 2), expand = c(0, 0.5))
+
+```
+
+Dla trzech grup
+
+```{r fig.height=3, fig.width=11}
+cluster_df3 <- data.frame(Dokument = rownames(dtm_norm), Cluster = km3$cluster)
+
+ggplot(cluster_df3, aes(x = reorder(Dokument, as.numeric(Dokument)), y = Cluster, color = factor(Cluster))) +
+  geom_point(size = 3) +
+  scale_color_discrete(name = "Cluster") +
+  labs(x = "Dokument", y = "Cluster", title = "Wyniki grupowania k-means dla tzech grup") +
+  theme_bw() + 
+  scale_y_continuous(limits = c(0.5, 3.5), breaks = c(1, 2), expand = c(0, 0.5))
+
+```
+
+Dla czterech grup
+
+```{r fig.height=3, fig.width=11}
+cluster_df4 <- data.frame(Dokument = rownames(dtm_norm), Cluster = km4$cluster)
+
+ggplot(cluster_df4, aes(x = reorder(Dokument, as.numeric(Dokument)), y = Cluster, color = factor(Cluster))) +
+  geom_point(size = 3) +
+  scale_color_discrete(name = "Cluster") +
+  labs(x = "Dokument", y = "Cluster", title = "Wyniki grupowania k-means dla czterech grup") +
+  theme_bw() + 
+  scale_y_continuous(limits = c(0.5, 4.5), breaks = c(1, 2), expand = c(0, 0.5))
+
+```
+
+Biorąc pod uwagę podział dokumentów na 1-37 dla pierwszej książki i 38-62 dla drugiej książki, na podstawie wykresów można wnioskować, że podział na dwie grupy jest najrozsądniejszy. Dzieli wspomniane powieści na dwie grupy, poprawnie przypisując dokumenty (za jednym wyjątkiem). Należy zwrócić uwagę na podobieństwo, wręcz identyczność przypisania dokumentów do grup jak w przypadku analizy wątku za pomocą LDA.
+
+Pomimo wybrania grupowania na 2 grupy, na podstawie wszystkich wykresów można zauważyć, że to powieść "W 80 dni dookoła świata" zostaje poddana dalszym podziałom, podczas gdy "Wokół księżyca" pozostaje jedną grupą poza wspomnianym już niejednokrotnie dokumentem 60, czyli przeodstatnim rozdziałem, w każdej kombinacji należy do innej grupy.

@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Macierze wystąpień</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">O analizie</a>
+</li>
+<li>
+  <a href="preprocessing.html">Przygotowanie</a>
+</li>
+<li>
+  <a href="chmury.html">Chmury</a>
+</li>
+<li>
+  <a href="macierze_wystapien.html">Macierze wystąpień</a>
+</li>
+<li>
+  <a href="sentyment.html">Analiza sentymentu</a>
+</li>
+<li>
+  <a href="watek.html">Analiza wątku</a>
+</li>
+<li>
+  <a href="grupowanie.html">Grupowanie</a>
+</li>
+<li>
+  <a href="klasyfikacja.html">Klasyfikacja</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Macierze wystąpień</h1>
+
+</div>
+
+
+<div id="macierz-dokument---feature-dtm" class="section level3">
+<h3>Macierz dokument - feature DTM</h3>
+<p>znana również jako macierz wystąpień terminów, jest strukturą danych
+używaną w analizie tekstu do reprezentacji tekstu jako macierzy
+numerycznej. DTM składa się z dokumentów jako wierszy i terminów (słów
+lub wyrażeń) jako kolumn.</p>
+<p>W DTM każda komórka reprezentuje liczbę lub wagę wystąpień danego
+terminu w danym dokumencie. Komórki zazwyczaj zawierają częstość
+wystąpień (np. liczba wystąpień termu w dokumencie) lub wagi (np.
+tf-idf), które odzwierciedlają znaczenie terminu w kontekście danego
+dokumentu lub zbioru dokumentów.</p>
+<p>DTM jest podstawowym narzędziem do analizy tekstu i umożliwia
+przeprowadzanie różnych operacji, takich jak analiza częstości słów,
+identyfikacja istotnych terminów, analiza klastrowania dokumentów,
+klasyfikacja tekstu, modelowanie tematyczne i wiele innych. DTM stanowi
+podstawę dla wielu technik analizy tekstu i jest szeroko stosowany w
+dziedzinie przetwarzania języka naturalnego i tekstowego.</p>
+<p>W celu utworzenia macierzy wystąpień z różnymi wagami przygotowano
+korpus:</p>
+<pre class="r"><code>eighty_days_text_mw &lt;- paste(eighty_days_lem$word_lemma, collapse = &quot; &quot;)
+
+all_moon_text_mw &lt;- paste(all_moon_lem$word_lemma, collapse = &quot; &quot;)
+
+books &lt;- data.frame(document = c(&quot;eighty_days&quot;, &quot;all_moon&quot;),
+                    text = c(eighty_days_text_mw, all_moon_text_mw),
+                    stringsAsFactors = FALSE)
+
+books_corpus_mw &lt;- corpus(books)
+docnames(books_corpus_mw) &lt;- c(&quot;Eighty_days&quot;, &quot;All_moon&quot;)</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="częstość-wystąpień" class="section level3">
+<h3>Częstość wystąpień</h3>
+<pre class="r"><code>dtm_tf_mw &lt;- DocumentTermMatrix(books_corpus_mw)
+dtm_tf_mw</code></pre>
+<pre><code>## &lt;&lt;DocumentTermMatrix (documents: 2, terms: 8901)&gt;&gt;
+## Non-/sparse entries: 11611/6191
+## Sparsity           : 35%
+## Maximal term length: 30
+## Weighting          : term frequency (tf)</code></pre>
+<pre class="r"><code>dtm_tf_mw_matrix &lt;- as.data.frame(as.matrix(dtm_tf_mw))</code></pre>
+<p>Na podstawie informacji o macierzy można powiedzieć, że istnieją dwa
+dokumenty, które mają znaczną liczbę unikalnych terminów (8901). Macierz
+jest względnie gęsta, a wagi terminów są obliczane na podstawie ich
+częstości w dokumentach.</p>
+<p>Naistotniejsze słowa:</p>
+<pre class="r"><code>sum_tf &lt;- rowSums(dtm_tf_mw_matrix)
+
+top_words_tf &lt;- apply(dtm_tf_mw_matrix, 1, function(x) {
+  sorted &lt;- names(sort(x, decreasing = TRUE))
+  head(sorted, 10)
+})
+
+kable(top_words_tf, format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Najistotniejsze słowa wg częstości wystąpień&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Najistotniejsze słowa wg częstości wystąpień
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Eighty_days
+</th>
+<th style="text-align:center;">
+All_moon
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+day
+</td>
+<td style="text-align:center;">
+moon
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+make
+</td>
+<td style="text-align:center;">
+projectile
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+leave
+</td>
+<td style="text-align:center;">
+earth
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+time
+</td>
+<td style="text-align:center;">
+great
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+hour
+</td>
+<td style="text-align:center;">
+time
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+train
+</td>
+<td style="text-align:center;">
+cry
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+master
+</td>
+<td style="text-align:center;">
+friend
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+pass
+</td>
+<td style="text-align:center;">
+make
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+steamer
+</td>
+<td style="text-align:center;">
+point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+reply
+</td>
+<td style="text-align:center;">
+mile
+</td>
+</tr>
+</tbody>
+</table>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="wagi-binarne" class="section level3">
+<h3>Wagi binarne</h3>
+<p>oznaczają, że dla każdego terminu wystąpienie jest reprezentowane
+jako 0 (brak wystąpienia) lub 1 (wystąpienie), ignorując częstość
+wystąpienia. Jest to prosty sposób uwzględnienia obecności terminu w
+dokumencie bez uwzględniania liczby wystąpień.</p>
+<pre class="r"><code># Tworzenie macierzy TDM z wagami binarnymi
+dtm_binary_mw &lt;- DocumentTermMatrix(books_corpus_mw, control = list(weighting = weightBin))
+dtm_binary_mw</code></pre>
+<pre><code>## &lt;&lt;DocumentTermMatrix (documents: 2, terms: 8901)&gt;&gt;
+## Non-/sparse entries: 11611/6191
+## Sparsity           : 35%
+## Maximal term length: 30
+## Weighting          : binary (bin)</code></pre>
+<pre class="r"><code>dtm_binary_mw_matrix &lt;- as.data.frame(as.matrix(dtm_binary_mw))</code></pre>
+<p>Na podstawie informacji o macierzy można powiedzieć, że istnieją dwa
+dokumenty, które mają znaczną liczbę unikalnych terminów (8901). Macierz
+jest względnie gęsta, a wagi terminów są binarne, co oznacza, że termy
+są traktowane jako obecne lub nieobecne w danym dokumencie.</p>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="wagi-logarytmiczne" class="section level3">
+<h3>Wagi logarytmiczne</h3>
+<p>można zastosować, aby uwzględnić częstość wystąpień terminów w sposób
+bardziej wyważony. Częstość wystąpień terminu w dokumencie jest
+logarytmem naturalnym (lub innym logarytmem) liczby wystąpień, co
+prowadzi do skoncentrowania się na istotnych różnicach w częstości
+wystąpień.</p>
+<pre class="r"><code>dtm_log_mw &lt;- log2(as.matrix(dtm_tf_mw) + 1) #Przekształcenie macierzy tf na macierz z wagami logarytmicznymi
+
+dtm_log_mw_matrix &lt;- as.data.frame(as.matrix(dtm_log_mw))</code></pre>
+<p>Najistotniejsze słowa:</p>
+<pre class="r"><code>sum_log &lt;- rowSums(dtm_log_mw_matrix)
+
+top_words_log &lt;- apply(dtm_log_mw_matrix, 1, function(x) {
+  sorted &lt;- names(sort(x, decreasing = TRUE))
+  head(sorted, 10)
+})
+
+kable(top_words_log, format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Najistotniejsze słowa wg wag logarytmicznych&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Najistotniejsze słowa wg wag logarytmicznych
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Eighty_days
+</th>
+<th style="text-align:center;">
+All_moon
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+day
+</td>
+<td style="text-align:center;">
+moon
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+make
+</td>
+<td style="text-align:center;">
+projectile
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+leave
+</td>
+<td style="text-align:center;">
+earth
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+time
+</td>
+<td style="text-align:center;">
+great
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+hour
+</td>
+<td style="text-align:center;">
+time
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+train
+</td>
+<td style="text-align:center;">
+cry
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+master
+</td>
+<td style="text-align:center;">
+friend
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+pass
+</td>
+<td style="text-align:center;">
+make
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+steamer
+</td>
+<td style="text-align:center;">
+point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+reply
+</td>
+<td style="text-align:center;">
+mile
+</td>
+</tr>
+</tbody>
+</table>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="wagi-tf-idf" class="section level3">
+<h3>Wagi TF-IDF</h3>
+<p>(Term Frequency-Inverse Document Frequency) to popularna metoda
+ważenia terminów, która uwzględnia zarówno częstość wystąpień terminu w
+dokumencie (TF) jak i jego znaczenie w kontekście całego korpusu
+dokumentów (IDF). Waga termu w dokumencie jest mnożona przez odwrotność
+częstości wystąpień termu w całym korpusie, co prowadzi do wyróżnienia
+istotnych terminów, które występują rzadziej w całym zbiorze
+dokumentów</p>
+<pre class="r"><code>dtm_tfidf_mw &lt;- DocumentTermMatrix(books_corpus_mw, control = list(weighting = weightTfIdf))
+dtm_tfidf_mw</code></pre>
+<pre><code>## &lt;&lt;DocumentTermMatrix (documents: 2, terms: 8901)&gt;&gt;
+## Non-/sparse entries: 6191/11611
+## Sparsity           : 65%
+## Maximal term length: 30
+## Weighting          : term frequency - inverse document frequency (normalized) (tf-idf)</code></pre>
+<pre class="r"><code>dtm_tfidf_mw_matrix &lt;- as.data.frame(as.matrix(dtm_tfidf_mw))</code></pre>
+<p>Macierz podobnie jak poprzednie zaiwera 2 dokumenty i 8901 termów.
+Jest stosunkowo rzadka, ponieważ tylko 35% z wszystkich możliwych wpisów
+ma wartość nieliczbową. Oznacza to, że większość miejsc w macierzy jest
+pusta lub zawiera zero. Terminy są ważone na podstawie częstości ich
+występowania w danym dokumencie oraz odwrotnej częstości ich
+występowania we wszystkich dokumentach. Ważenie tf-idf normalizuje
+wyniki, aby wyrównać wpływ popularnych terminów.</p>
+<p>Najistotniejsze słowa:</p>
+<pre class="r"><code>sum_tfidf &lt;- rowSums(dtm_tfidf_mw_matrix)
+
+top_words_tfidf &lt;- apply(dtm_tfidf_mw_matrix, 1, function(x) {
+  sorted &lt;- names(sort(x, decreasing = TRUE))
+  head(sorted, 10)
+})
+
+kable(top_words_tfidf, format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Najistotniejsze słowa wg wag TfI&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Najistotniejsze słowa wg wag TfI
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Eighty_days
+</th>
+<th style="text-align:center;">
+All_moon
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+detective
+</td>
+<td style="text-align:center;">
+projectile
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+hong
+</td>
+<td style="text-align:center;">
+lunar
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+kong
+</td>
+<td style="text-align:center;">
+crater
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+bombay
+</td>
+<td style="text-align:center;">
+satellite
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+servant
+</td>
+<td style="text-align:center;">
+map
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+yokohama
+</td>
+<td style="text-align:center;">
+mare
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+reform
+</td>
+<td style="text-align:center;">
+barbican
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+calcutta
+</td>
+<td style="text-align:center;">
+ardans
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+parsee
+</td>
+<td style="text-align:center;">
+boy
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+carnatic
+</td>
+<td style="text-align:center;">
+belfast
+</td>
+</tr>
+</tbody>
+</table>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="porównanie-10-najistotniejszych-słów-dla-różnych-wag"
+class="section level3">
+<h3>Porównanie 10 najistotniejszych słów dla różnych wag</h3>
+<pre class="r"><code>table_eighty_days &lt;- data.frame(Słowa = seq(1,10),
+                                Częstość = top_words_tf[, &quot;Eighty_days&quot;],
+                                TfIdf = top_words_tfidf[, &quot;Eighty_days&quot;])
+
+table_all_moon &lt;- data.frame(Słowa = seq(1,10),
+                             Częśotść = top_words_tf[, &quot;All_moon&quot;],
+                             TfIdf = top_words_tfidf[, &quot;All_moon&quot;])</code></pre>
+<p>Pod uwagę wzięte zostały częstość wys†epowania (tf), wagi
+logarytmiczna i tfidf. Waga binarna nie została wzięta pod uwagę gdyż
+nie da się wyodrębnić najpopularniejszych termów.</p>
+<ul>
+<li><strong><em>“W 80 dnii dookoła świata”</em></strong></li>
+</ul>
+<pre class="r"><code>kable(table_eighty_days, format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Najistotniejsze słowa wg częstości występowania oraz wag TfIdf&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Najistotniejsze słowa wg częstości występowania oraz wag TfIdf
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Słowa
+</th>
+<th style="text-align:center;">
+Częstość
+</th>
+<th style="text-align:center;">
+TfIdf
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+day
+</td>
+<td style="text-align:center;">
+detective
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+make
+</td>
+<td style="text-align:center;">
+hong
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+leave
+</td>
+<td style="text-align:center;">
+kong
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+time
+</td>
+<td style="text-align:center;">
+bombay
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+hour
+</td>
+<td style="text-align:center;">
+servant
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+train
+</td>
+<td style="text-align:center;">
+yokohama
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+master
+</td>
+<td style="text-align:center;">
+reform
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+pass
+</td>
+<td style="text-align:center;">
+calcutta
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+steamer
+</td>
+<td style="text-align:center;">
+parsee
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+reply
+</td>
+<td style="text-align:center;">
+carnatic
+</td>
+</tr>
+</tbody>
+</table>
+<p>Najczęściej występujące słowa w powieści “W 80 dni dookoła ziemi” na
+podstawie macierzy wystąpień (częstość) oraz wag TfIdf mają zarówno
+podobne, jak i różne cechy. W obu przypadkach często występują słowa
+takie jak “day”, “make” i “time”, co wskazuje na ich znaczenie w treści
+powieści. Jednak w macierzy wag TfIdf pojawiają się również specyficzne
+słowa, takie jak “detective”, “hong”, “kong”, “servant” i “reform”,
+które mogą odzwierciedlać szczególne tematy, lokalizacje lub aspekty
+powieści. Takie różnice w słowach podkreślają istotne elementy, które
+można wyróżnić, analizując powieść z różnych perspektyw.</p>
+<ul>
+<li><strong><em>“Wokół księżyca”</em></strong></li>
+</ul>
+<pre class="r"><code>kable(table_all_moon, format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Najistotniejsze słowa wg częstości występowania oraz wag TfIdf&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Najistotniejsze słowa wg częstości występowania oraz wag TfIdf
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Słowa
+</th>
+<th style="text-align:center;">
+Częśotść
+</th>
+<th style="text-align:center;">
+TfIdf
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+moon
+</td>
+<td style="text-align:center;">
+projectile
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+projectile
+</td>
+<td style="text-align:center;">
+lunar
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+earth
+</td>
+<td style="text-align:center;">
+crater
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+great
+</td>
+<td style="text-align:center;">
+satellite
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+time
+</td>
+<td style="text-align:center;">
+map
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+cry
+</td>
+<td style="text-align:center;">
+mare
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+friend
+</td>
+<td style="text-align:center;">
+barbican
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+make
+</td>
+<td style="text-align:center;">
+ardans
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+point
+</td>
+<td style="text-align:center;">
+boy
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+mile
+</td>
+<td style="text-align:center;">
+belfast
+</td>
+</tr>
+</tbody>
+</table>
+<p>Najczęściej występujące słowa w powieści “Wokół księżyca” na
+podstawie macierzy wystąpień (częstość) oraz wag TfIdf wykazują podobne
+i różniące się cechy. W obu przypadkach często występują słowa takie jak
+“moon” i “projectile”, co wskazuje na ich znaczenie w kontekście
+książki. Jednak w macierzy wag TfIdf pojawiają się również specyficzne
+słowa, takie jak “lunar”, “crater”, “satellite” i “mare”, które odnoszą
+się do tematyki księżycowej, podróży kosmicznej i eksploracji. Słowa
+takie jak “earth”, “great”, “time” i “friend” są również obecne. Można
+zauważyć, że analiza słów na podstawie macierzy wag TfIdf uwydatnia
+specyficzne tematy i elementy związane z książką.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

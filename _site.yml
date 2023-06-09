@@ -1,0 +1,21 @@
+name: "Analiza książek Juliusza Verne'a"
+navbar:
+  title: "Analiza książek Juliusza Verne'a"
+  left:
+    - text: "O analizie"
+      href: index.html
+    - text: "Przygotowanie"
+      href: preprocessing.html
+    - text: "Chmury"
+      href: chmury.html
+    - text: "Macierze wystąpień"
+      href: macierze_wystapien.html
+    - text: "Analiza sentymentu"
+      href: sentyment.html
+    - text: "Analiza wątku"
+      href: watek.html
+    - text: "Grupowanie"
+      href: grupowanie.html
+    - text: "Klasyfikacja"
+      href: klasyfikacja.html
+output_dir: "docs"

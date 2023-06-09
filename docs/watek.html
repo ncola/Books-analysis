@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Analiza wątku</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">O analizie</a>
+</li>
+<li>
+  <a href="preprocessing.html">Przygotowanie</a>
+</li>
+<li>
+  <a href="chmury.html">Chmury</a>
+</li>
+<li>
+  <a href="macierze_wystapien.html">Macierze wystąpień</a>
+</li>
+<li>
+  <a href="sentyment.html">Analiza sentymentu</a>
+</li>
+<li>
+  <a href="watek.html">Analiza wątku</a>
+</li>
+<li>
+  <a href="grupowanie.html">Grupowanie</a>
+</li>
+<li>
+  <a href="klasyfikacja.html">Klasyfikacja</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Analiza wątku</h1>
+
+</div>
+
+
+<div id="przygotowanie-danych" class="section level2">
+<h2>Przygotowanie danych</h2>
+<p>Korpus:</p>
+<pre class="r"><code>books_list &lt;- list(books_docs$text)[[1]]
+books_corpus &lt;- VCorpus(VectorSource(books_list))</code></pre>
+<p>Macierz wystąpień:</p>
+<pre class="r"><code>dtm_tf &lt;- DocumentTermMatrix(books_corpus, 
+                                control = list(
+                                                bounds = list(global = c(2, Inf)), # oznacza, że terminy muszą mieć co najmniej 2 znaki
+                                                weighting = weightTf))
+
+dtm_tf</code></pre>
+<pre><code>## &lt;&lt;DocumentTermMatrix (documents: 62, terms: 4597)&gt;&gt;
+## Non-/sparse entries: 33034/251980
+## Sparsity           : 88%
+## Maximal term length: 17
+## Weighting          : term frequency (tf)</code></pre>
+<p>Macierz wystąpień została zredukowana do słówm które mają co najmniej
+dwa znaki z kilku powodów:</p>
+<ul>
+<li><p>redukcja szumu - macierz zawierała wiele słów, które występowały
+rzadko i nie wnosiły istotnej informacji do analizy,</p></li>
+<li><p>skrócenie czasu obliczeń</p></li>
+</ul>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="lda---budowa" class="section level2">
+<h2>LDA - budowa</h2>
+<pre class="r"><code>lda &lt;- LDA(dtm_tf, 2, control = list(seed = 1652))
+str(lda)</code></pre>
+<pre><code>## Formal class &#39;LDA_VEM&#39; [package &quot;topicmodels&quot;] with 14 slots
+##   ..@ alpha          : num 0.033
+##   ..@ call           : language LDA(x = dtm_tf, k = 2, control = list(seed = 1652))
+##   ..@ Dim            : int [1:2] 62 4597
+##   ..@ control        :Formal class &#39;LDA_VEMcontrol&#39; [package &quot;topicmodels&quot;] with 13 slots
+##   .. .. ..@ estimate.alpha: logi TRUE
+##   .. .. ..@ alpha         : num 25
+##   .. .. ..@ seed          : int 1652
+##   .. .. ..@ verbose       : int 0
+##   .. .. ..@ prefix        : chr &quot;/var/folders/_8/fj4h73xd2k9bkvnpc48zttvh0000gn/T//RtmpWChnFX/file88a9124ffdc9&quot;
+##   .. .. ..@ save          : int 0
+##   .. .. ..@ nstart        : int 1
+##   .. .. ..@ best          : logi TRUE
+##   .. .. ..@ keep          : int 0
+##   .. .. ..@ estimate.beta : logi TRUE
+##   .. .. ..@ var           :Formal class &#39;OPTcontrol&#39; [package &quot;topicmodels&quot;] with 2 slots
+##   .. .. .. .. ..@ iter.max: int 500
+##   .. .. .. .. ..@ tol     : num 1e-06
+##   .. .. ..@ em            :Formal class &#39;OPTcontrol&#39; [package &quot;topicmodels&quot;] with 2 slots
+##   .. .. .. .. ..@ iter.max: int 1000
+##   .. .. .. .. ..@ tol     : num 1e-04
+##   .. .. ..@ initialize    : chr &quot;random&quot;
+##   ..@ k              : int 2
+##   ..@ terms          : chr [1:4597] &quot;abandon&quot; &quot;abash&quot; &quot;abide&quot; &quot;ably&quot; ...
+##   ..@ documents      : chr [1:62] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   ..@ beta           : num [1:2, 1:4597] -7.65 -9.6 -9.42 -17.57 -10.07 ...
+##   ..@ gamma          : num [1:62, 1:2] 1 0.887 1 1 1 ...
+##   ..@ wordassignments:List of 5
+##   .. ..$ i   : int [1:33034] 1 1 1 1 1 1 1 1 1 1 ...
+##   .. ..$ j   : int [1:33034] 10 24 33 43 67 72 99 143 180 190 ...
+##   .. ..$ v   : num [1:33034] 1 1 1 1 1 1 1 1 1 1 ...
+##   .. ..$ nrow: int 62
+##   .. ..$ ncol: int 4597
+##   .. ..- attr(*, &quot;class&quot;)= chr &quot;simple_triplet_matrix&quot;
+##   ..@ loglikelihood  : num [1:62] -3651 -3084 -5543 -2518 -2765 ...
+##   ..@ iter           : int 29
+##   ..@ logLiks        : num(0) 
+##   ..@ n              : int 57857</code></pre>
+<p>Model LDA:</p>
+<ul>
+<li><p>został skonfigurowany dla 2 tematów,</p></li>
+<li><p>Wartość parametru alfa, kontrolującego proporcje tematów w
+poszczególnych dokumentach, wynosi 0.033,</p></li>
+<li><p>zbiór dokumentów składa się z jak dotychczas 62 dokumentów
+(rozdziałów z dwóch książek)</p></li>
+</ul>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<p><u><strong>Dane potrzebne do klasyfikacji w następnym
+rozdziale</strong></u></p>
+<ul>
+<li><strong>Wyodrębnione termy tematów</strong>, które zostaną użyte
+jako klasy:</li>
+</ul>
+<pre class="r"><code>tematy_term &lt;- terms(lda)
+tematy &lt;- topics(lda)
+
+tematy_term</code></pre>
+<pre><code>## Topic 1 Topic 2 
+##   &quot;day&quot;  &quot;moon&quot;</code></pre>
+<ul>
+<li>zmienna, która zawiera przypisane wątki w odpowiendnie
+kolejnośći</li>
+</ul>
+<pre class="r"><code>tematy &lt;- topics(lda)</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="termy-charakterystyczne-dla-obu-wątków" class="section level2">
+<h2>Termy charakterystyczne dla obu wątków</h2>
+<pre class="r"><code>tematy_termy8 &lt;- terms(lda, 8)
+
+kable(tematy_termy8, format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Termy w poszczególnych tematach&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Termy w poszczególnych tematach
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Topic 1
+</th>
+<th style="text-align:center;">
+Topic 2
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+day
+</td>
+<td style="text-align:center;">
+moon
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+make
+</td>
+<td style="text-align:center;">
+projectile
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+hour
+</td>
+<td style="text-align:center;">
+earth
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+time
+</td>
+<td style="text-align:center;">
+time
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+leave
+</td>
+<td style="text-align:center;">
+great
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+train
+</td>
+<td style="text-align:center;">
+cry
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+master
+</td>
+<td style="text-align:center;">
+friend
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+man
+</td>
+<td style="text-align:center;">
+point
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Wątek pierwszy</strong></li>
+</ul>
+<p>W temacie 1 występują słowa takie jak “day”, “make”, “hour”, “time”,
+“leave”, “train”, “master” i “man”. “Train” wskazuje na środek
+transportu, a “leave” sugeruje opuszczenie miejsca i rozpoczęcie
+podróży. “Master” może odnosić się do głównego bohatera, który zarządza
+swoją podróżą. Temat ten skupia się na aspektach organizacji, czasu i
+podróży. Połączenie słów określających czas (‘day’, ‘hour’, ‘time) wraz
+ze słowami ’make’ i ‘leave’ może sugerować napięcie fabuły, w której
+bohaterzy się spieszą.</p>
+<ul>
+<li><strong>Wątek drugi</strong></li>
+</ul>
+<p>W temacie 2 wsytępują słowa takie jak “moon”, “projectile”, “earth”,
+“time”, “great”, “cry”, “friend” i “point”. Słowa te wskazują, że temat
+ten może dotyczyć podróży kosmicznych, eksploracji kosmosu, badań
+związanych z Księżycem, ziemią, istonością czasu, przyjaźni itp. “Moon”
+wskazuje na Księżyc jako ważny element w tej tematyce, a “earth”
+sugeruje porównanie między Ziemią a Księżycem. “Great” może odnosić się
+do niesamowitych i ekscytujących doświadczeń związanych z badaniami
+kosmicznymi. Temat ten skupia się na aspektach kosmosu, nauki i
+eksploracji.</p>
+<ul>
+<li><strong>Porównanie</strong></li>
+</ul>
+<p>Należy zauważyć, że słowo ‘time’ jest charakterystyczne zarówno dla
+pierwszego jak i drugiego wątku, jednak w pierwszym czas ma większe
+znaczenie, ze względu na dodatkowe słowa, takie jak ‘hour’, ‘day’.</p>
+<p>Pomimo faktu, że reszta słów się różni, można wyciągnąc wniosek, że
+obie książki mogą eksplorować tematy podróży, odkrywania nieznanych
+miejsc i pokonywania wyzwań. Temat 1 może skupiać się na podróży dookół
+Ziemi (train), podczas gdy temat 2 może dotyczyć podróży kosmicznych
+(projectile), zwłaszcza w kontekście Księżyca.</p>
+<pre class="r"><code>tematy_termy8_string &lt;- apply(tematy_termy8, 2, paste, collapse = &quot; / &quot;)
+
+tematy8_df &lt;- tibble(Dokument = 1:62, &quot;Część tekstu&quot; = paste0(substr(books_list, 1, 100), &quot;[...]&quot;), Wątek = tematy, Książka = c(rep(&quot;W 80 dni dookoła świata&quot;, 37), rep(&quot;Wokół księżyca&quot;, 25)), Termy = tematy_termy8_string[tematy])
+
+kable(tematy8_df, format = &quot;html&quot;, align = &quot;c&quot;, table.attr = &quot;class=&#39;table table-striped&#39;&quot;, row.names = FALSE, caption = &quot;Przypisane wątki do konkretnych dokumentów&quot;) %&gt;%
+  kable_styling()</code></pre>
+<table class="table table-striped table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Przypisane wątki do konkretnych dokumentów
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Dokument
+</th>
+<th style="text-align:center;">
+Część tekstu
+</th>
+<th style="text-align:center;">
+Wątek
+</th>
+<th style="text-align:center;">
+Książka
+</th>
+<th style="text-align:center;">
+Termy
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+accept master man live saville row burlington garden house sheridan die
+noticeable member reform clu[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+ii convince find ideal faith mutter flurried ive people madame tussauds
+lively master madame tussaud[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+iii conversation take place cost dear shut door house halfpast eleven
+put foot leave hundred seventy[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+iv astound servant win twenty guinea whist leave friend twentyfive
+minute past leave reform club con[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+species fund unknown moneyed man appear change rightly suspect departure
+london create lively sensat[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+vi detective betray natural impatience circumstance telegraphic dispatch
+steamer mongolia belong pen[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+vii demonstrate uselessness passport aid detective detective pass quay
+rapidly make consul office ad[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+viii talk prudent rejoin lounge quay feel oblige friend detective come
+passport visa ah monsieur res[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+ix red sea indian ocean prove propitious design distance suez aden
+precisely thirteen hundred ten mi[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+glad loss shoe great reverse triangle land base north apex south call
+india embrace fourteen hundred[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+11
+</td>
+<td style="text-align:center;">
+xi secure curious mean conveyance fabulous price train start punctually
+passenger numb officer gover[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+12
+</td>
+<td style="text-align:center;">
+xii companion venture indian forest ensue order shorten journey guide
+pass leave line railway proces[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+13
+</td>
+<td style="text-align:center;">
+xiii receive proof fortune favor brave project bold full difficulty
+impracticable risk life liberty […]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+14
+</td>
+<td style="text-align:center;">
+xiv descend length beautiful valley ganges think rash exploit accomplish
+hour laugh gaily success si[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+15
+</td>
+<td style="text-align:center;">
+xv bag banknote disgorge thousand pound train enter station jump assist
+fair companion descend inten[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+16
+</td>
+<td style="text-align:center;">
+xvi understand rangoonone peninsular oriental companys boat ply chinese
+japanese seaswas screw steam[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+17
+</td>
+<td style="text-align:center;">
+xvii show happen voyage singapore hong kong detective meet deck
+interview reserve attempt induce com[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+18
+</td>
+<td style="text-align:center;">
+xviii business weather bad day voyage wind obstinately remain northwest
+blow gale retard steamer ran[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+19
+</td>
+<td style="text-align:center;">
+xix take great interest master hong kong island possession english
+treaty nankin war colonise genius[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+20
+</td>
+<td style="text-align:center;">
+xx face face event pass opiumhouse unconscious danger lose steamer
+quietly escort street english qua[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+21
+</td>
+<td style="text-align:center;">
+xxi master tankadere run great risk lose reward hundred pound voyage
+hundred mile perilous venture c[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+22
+</td>
+<td style="text-align:center;">
+xxii find antipode convenient money pocket carnatic set sail hong kong
+halfpast november direct full[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+23
+</td>
+<td style="text-align:center;">
+xxiii nose outrageously long morning poor jaded famish eat hazard soon
+sell watch starve strong melo[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+24
+</td>
+<td style="text-align:center;">
+xxiv party cross pacific ocean happen pilotboat sight shanghai easily
+guess signal make tankadere yo[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+25
+</td>
+<td style="text-align:center;">
+xxv slight glimpse san francisco morning set foot american continent
+float quay disembark quay rise […]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+26
+</td>
+<td style="text-align:center;">
+xxvi party travel pacific railroad ocean oceanso american word compose
+general designation great tru[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+27
+</td>
+<td style="text-align:center;">
+xxvii undergo speed twenty mile hour mormon history night december train
+run southeasterly fifty mil[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+28
+</td>
+<td style="text-align:center;">
+xxviii succeed make listen reason train leave great salt lake ogden pass
+northward hour weber river […]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+29
+</td>
+<td style="text-align:center;">
+xxix incident narrate meet american railroad train pursue even
+interruption pass fort saunders cross[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+30
+</td>
+<td style="text-align:center;">
+xxx simply duty passenger include disappear kill struggle prisoner sioux
+impossible wound mortally c[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+31
+</td>
+<td style="text-align:center;">
+xxxi detective considerably further interest find twenty hour time
+involuntary delay desperate ruin […]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+32
+</td>
+<td style="text-align:center;">
+xxxii engage direct struggle bad fortune china leave carry hope steamer
+serve project pereire french[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+33
+</td>
+<td style="text-align:center;">
+xxxiii show equal occasion hour henrietta pass lighthouse mark entrance
+hudson turn point sandy hook[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+34
+</td>
+<td style="text-align:center;">
+xxxiv reach london prison shut custom house transfer london day master
+arrest fall hold back policem[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+35
+</td>
+<td style="text-align:center;">
+xxxv repeat order dweller saville row surprise day tell return home door
+window close appearance cha[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+36
+</td>
+<td style="text-align:center;">
+xxxvi premium change time relate change place english public opinion
+transpire real bankrobber james[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+37
+</td>
+<td style="text-align:center;">
+xxxvii show gain tour world happiness person reader remember minute past
+eveningabout twenty hour ar[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+W 80 dni dookoła świata
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+38
+</td>
+<td style="text-align:center;">
+preliminary chapter resume part work serve introduction year ago world
+suddenly astound hear experim[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+39
+</td>
+<td style="text-align:center;">
+pm moment great clock belong work stony hill strike ten begin farewell
+numerous friend surround dog […]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+40
+</td>
+<td style="text-align:center;">
+ii half hour place projectile effect produce frightful concussion
+barbican ingenuity attend fortunat[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+41
+</td>
+<td style="text-align:center;">
+iii make home feel comfortable curious explanation soundness immediately
+recognize friend fast wrap […]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+42
+</td>
+<td style="text-align:center;">
+iv chap cornell girl incident worth record occur night night call
+reality night day projectile stric[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+43
+</td>
+<td style="text-align:center;">
+cold space imagine observatory man commit blunder make calculation flaw
+find carefully examine figur[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+44
+</td>
+<td style="text-align:center;">
+vi instructive conversation 4 december projectile chronometer mark
+oclock morning traveller wake ple[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+45
+</td>
+<td style="text-align:center;">
+vii high time phenomenon strange logical startle admit easy explanation
+present view afford fresh su[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+46
+</td>
+<td style="text-align:center;">
+viii neutral point place proceed strange intoxication consequence prove
+disastrous forgetfulness ard[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+47
+</td>
+<td style="text-align:center;">
+ix track barbican mind completely rest subject original force discharge
+great send projectile neutra[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+48
+</td>
+<td style="text-align:center;">
+observer moon barbican happy conjecture hit nail head divergency amount
+million mile line long proje[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+49
+</td>
+<td style="text-align:center;">
+xi fact fancy moon teacher ironically day class pupil sir pert reply
+safely ive hear speak consider […]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+50
+</td>
+<td style="text-align:center;">
+xii bird eye view lunar mountain incline word ardans rhapsody hear long
+speak word mute statue eager[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+51
+</td>
+<td style="text-align:center;">
+xiii lunar landscape half past morning december traveller cross northern
+parallel distance lunar sur[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+52
+</td>
+<td style="text-align:center;">
+xiv night fifteen day projectile mile moon north pole startle phenomenon
+record chapt place second s[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+53
+</td>
+<td style="text-align:center;">
+xv glimpse invisible spite dreadful condition friend find dreadful
+future await acknowledge bravely […]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+54
+</td>
+<td style="text-align:center;">
+xvi southern hemisphere exceedingly narrow exceedingly fortunate escape
+projectile danger unexpected[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+55
+</td>
+<td style="text-align:center;">
+xvii tycho oclock even sun completely clear contact lunar disc steep
+projectile golden ray traveller[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+56
+</td>
+<td style="text-align:center;">
+xviii puzzle question projectile pass tychos immense concavity friend
+good opportunity observe brill[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+57
+</td>
+<td style="text-align:center;">
+xix fight impossible win matter accustom sad bid farewell forever
+glimpse moon wondrous world impart[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+58
+</td>
+<td style="text-align:center;">
+xx pacific coast lieutenant sound pretty lively reply lieutenant
+tremendous depth land mile californ[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+59
+</td>
+<td style="text-align:center;">
+xxi news minute consciousness restore order board susquehanna excitement
+great escape hairsbreadth t[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+60
+</td>
+<td style="text-align:center;">
+xxii wing wind leave mconnell cambridge man charge great telescope
+belfast hour receipt excite dispa[…]
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+day / make / hour / time / leave / train / master / man
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+61
+</td>
+<td style="text-align:center;">
+xxiii club man fish bloomsbury perfectly ready commencement great work
+club man accomplish require g[…]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+62
+</td>
+<td style="text-align:center;">
+xxiv farewell baltimore gun club intense interest extraordinary
+veracious history reach culmination […]
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+Wokół księżyca
+</td>
+<td style="text-align:center;">
+moon / projectile / earth / time / great / cry / friend / point
+</td>
+</tr>
+</tbody>
+</table>
+<p>Można zauważyć, że w procesie analizy wątku do powieści “W 80 dni
+dookoła świata” został przypisany pierwszy wątek, natomiast do “Wokół
+księżyca” drugi, z wyjątkiem dokumentu 60, któremu został przypisany
+piewrszy wątek. Możliwe, że na przykład w tym rodziale (tj. 24,
+przedostatni) czas ma większe znaczenie niż zwykle, co jest bardziej
+charakterystyczne dla pierwszego wątku.</p>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="wizualizacja-wartości-beta-i-gamma" class="section level2">
+<h2>Wizualizacja wartości beta i gamma</h2>
+<p><u><strong>Wartość beta (eksponenta)</strong></u></p>
+<ul>
+<li>wartość beta w macierzy lda@beta reprezentuje prawdopodobieństwo
+przynależności danego słowa (reprezentowanego przez wiersz) do każdego z
+tematów (reprezentowanych przez kolumny). Im wyższa wartość beta dla
+danego słowa i tematu, tym większe prawdopodobieństwo, że dane słowo
+jest silnie związane z danym tematem.</li>
+</ul>
+<p><u><strong>Wartość gamma</strong></u></p>
+<ul>
+<li>wartość gamma odnosi się do rozkładu tematów w danym dokumencie,
+reprezentuje proporcje przypisane do poszczególnych tematów dla danego
+dokumentu. Dla każdego dokumentu w korpusie, wartość gamma dla każdego
+tematu wskazuje, jak bardzo ten temat jest obecny w danym
+dokumencie.</li>
+</ul>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<div id="beta" class="section level3">
+<h3>Beta</h3>
+<pre class="r"><code>beta_df &lt;- data_frame(term = lda@terms, wątek1 = exp(lda@beta[1, ]), wątek2 = exp(lda@beta[2, ]))</code></pre>
+<pre class="r"><code>beta_tidy &lt;- beta_df %&gt;% 
+  pivot_longer(-term, names_to = &quot;watek&quot;, values_to = &quot;beta&quot;)
+
+beta_top &lt;- beta_tidy %&gt;% 
+  group_by(watek) %&gt;% 
+  top_n(8, beta) %&gt;% 
+  ungroup() %&gt;% 
+  arrange(watek, -beta)</code></pre>
+<pre class="r"><code>beta_top %&gt;% 
+ggplot(aes(beta, tidytext::reorder_within(term, beta, watek), fill = watek)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_manual(values = c(&quot;steelblue&quot;, &quot;lightgreen&quot;)) +
+  facet_wrap(vars(watek), scales = &quot;free_y&quot;) +
+  labs(x = &quot;Termy&quot;) +
+  tidytext::scale_y_reordered() +
+  labs(x = expression(beta), y = NULL) +
+  theme_bw()</code></pre>
+<p><img src="watek_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Wspomniane i zinterpretowane już wcześniej słowa charaktertystyczne
+dla obu wątków na wykresie powyżej zostały ponownie przedstawione, wraz
+z ich wartością beta. Można zauważyć, że w przypadku drugiego wątku
+wymienione słowa są z nim bardziej związane aniżeli słowa wymienione dla
+wątku pierwszego. Słowo najbardziej charakterystyczne dla wątku
+pierwszego - ‘day’ przyjmuje wartość około 0.0076, podczas gdy wyższe
+wartości przyjmują słowa ‘moon’, ‘projectile’ i ‘earth’ dla wątku
+drugiego.</p>
+<p>Ponadto słowo ‘moon’ zdecydowanie wyróżnie się na tle innych,
+osiągając wartość beta na poziomie około 0.014, osiągając przy tym
+największe prawdopodobieństwo przynależności do wątku drugiego.</p>
+<p>Ciekawą słowem do intepretacji jest słowo ‘time’, istotne dla obu
+wątków. Okazuje się, charakteryzuje się niższym prawdopdobieństwem
+przynależności do wątku pierwszego (beta = 0.006) aniżeli drugiego (beta
+= 0.007).</p>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="gamma" class="section level3">
+<h3>Gamma</h3>
+<pre class="r"><code>gamma_df &lt;- data_frame(dokument = lda@documents, wątek1 = lda@gamma[, 1], wątek2 = lda@gamma[, 2])</code></pre>
+<pre class="r"><code>gamma_tidy &lt;- gamma_df %&gt;% 
+  pivot_longer(-dokument, names_to = &quot;watek&quot;, values_to = &quot;gamma&quot;)
+
+gamma_tidy %&gt;% 
+  ggplot(aes(dokument, gamma, fill = watek)) + 
+  geom_col(position = &quot;stack&quot;) +
+  scale_fill_manual(values = c(&quot;steelblue&quot;, &quot;lightgreen&quot;)) +
+  geom_hline(yintercept = 0.5, linetype = 2) +
+  coord_flip() +
+  labs(fill = &quot;Wątki&quot;) +
+  labs(x = &quot;Dokument&quot;, y = &quot;Gamma&quot;, title = &quot;Rozkład tematów w rozdziałach&quot;) +
+  theme_bw()</code></pre>
+<p><img src="watek_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Na wykresie powyżej przedstawiony został rozkład wątków w
+poszczególnych rozdziałach. Na pierwszy rzut oka widać, że dominuje
+wątek 1, większość rozdziałów przynależy do niego w 100%. W przypadku
+drugiego wątku wiele dokumentów zostało do niego przypisanych nie na
+100%. Ponadto, zauważono wcześniej przynależność dokumentu 60 (który
+jest przedostatnim rozdziałem drugiej książki) do wątku pierwszego,
+dokładniejsza analiza ukazuje, że niewiele brakowało, aby został
+przypisany do wątku drugiego.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

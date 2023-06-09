@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Analiza wątku</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">O analizie</a>
+</li>
+<li>
+  <a href="preprocessing.html">Przygotowanie</a>
+</li>
+<li>
+  <a href="chmury.html">Chmury</a>
+</li>
+<li>
+  <a href="macierze_wystapien.html">Macierze wystąpień</a>
+</li>
+<li>
+  <a href="sentyment.html">Analiza sentymentu</a>
+</li>
+<li>
+  <a href="watek.html">Analiza wątku</a>
+</li>
+<li>
+  <a href="grupowanie.html">Grupowanie</a>
+</li>
+<li>
+  <a href="klasyfikacja.html">Klasyfikacja</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Analiza wątku</h1>
+
+</div>
+
+
+<div id="przygotowanie-tekstu" class="section level2">
+<h2>Przygotowanie tekstu</h2>
+<p>Dopisujemy klasy wyłonione z analizy wątku</p>
+<pre class="r"><code>eighty_days_text$type &lt;- tematy_term[tematy][1:37]
+all_moon_text$type &lt;- tematy_term[tematy][38:62]</code></pre>
+<p>Łączymy dokumenty</p>
+<pre class="r"><code>books_df &lt;- rbind(eighty_days_text, all_moon_text)</code></pre>
+<pre class="r"><code>kable(table(books_df$type), format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Ilość klas&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Ilość klas
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Var1
+</th>
+<th style="text-align:center;">
+Freq
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+day
+</td>
+<td style="text-align:center;">
+38
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+moon
+</td>
+<td style="text-align:center;">
+24
+</td>
+</tr>
+</tbody>
+</table>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<div id="budowa-modelu" class="section level2">
+<h2>Budowa modelu</h2>
+<p>Do budowy algorytmu wybrano Naiwny Klasyfikator Bayesa.</p>
+<p>Zamiana typu zmiennych i stworzenie korpusu</p>
+<pre class="r"><code>books_df$type &lt;- factor(books_df$type)
+
+books_corpus &lt;- Corpus(VectorSource(books_df$text))</code></pre>
+<div id="wagi-binarne" class="section level3">
+<h3>1. Wagi binarne</h3>
+<p>Macierz DTM</p>
+<pre class="r"><code>dtm_binary &lt;- DocumentTermMatrix(books_corpus, control = list(weighting = weightBin))
+
+dtm_bin &lt;- data.frame(as.matrix(dtm_binary))
+dtm_bin$type &lt;- factor(tematy_term[tematy][1:62])</code></pre>
+<p>Utworzenie treningowego i testowego zbioru NOWE</p>
+<pre class="r"><code># Losowe wybranie zbioru treningowego
+set.seed(123)
+train_indices &lt;- createDataPartition(dtm_bin$type, p = 0.75, list = FALSE)
+
+# Zbiór treningowy
+dtm_train_bin &lt;- dtm_bin[train_indices, ]
+
+# Zbiór testowy
+dtm_test_bin &lt;- dtm_bin[-train_indices, ]</code></pre>
+<p>Sprawdzenie rozkładu klas w zbiorach</p>
+<pre class="r"><code>kable(table(dtm_test_bin$type), format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Ilosciowo klasy w zbiorze testowym&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Ilosciowo klasy w zbiorze testowym
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Var1
+</th>
+<th style="text-align:center;">
+Freq
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+day
+</td>
+<td style="text-align:center;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+moon
+</td>
+<td style="text-align:center;">
+6
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(prop.table(table(dtm_train_bin$type)), format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Proporcje klas w zbiorze treningowym&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Proporcje klas w zbiorze treningowym
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Var1
+</th>
+<th style="text-align:center;">
+Freq
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+day
+</td>
+<td style="text-align:center;">
+0.6170213
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+moon
+</td>
+<td style="text-align:center;">
+0.3829787
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(prop.table(table(dtm_test_bin$type)), format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Proporcje klas w zbiorze testowym&quot;) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+<caption>
+Proporcje klas w zbiorze testowym
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Var1
+</th>
+<th style="text-align:center;">
+Freq
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+day
+</td>
+<td style="text-align:center;">
+0.6
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+moon
+</td>
+<td style="text-align:center;">
+0.4
+</td>
+</tr>
+</tbody>
+</table>
+<p>Rozkład jest w porządku, można kontynuować.</p>
+<p>Niezbędne przeksztalcenia</p>
+<pre class="r"><code>levels(dtm_test_bin$type) &lt;- levels(dtm_train_bin$type)</code></pre>
+<p>Utworzenie i testowanie modelu</p>
+<pre class="r"><code>classifier_bin &lt;- naiveBayes(type ~ ., data = dtm_train_bin)
+predictions_bin &lt;- predict(classifier_bin, newdata = dtm_test_bin)</code></pre>
+</div>
+<div id="wagi-logarytmiczne" class="section level3">
+<h3>2. Wagi logarytmiczne</h3>
+<p>Macierz DTM</p>
+<pre class="r"><code>dtm_tf &lt;- DocumentTermMatrix(books_corpus, control = list(weighting = weightTf))
+
+dtm_log &lt;- log2(as.matrix(dtm_tf) + 1) #Przekształcenie macierzy tf na macierz z wagami logarytmicznymi
+
+dtm_log &lt;- data.frame(dtm_log)
+dtm_log$type &lt;- factor(tematy_term[tematy][1:62])</code></pre>
+<p>Utworzenie treningowego i testowego zbioru</p>
+<pre class="r"><code># Zbiór treningowy
+dtm_train_log &lt;- dtm_log[train_indices, ]
+# Zbiór testowy
+dtm_test_log &lt;- dtm_log[-train_indices, ]</code></pre>
+<p>Niezbędne przeksztalcenia</p>
+<pre class="r"><code>levels(dtm_test_log$type) &lt;- levels(dtm_train_log$type)</code></pre>
+<p>Utworzenie i testowanie modelu</p>
+<pre class="r"><code>classifier_log &lt;- naiveBayes(type ~ ., data = dtm_train_log)
+predictions_log &lt;- predict(classifier_log, newdata = dtm_test_log)</code></pre>
+</div>
+<div id="wagi-tfidf" class="section level3">
+<h3>3. Wagi TfIdf</h3>
+<p>Macierz DTM</p>
+<pre class="r"><code>dtm_tfidf &lt;- DocumentTermMatrix(books_corpus, control = list(weighting = weightTfIdf))
+
+dtm_tfidf &lt;- data.frame(as.matrix(dtm_tfidf))
+dtm_tfidf$type &lt;- tematy_term[tematy][1:62]</code></pre>
+<p>Utworzenie treningowego i testowego zbioru</p>
+<pre class="r"><code># Zbiór treningowy
+dtm_train_tfidf &lt;- dtm_tfidf[train_indices, ]
+# Zbiór testowy
+dtm_test_tfidf &lt;- dtm_tfidf[-train_indices, ]</code></pre>
+<p>Niezbędne przeksztalcenia</p>
+<pre class="r"><code>dtm_tfidf$type &lt;- factor(dtm_tfidf$type)
+
+dtm_test_tfidf$type &lt;- factor(dtm_test_tfidf$type, levels = levels(dtm_tfidf$type))</code></pre>
+<p>Utworzenie i testowanie modelu</p>
+<pre class="r"><code>classifier_tdidf &lt;- naiveBayes(type ~ ., data = dtm_tfidf)
+predictions_tfidf &lt;- predict(classifier_tdidf, newdata = dtm_test_tfidf)</code></pre>
+<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+</div>
+<div id="ocena-modeli" class="section level2">
+<h2>Ocena modeli</h2>
+<ul>
+<li><strong>liczebność ważona wagami binarnymi</strong></li>
+</ul>
+<pre class="r"><code>confusion_matrix_bin &lt;- confusionMatrix(predictions_bin, dtm_test_bin$type)
+confusion_matrix_bin</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction day moon
+##       day    9    6
+##       moon   0    0
+##                                           
+##                Accuracy : 0.6             
+##                  95% CI : (0.3229, 0.8366)
+##     No Information Rate : 0.6             
+##     P-Value [Acc &gt; NIR] : 0.60981         
+##                                           
+##                   Kappa : 0               
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.04123         
+##                                           
+##             Sensitivity : 1.0             
+##             Specificity : 0.0             
+##          Pos Pred Value : 0.6             
+##          Neg Pred Value : NaN             
+##              Prevalence : 0.6             
+##          Detection Rate : 0.6             
+##    Detection Prevalence : 1.0             
+##       Balanced Accuracy : 0.5             
+##                                           
+##        &#39;Positive&#39; Class : day             
+## </code></pre>
+<p><em>No Information Rate</em> - 0.6 oznacza, że gdybyśmy klasyfikowali
+przypadki losowo, oczekiwalibyśmy dokładności 60%.</p>
+<p><em>Wartość P-value</em> - 0.61, co sugeruje, że dokładność modelu
+nie jest statystycznie istotnie lepsza od przewidzenia klasy
+dominującej.</p>
+<ul>
+<li><p>W przypadku referencji (Reference) jako “day”, algorytm poprawnie
+sklasyfikował 9 przypadków jako “day” (True Positive). Nie występują
+błędne klasyfikacje jako “day” (False Negative).</p></li>
+<li><p>W przypadku referencji jako “moon”, algorytm błędnie
+sklasyfikował 6 przypadków jako “day” (False Positive) i nie
+sklasyfikował poprawnie żadnego przyapdku jako “moon” (True
+Negative).</p></li>
+</ul>
+<p><em>Accuracy</em>: 0.6 co jest równoważne z przewidzeniem klasy
+dominującej (klasy o największej liczbie wystąpień) dla wszystkich
+przypadków.</p>
+<p>Współczynnik <em>Kappa</em> wynosi 0.0, co oznacza, że model nie ma
+lepszej wydajności niż przewidzenie klasy dominującej.</p>
+<p><em>Sensitivity</em>: 1 oznacza, że algorytm poprawnie sklasyfikował
+100% przypadków “day” spośród wszystkich przypadków rzeczywiście
+należących do klasy “day”.</p>
+<p><em>Specificity</em>: 0 oznacza, że algorytm poprawnie sklasyfikował
+0% przypadków “moon” spośród wszystkich przypadków rzeczywiście
+należących do klasy “moon”.</p>
+<p><em>Pos Pred Value</em>: 0.6 co oznacza, że z przewidzianych przez
+model przypadków klasy “day” tylko 60% faktycznie należy do tej
+klasy.</p>
+<p><em>Neg Pred Value</em>: NA oznacza, że nie można obliczyć tej
+wartości ze względu na brak przypadków sklasyfikowanych jako “day”.</p>
+<p><em>Prevalence</em>: 0.6 oznacza, że klasa “day” stanowi 60%
+wszystkich przypadków.</p>
+<p>Detection Rate: 0.6 oznacza, że algorytm wykrył 60% wszystkich
+przypadków.</p>
+<p><em>Detection Prevalence</em>: 1 oznacza, że 100% przypadków
+sklasyfikowanych przez algorytm należy do klasy “day”.</p>
+<p><em>Balanced Accuracy</em>: 0.5 oznacza, że model ma równą
+skuteczność w identyfikowaniu obu klas.</p>
+<ul>
+<li><strong>liczebność ważona wagami logarytmicznymi</strong></li>
+</ul>
+<pre class="r"><code>confusion_matrix_log &lt;- confusionMatrix(predictions_log, dtm_test_log$type)
+confusion_matrix_log</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction day moon
+##       day    9    1
+##       moon   0    5
+##                                           
+##                Accuracy : 0.9333          
+##                  95% CI : (0.6805, 0.9983)
+##     No Information Rate : 0.6             
+##     P-Value [Acc &gt; NIR] : 0.005172        
+##                                           
+##                   Kappa : 0.8571          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 1.000000        
+##                                           
+##             Sensitivity : 1.0000          
+##             Specificity : 0.8333          
+##          Pos Pred Value : 0.9000          
+##          Neg Pred Value : 1.0000          
+##              Prevalence : 0.6000          
+##          Detection Rate : 0.6000          
+##    Detection Prevalence : 0.6667          
+##       Balanced Accuracy : 0.9167          
+##                                           
+##        &#39;Positive&#39; Class : day             
+## </code></pre>
+<p><em>No Information Rate</em> - 0.6, co jest równoważne z
+przewidzeniem klasy dominującej (klasy o największej liczbie wystąpień)
+dla wszystkich przypadków.</p>
+<p><em>Wartość P-Value</em> - 0.005 co sugeruje, że dokładność modelu
+jest statystycznie istotnie lepsza od przewidzenia klasy
+dominującej.</p>
+<ul>
+<li><p>W przypadku referencji (Reference) jako “day”, algorytm
+sklasyfikował 9 przypadków jako “day” (True Positive). Nie występują
+błędne klasyfikacje jako “day” (False Negative).</p></li>
+<li><p>W przypadku referencji jako “moon”, algorytm poprawnie
+sklasyfikował 5 przypadków jako “moon” (True Negative), ale błędnie
+sklasyfikował 1 przypadek jako “day” (False Positive).</p></li>
+</ul>
+<p><em>Accuracy</em>: 0.9333 oznacza, że algorytm poprawnie
+sklasyfikował 93.33% przypadków.</p>
+<p><em>Współczynnik</em> <em>Kappa</em> wynosi 0.8751, co wskazuje na
+dobrą zgodność między przewidywaniami modelu a rzeczywistością.</p>
+<p><em>Sensitivity</em>: 1 co oznacza, że model poprawnie zidentyfikował
+wszystkie przypadki klasy “day”.</p>
+<p><em>Specificity</em>: 0.83 co oznacza, że model poprawnie
+zidentyfikował 83.33% przypadków klasy “moon”.</p>
+<p><em>Pos Pred Value</em>: 0.9 co oznacza, że z przewidzianych przez
+model przypadków klasy “day” 90% faktycznie należy do tej klasy.</p>
+<p><em>Neg Pred Value</em>: 1 co oznacza, że wszystkie przewidziane
+przez model przypadki klasy “moon” są faktycznie poprawne.</p>
+<p><em>Prevalence</em>: 0.6 oznacza, że klasa “day” stanowi 60%
+wszystkich przypadków.</p>
+<p><em>Detection Rate</em>; 0.6 oznacza, że algorytm wykrył 60%
+przypadków “day”.</p>
+<p><em>Detection Prevalence</em>: 0.6667 oznacza, że 66.67% przypadków
+sklasyfikowanych przez algorytm należy do klasy “day”.</p>
+<p><em>Balanced Accuracy</em>: 0.9167 oznacza, że model osiągnął wysoką
+skuteczność w klasyfikacji obserwacji, uwzględniając proporcje obu
+klas.</p>
+<ul>
+<li><strong>liczebność ważona wagami tfidf</strong></li>
+</ul>
+<pre class="r"><code>confusion_matrix_tfidf &lt;- confusionMatrix(predictions_tfidf, dtm_test_tfidf$type)
+confusion_matrix_tfidf</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction day moon
+##       day    9    0
+##       moon   0    6
+##                                     
+##                Accuracy : 1         
+##                  95% CI : (0.782, 1)
+##     No Information Rate : 0.6       
+##     P-Value [Acc &gt; NIR] : 0.0004702 
+##                                     
+##                   Kappa : 1         
+##                                     
+##  Mcnemar&#39;s Test P-Value : NA        
+##                                     
+##             Sensitivity : 1.0       
+##             Specificity : 1.0       
+##          Pos Pred Value : 1.0       
+##          Neg Pred Value : 1.0       
+##              Prevalence : 0.6       
+##          Detection Rate : 0.6       
+##    Detection Prevalence : 0.6       
+##       Balanced Accuracy : 1.0       
+##                                     
+##        &#39;Positive&#39; Class : day       
+## </code></pre>
+<p><em>No Information Rate</em> - 0.6 oznacza, że gdybyśmy klasyfikowali
+wszystkie przypadki jako najbardziej powszechną klasę, czyli “moon” w
+tym przypadku, osiągnęlibyśmy dokładność wynoszącą 60%.</p>
+<p>Wartość P-value - 0.0004 sugeruje, że istnieje statystycznie istotna
+różnica między dokładnością modelu a przypadkową dokładnością. Oznacza
+to, że model jest znacznie lepszy niż przypadkowa klasyfikacja i
+dokładność jego predykcji nie wynika z przypadkowości.</p>
+<ul>
+<li><p>W przypadku referencji (Reference) jako “day”, algorytm poprawnie
+sklasyfikował 9 przypadek jako “day” (True Positive). Nie występują
+żadne błędne klasyfikacje jako “day” (False Negative).</p></li>
+<li><p>W przypadku referencji jako “moon”, algorytm poprawnie
+sklasyfikował 6 przypadków jako “moon” (True Negative). Nie występują
+żadne błędne klasyfikacje jako “moon” (False Positive).</p></li>
+</ul>
+<p><em>Accuracy</em>: 1 oznacza, że algorytm poprawnie sklasyfikował
+100% przypadków.</p>
+<p>Współczynnik <em>Kappa</em> wynosi 1, co wskazuje na doskonałą
+zgodność między klasyfikacją algorytmu a rzeczywistymi etykietami.</p>
+<p><em>Sensitivity</em>: 1 oznacza, że algorytm poprawnie sklasyfikował
+wszystkie przypadki “day” spośród wszystkich przypadków rzeczywiście
+należących do klasy “day”.</p>
+<p><em>Specificity</em>: 1 oznacza, że algorytm poprawnie sklasyfikował
+wszystkie przypadki “moon” spośród wszystkich przypadków rzeczywiście
+należących do klasy “moon”.</p>
+<p><em>Pos Pred Value</em>: 1 oznacza, że wszystkie przypadki
+sklasyfikowane jako “day” są prawidłowe.</p>
+<p><em>Neg Pred Value</em>: 1 oznacza, że wszystkie przypadki
+sklasyfikowane jako “moon” są prawidłowe.</p>
+<p><em>Prevalence</em>: 0.6 oznacza, że klasa “day” stanowi 60%
+wszystkich przypadków.</p>
+<p><em>Detection Rate</em>: 0.6 oznacza, że algorytm wykrył 60%
+przypadków “day”.</p>
+<p><em>Detection Prevalence</em>: 1 oznacza, że 100% przypadków
+sklasyfikowanych przez algorytm należy do klasy “day”.</p>
+<p><em>Balanced Accuracy</em>: 1 wskazuje na doskonałe wyważenie między
+wrażliwością a swoistością.</p>
+<div id="podsumowanie-i-wybór-modelu" class="section level4">
+<h4>Podsumowanie i wybór modelu</h4>
+<p>Na podstawie powyższych wyników można stwierdzić, że klasyfikator
+oparty na wagach tfidf osiąga najlepsze rezultaty we wszystkich
+mierzonych metrykach. Posiada on dokładność wynoszącą 1, co oznacza, że
+wszystkie obserwacje zostały poprawnie sklasyfikowane. Czułość,
+specyficzność i wyważona dokładność również wynoszą 1, co wskazuje na
+doskonałą zdolność klasyfikatora do identyfikacji zarówno pozytywnych,
+jak i negatywnych przypadków.</p>
+<p>Należy jednak zauważyć, że zarówno klasyfikator oaparty na wagach
+logarytmiczncych jak i tfidf osiągneły taką wartość p-value, która
+oznacza, że model jest znacznie lepszy niż przypadkowa klasyfikacja i
+dokładność jego predykcji nie wynika z przypadkowości.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

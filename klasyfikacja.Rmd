@@ -1,0 +1,384 @@
+---
+title: "Analiza wątku"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+```{r include=FALSE}
+library(tidytext)
+library(dplyr)
+library(textstem)
+library(tidyr)
+library(ggplot2)
+library(tm)
+library(stringr)
+library(quanteda)
+library(e1071)
+library(gmodels)
+library(caret)
+library(topicmodels)
+library(kableExtra)
+library(proxy)
+library(dendextend)
+library(knitr)
+
+url <- "https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/Around_the_World_in_Eighty_Days.txt"
+
+eighty_days <- readLines(url) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 0:(length(.) - 1), text = ., stringsAsFactors = FALSE)
+
+eighty_days <- eighty_days[-1, ] 
+
+url2 <- "https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/All_around_the_moon.txt"
+
+all_moon <- readLines(url2) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 1:length(.), text = ., stringsAsFactors = FALSE)
+
+clean_text <- function(df) {
+  df$text <- str_remove_all(df$text, "[[:punct:]]")
+  df$text <- str_remove_all(df$text, "\"") 
+  df$text <- str_remove_all(df$text, "'")
+  df$text <- str_replace_all(df$text, "(\\b)'(\\w+)'(\\b)", "\\1\\2\\3")
+  df$text <- str_remove_all(df$text, "\\d+")
+  return(df)
+}
+
+eighty_days <- clean_text(eighty_days)
+all_moon <- clean_text(all_moon)
+
+eighty_days_tokens <- eighty_days %>%
+  unnest_tokens(word, text)
+
+all_moon_tokens <- all_moon %>%
+  unnest_tokens(word, text)
+
+stopwords <- get_stopwords(source = "smart") #wybieram smart ponieważ zaiwera najwięcej stop wordów
+stopwords <- data.frame(Word = c(stopwords[[1]], 'passepartout', 'phileas', 'fogg', 'foggs', 'auouda','aouda' ,'francis', 'ardan', 'captain', 'barbican', 'mnicholl', 'mr', 'passepartouts', 'marston', 'fix'))
+
+eighty_days_tidy <- anti_join(eighty_days_tokens, stopwords, by = c("word" = "Word"))
+all_moon_tidy <- anti_join(all_moon_tokens, stopwords, by = c("word" = "Word"))
+
+eighty_days_lem <- eighty_days_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+all_moon_lem <- all_moon_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+eighty_days_text <- books_list <- eighty_days_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+  
+all_moon_text <- books_list <- all_moon_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+
+books_docs <- rbind(eighty_days_text, all_moon_text)
+
+books_list <- list(books_docs$text)[[1]]
+books_corpus <- VCorpus(VectorSource(books_list))
+
+dtm_tf <- DocumentTermMatrix(books_corpus, 
+                                control = list(
+                                                bounds = list(global = c(2, Inf)), 
+                                                weighting = weightTf))
+
+
+
+lda <- LDA(dtm_tf, 2, control = list(seed = 1652))
+str(lda)
+
+tematy_term <- terms(lda)
+tematy <- topics(lda)
+```
+
+## Przygotowanie tekstu
+
+Dopisujemy klasy wyłonione z analizy wątku
+
+```{r message=FALSE, warning=FALSE}
+eighty_days_text$type <- tematy_term[tematy][1:37]
+all_moon_text$type <- tematy_term[tematy][38:62]
+```
+
+Łączymy dokumenty
+
+```{r}
+books_df <- rbind(eighty_days_text, all_moon_text)
+```
+
+```{r}
+kable(table(books_df$type), format = "html", align = "c", caption = "Ilość klas") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Budowa modelu
+
+Do budowy algorytmu wybrano Naiwny Klasyfikator Bayesa.
+
+Zamiana typu zmiennych i stworzenie korpusu
+
+```{r}
+books_df$type <- factor(books_df$type)
+
+books_corpus <- Corpus(VectorSource(books_df$text))
+```
+
+### 1. Wagi binarne
+
+Macierz DTM
+
+```{r}
+dtm_binary <- DocumentTermMatrix(books_corpus, control = list(weighting = weightBin))
+
+dtm_bin <- data.frame(as.matrix(dtm_binary))
+dtm_bin$type <- factor(tematy_term[tematy][1:62])
+```
+
+Utworzenie treningowego i testowego zbioru NOWE
+
+```{r}
+# Losowe wybranie zbioru treningowego
+set.seed(123)
+train_indices <- createDataPartition(dtm_bin$type, p = 0.75, list = FALSE)
+
+# Zbiór treningowy
+dtm_train_bin <- dtm_bin[train_indices, ]
+
+# Zbiór testowy
+dtm_test_bin <- dtm_bin[-train_indices, ]
+```
+
+Sprawdzenie rozkładu klas w zbiorach
+
+```{r}
+kable(table(dtm_test_bin$type), format = "html", align = "c", caption = "Ilosciowo klasy w zbiorze testowym") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+```
+
+```{r}
+kable(prop.table(table(dtm_train_bin$type)), format = "html", align = "c", caption = "Proporcje klas w zbiorze treningowym") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+kable(prop.table(table(dtm_test_bin$type)), format = "html", align = "c", caption = "Proporcje klas w zbiorze testowym") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+
+Rozkład jest w porządku, można kontynuować.
+
+Niezbędne przeksztalcenia
+
+```{r}
+levels(dtm_test_bin$type) <- levels(dtm_train_bin$type)
+```
+
+Utworzenie i testowanie modelu
+
+```{r}
+classifier_bin <- naiveBayes(type ~ ., data = dtm_train_bin)
+predictions_bin <- predict(classifier_bin, newdata = dtm_test_bin)
+```
+
+### 2. Wagi logarytmiczne
+
+Macierz DTM
+
+```{r}
+dtm_tf <- DocumentTermMatrix(books_corpus, control = list(weighting = weightTf))
+
+dtm_log <- log2(as.matrix(dtm_tf) + 1) #Przekształcenie macierzy tf na macierz z wagami logarytmicznymi
+
+dtm_log <- data.frame(dtm_log)
+dtm_log$type <- factor(tematy_term[tematy][1:62])
+```
+
+Utworzenie treningowego i testowego zbioru
+
+```{r}
+# Zbiór treningowy
+dtm_train_log <- dtm_log[train_indices, ]
+# Zbiór testowy
+dtm_test_log <- dtm_log[-train_indices, ]
+```
+
+Niezbędne przeksztalcenia
+
+```{r}
+levels(dtm_test_log$type) <- levels(dtm_train_log$type)
+```
+
+Utworzenie i testowanie modelu
+
+```{r}
+classifier_log <- naiveBayes(type ~ ., data = dtm_train_log)
+predictions_log <- predict(classifier_log, newdata = dtm_test_log)
+```
+
+### 3. Wagi TfIdf
+
+Macierz DTM
+
+```{r}
+dtm_tfidf <- DocumentTermMatrix(books_corpus, control = list(weighting = weightTfIdf))
+
+dtm_tfidf <- data.frame(as.matrix(dtm_tfidf))
+dtm_tfidf$type <- tematy_term[tematy][1:62]
+```
+
+Utworzenie treningowego i testowego zbioru
+
+```{r}
+# Zbiór treningowy
+dtm_train_tfidf <- dtm_tfidf[train_indices, ]
+# Zbiór testowy
+dtm_test_tfidf <- dtm_tfidf[-train_indices, ]
+```
+
+Niezbędne przeksztalcenia
+
+```{r}
+dtm_tfidf$type <- factor(dtm_tfidf$type)
+
+dtm_test_tfidf$type <- factor(dtm_test_tfidf$type, levels = levels(dtm_tfidf$type))
+
+```
+
+Utworzenie i testowanie modelu
+
+```{r}
+classifier_tdidf <- naiveBayes(type ~ ., data = dtm_tfidf)
+predictions_tfidf <- predict(classifier_tdidf, newdata = dtm_test_tfidf)
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Ocena modeli
+
+-   **liczebność ważona wagami binarnymi**
+
+```{r}
+confusion_matrix_bin <- confusionMatrix(predictions_bin, dtm_test_bin$type)
+confusion_matrix_bin
+```
+
+*No Information Rate* - 0.6 oznacza, że gdybyśmy klasyfikowali przypadki losowo, oczekiwalibyśmy dokładności 60%.
+
+*Wartość P-value* - 0.61, co sugeruje, że dokładność modelu nie jest statystycznie istotnie lepsza od przewidzenia klasy dominującej.
+
+-   W przypadku referencji (Reference) jako "day", algorytm poprawnie sklasyfikował 9 przypadków jako "day" (True Positive). Nie występują błędne klasyfikacje jako "day" (False Negative).
+
+-   W przypadku referencji jako "moon", algorytm błędnie sklasyfikował 6 przypadków jako "day" (False Positive) i nie sklasyfikował poprawnie żadnego przyapdku jako "moon" (True Negative).
+
+*Accuracy*: 0.6 co jest równoważne z przewidzeniem klasy dominującej (klasy o największej liczbie wystąpień) dla wszystkich przypadków.
+
+Współczynnik *Kappa* wynosi 0.0, co oznacza, że model nie ma lepszej wydajności niż przewidzenie klasy dominującej.
+
+*Sensitivity*: 1 oznacza, że algorytm poprawnie sklasyfikował 100% przypadków "day" spośród wszystkich przypadków rzeczywiście należących do klasy "day".
+
+*Specificity*: 0 oznacza, że algorytm poprawnie sklasyfikował 0% przypadków "moon" spośród wszystkich przypadków rzeczywiście należących do klasy "moon".
+
+*Pos Pred Value*: 0.6 co oznacza, że z przewidzianych przez model przypadków klasy "day" tylko 60% faktycznie należy do tej klasy.
+
+*Neg Pred Value*: NA oznacza, że nie można obliczyć tej wartości ze względu na brak przypadków sklasyfikowanych jako "day".
+
+*Prevalence*: 0.6 oznacza, że klasa "day" stanowi 60% wszystkich przypadków.
+
+Detection Rate: 0.6 oznacza, że algorytm wykrył 60% wszystkich przypadków.
+
+*Detection Prevalence*: 1 oznacza, że 100% przypadków sklasyfikowanych przez algorytm należy do klasy "day".
+
+*Balanced Accuracy*: 0.5 oznacza, że model ma równą skuteczność w identyfikowaniu obu klas.
+
+-   **liczebność ważona wagami logarytmicznymi**
+
+```{r}
+confusion_matrix_log <- confusionMatrix(predictions_log, dtm_test_log$type)
+confusion_matrix_log
+```
+
+*No Information Rate* - 0.6, co jest równoważne z przewidzeniem klasy dominującej (klasy o największej liczbie wystąpień) dla wszystkich przypadków.
+
+*Wartość P-Value* - 0.005 co sugeruje, że dokładność modelu jest statystycznie istotnie lepsza od przewidzenia klasy dominującej.
+
+-   W przypadku referencji (Reference) jako "day", algorytm sklasyfikował 9 przypadków jako "day" (True Positive). Nie występują błędne klasyfikacje jako "day" (False Negative).
+
+-   W przypadku referencji jako "moon", algorytm poprawnie sklasyfikował 5 przypadków jako "moon" (True Negative), ale błędnie sklasyfikował 1 przypadek jako "day" (False Positive).
+
+*Accuracy*: 0.9333 oznacza, że algorytm poprawnie sklasyfikował 93.33% przypadków.
+
+*Współczynnik* *Kappa* wynosi 0.8751, co wskazuje na dobrą zgodność między przewidywaniami modelu a rzeczywistością.
+
+*Sensitivity*: 1 co oznacza, że model poprawnie zidentyfikował wszystkie przypadki klasy "day".
+
+*Specificity*: 0.83 co oznacza, że model poprawnie zidentyfikował 83.33% przypadków klasy "moon".
+
+*Pos Pred Value*: 0.9 co oznacza, że z przewidzianych przez model przypadków klasy "day" 90% faktycznie należy do tej klasy.
+
+*Neg Pred Value*: 1 co oznacza, że wszystkie przewidziane przez model przypadki klasy "moon" są faktycznie poprawne.
+
+*Prevalence*: 0.6 oznacza, że klasa "day" stanowi 60% wszystkich przypadków.
+
+*Detection Rate*; 0.6 oznacza, że algorytm wykrył 60% przypadków "day".
+
+*Detection Prevalence*: 0.6667 oznacza, że 66.67% przypadków sklasyfikowanych przez algorytm należy do klasy "day".
+
+*Balanced Accuracy*: 0.9167 oznacza, że model osiągnął wysoką skuteczność w klasyfikacji obserwacji, uwzględniając proporcje obu klas.
+
+-   **liczebność ważona wagami tfidf**
+
+```{r}
+confusion_matrix_tfidf <- confusionMatrix(predictions_tfidf, dtm_test_tfidf$type)
+confusion_matrix_tfidf
+```
+
+*No Information Rate* - 0.6 oznacza, że gdybyśmy klasyfikowali wszystkie przypadki jako najbardziej powszechną klasę, czyli "moon" w tym przypadku, osiągnęlibyśmy dokładność wynoszącą 60%.
+
+Wartość P-value - 0.0004 sugeruje, że istnieje statystycznie istotna różnica między dokładnością modelu a przypadkową dokładnością. Oznacza to, że model jest znacznie lepszy niż przypadkowa klasyfikacja i dokładność jego predykcji nie wynika z przypadkowości.
+
+-   W przypadku referencji (Reference) jako "day", algorytm poprawnie sklasyfikował 9 przypadek jako "day" (True Positive). Nie występują żadne błędne klasyfikacje jako "day" (False Negative).
+
+-   W przypadku referencji jako "moon", algorytm poprawnie sklasyfikował 6 przypadków jako "moon" (True Negative). Nie występują żadne błędne klasyfikacje jako "moon" (False Positive).
+
+*Accuracy*: 1 oznacza, że algorytm poprawnie sklasyfikował 100% przypadków.
+
+Współczynnik *Kappa* wynosi 1, co wskazuje na doskonałą zgodność między klasyfikacją algorytmu a rzeczywistymi etykietami.
+
+*Sensitivity*: 1 oznacza, że algorytm poprawnie sklasyfikował wszystkie przypadki "day" spośród wszystkich przypadków rzeczywiście należących do klasy "day".
+
+*Specificity*: 1 oznacza, że algorytm poprawnie sklasyfikował wszystkie przypadki "moon" spośród wszystkich przypadków rzeczywiście należących do klasy "moon".
+
+*Pos Pred Value*: 1 oznacza, że wszystkie przypadki sklasyfikowane jako "day" są prawidłowe.
+
+*Neg Pred Value*: 1 oznacza, że wszystkie przypadki sklasyfikowane jako "moon" są prawidłowe.
+
+*Prevalence*: 0.6 oznacza, że klasa "day" stanowi 60% wszystkich przypadków.
+
+*Detection Rate*: 0.6 oznacza, że algorytm wykrył 60% przypadków "day".
+
+*Detection Prevalence*: 1 oznacza, że 100% przypadków sklasyfikowanych przez algorytm należy do klasy "day".
+
+*Balanced Accuracy*: 1 wskazuje na doskonałe wyważenie między wrażliwością a swoistością.
+
+#### Podsumowanie i wybór modelu
+
+Na podstawie powyższych wyników można stwierdzić, że klasyfikator oparty na wagach tfidf osiąga najlepsze rezultaty we wszystkich mierzonych metrykach. Posiada on dokładność wynoszącą 1, co oznacza, że wszystkie obserwacje zostały poprawnie sklasyfikowane. Czułość, specyficzność i wyważona dokładność również wynoszą 1, co wskazuje na doskonałą zdolność klasyfikatora do identyfikacji zarówno pozytywnych, jak i negatywnych przypadków.
+
+Należy jednak zauważyć, że zarówno klasyfikator oaparty na wagach logarytmiczncych jak i tfidf osiągneły taką wartość p-value, która oznacza, że model jest znacznie lepszy niż przypadkowa klasyfikacja i dokładność jego predykcji nie wynika z przypadkowości.

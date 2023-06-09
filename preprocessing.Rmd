@@ -1,0 +1,230 @@
+---
+title: "Przygotowanie"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+```{r}
+
+library(tidytext)
+library(dplyr)
+library(textstem)
+library(wordcloud)
+library(tidyr)
+library(ggplot2)
+library(tm)
+library(stringr)
+library(quanteda)
+library(e1071)
+library(gmodels)
+library(caret)
+library(topicmodels)
+library(kableExtra)
+library(proxy)
+library(dendextend)
+library(rmdformats)
+library(knitr)
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+# Wczytanie danych
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+Poddane analizie są książki Juliusza Verne'a:
+
+-   "W 80 dnii dookoła świata"
+
+-   "Wokół księżyca"
+
+Wczytywane są w podziale na rozdziały.
+
+```{r}
+url <- "https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/Around_the_World_in_Eighty_Days.txt"
+
+eighty_days <- readLines(url) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 0:(length(.) - 1), text = ., stringsAsFactors = FALSE)
+
+eighty_days <- eighty_days[-1, ]  # usunięcie pierwszego pustego wiersza
+
+
+wys <- head(eighty_days$text,5)
+wyswietlenie <- tibble(Chapter = 1:5, "Część tekstu" = paste0(substr(wys, 1, 250), "[...]"))
+kable(wyswietlenie, format = "html", align = "c", table.attr = "class='table table-striped'", row.names = FALSE, caption = "W 80 dni dookoła świata w podziale na rozdziały") %>%
+  kable_styling()
+```
+
+```{r}
+url2 <- "https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/All_around_the_moon.txt"
+
+all_moon <- readLines(url2) %>%
+  paste(collapse = " ") %>%
+  strsplit(split = "(CHAPTER\\s+)", perl = TRUE) %>%
+  unlist() %>%
+  data.frame(chapter = 1:length(.), text = ., stringsAsFactors = FALSE)
+
+wys2 <- head(all_moon$text,5)
+wyswietlenie2 <- tibble(Chapter = 1:5, "Część tekstu" = paste0(substr(wys2, 1, 250), "[...]"))
+kable(wyswietlenie2, format = "html", align = "c", table.attr = "class='table table-striped'", row.names = FALSE, caption = "W 80 dni dookoła świata w podziale na rozdziały") %>%
+  kable_styling()
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+# Przygotowanie danych
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Wstępne czyszczenie
+
+Z tekstu usuwamy znaki interpunkcyjne, podwójne i pojedyńcze cudzysłowy, apostrofy i cyfry.
+
+```{r}
+clean_text <- function(df) {
+  df$text <- str_remove_all(df$text, "[[:punct:]]")
+  df$text <- str_remove_all(df$text, "\"") 
+  df$text <- str_remove_all(df$text, "'")
+  df$text <- str_replace_all(df$text, "(\\b)'(\\w+)'(\\b)", "\\1\\2\\3")
+  df$text <- str_remove_all(df$text, "\\d+")
+  return(df)
+}
+
+eighty_days <- clean_text(eighty_days)
+all_moon <- clean_text(all_moon)
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Tokenizacja
+
+```{r}
+eighty_days_tokens <- eighty_days %>%
+  unnest_tokens(word, text)
+
+all_moon_tokens <- all_moon %>%
+  unnest_tokens(word, text)
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Usunięcie stopwords
+
+```{r}
+stopwords <- get_stopwords(source = "smart") #wybieram smart ponieważ zaiwera najwięcej stop wordów
+stopwords <- data.frame(Word = c(stopwords[[1]], 'passepartout', 'phileas', 'fogg', 'foggs', 'auouda','aouda' ,'francis', 'ardan', 'captain', 'barbican', 'mnicholl', 'mr', 'passepartouts', 'marston', 'fix'))
+
+eighty_days_tidy <- anti_join(eighty_days_tokens, stopwords, by = c("word" = "Word"))
+all_moon_tidy <- anti_join(all_moon_tokens, stopwords, by = c("word" = "Word"))
+```
+
+Do stop words dodane zostały postacie z książek (imiona, naziwska itd) ponieważ zajmowały zdecydowaną część chmury, nie wnosząc nic do analizy. Są to:
+
+-   fogg - Phileas Fogg ("W 80 dni dookoła świata")
+
+-   phileas - Phileas Fogg ("W 80 dni dookoła świata")
+
+-   passepartout - Jean Passepartout (oraz passepartouts ponieważ lemmatyzacja sobie nie poradziła) ("W 80 dni dookoła świata")
+
+-   auouda - postać (zapisywana również aouda) ("W 80 dni dookoła świata")
+
+-   francis - postać ("W 80 dni dookoła świata")
+
+-   Ardan - Michel Ardan ("Wokół księżyca")
+
+-   Barbican - Przedyent barbican ("Wokół księżyca")
+
+-   mnicholl - Captain M'nicholl ("Wokół księżyca")
+
+-   marston - J.K Marston, postac ("Wokół księżyca")
+
+-   fix - postać ("Wokół księżyca")
+
+```{r}
+eighty_num <- nrow(eighty_days_tokens)
+eighty_stop_num <- nrow(eighty_days_tidy)
+eighty_per <- (eighty_num - eighty_stop_num) / eighty_num * 100
+
+moon_num <- nrow(all_moon_tokens)
+moon_stop_num <- nrow(all_moon_tidy)
+moon_per <- (moon_num - moon_stop_num) / moon_num * 100
+
+
+cat("'W 80 dni dookoła świata'\n",
+    "Liczba tokenów przed usunięciem stopwords:", eighty_num, "\n",
+    "Liczba tokenów po usunięciu stopwords:", eighty_stop_num, "\n",
+    "% usuniętych:", sprintf("%.2f%%", eighty_per), "\n\n",
+    "'Wokół księżyca'\n",
+    "Liczba tokenów przed usunięciem stopwords:", moon_num, "\n",
+    "Liczba tokenów po usunięciu stopwords:", moon_stop_num, "\n",
+    "% usuniętych:", sprintf("%.2f%%", moon_per), "\n"
+)
+```
+
+Można zauważyć, że w w powieści "80 dnii dookoła świata" zostało usunięte 61.12% tokenów, a w powieści "Wokół księżyca" 60.56% jako stop words.
+
+Ogólnie rzecz biorąc, usunięcie stopwords znacznie zmniejszyło liczbę tokenów w obu przypadkach. Pozwala to na bardziej precyzyjne analizowanie istotnych słów w tekście, eliminując słowa powszechnie używane, które nie niosą dużo informacji.
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Lemmatyzacja
+
+Na tym etapie do wyboru mamy:
+
+-   lemmatyzacje,
+
+-   stemming.
+
+Do obróbki tokenów została wybrana lemmatyzacja, jako że sprowadza token do jego podstawej wersji, co uznałam za czytelniejsze. Ponadto lemmatyzacja jest bardziej zaawansowaną techniką, która uwzględnia morfologię języka i może generować bardziej dokładne wyniki. Jest szczególnie przydatna w przypadku analizy semantycznej, gdzie zachowanie znaczenia słowa jest ważne.
+
+```{r}
+eighty_days_lem <- eighty_days_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+
+all_moon_lem <- all_moon_tidy %>%
+  mutate(word_lemma = lemmatize_words(word, language = "english")) %>%
+  select(chapter, word_lemma)
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Złączenie gotowych tokenów
+
+W celu utworzenia korpusu i dalszej analizy, oczyszczone tokeny zostały złączone z powrotem do ciągu tekstu jako konkretne rozdziały.
+
+```{r}
+eighty_days_text <- books_list <- eighty_days_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+  
+all_moon_text <- books_list <- all_moon_lem %>%
+  group_by(chapter) %>%
+  summarize(text = paste(word_lemma, collapse = " ")) %>%
+  ungroup() 
+```
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+## Połączenie książek
+
+```{r}
+books_docs <- rbind(eighty_days_text, all_moon_text)
+nrow(books_docs)
+```
+
+Mamy 62 rozdziały (dokumety) z dwóch książek:
+
+-   wiersze 1:37 - "w 80 dni dookola swiata",
+
+-   wiersze 38:62 - "wokół ksieżyca"

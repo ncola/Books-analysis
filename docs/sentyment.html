@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Analiza sentymentu</title>
+
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">O analizie</a>
+</li>
+<li>
+  <a href="preprocessing.html">Przygotowanie</a>
+</li>
+<li>
+  <a href="chmury.html">Chmury</a>
+</li>
+<li>
+  <a href="macierze_wystapien.html">Macierze wystąpień</a>
+</li>
+<li>
+  <a href="sentyment.html">Analiza sentymentu</a>
+</li>
+<li>
+  <a href="watek.html">Analiza wątku</a>
+</li>
+<li>
+  <a href="grupowanie.html">Grupowanie</a>
+</li>
+<li>
+  <a href="klasyfikacja.html">Klasyfikacja</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Analiza sentymentu</h1>
+
+</div>
+
+
+<div id="słownik-bing---zero-jedynkowy-wskaźnik-nastroju"
+class="section level2">
+<h2>Słownik BING - zero jedynkowy wskaźnik nastroju</h2>
+<p><u><strong>Słownik Bing</strong></u> to zbiór słów kluczowych z
+przypisanymi wartościami sentymentalnymi:</p>
+<ul>
+<li><p>pozytywnymi,</p></li>
+<li><p>negatywnymi,</p></li>
+<li><p>neutralnymi.</p></li>
+</ul>
+<p>W analizie sentymentu według słownika Bing, tekst jest przetwarzany
+pod kątem występowania tych słów, co pozwala na określenie ogólnego
+nastroju lub emocji wyrażanych w tekście. Dzięki temu narzędziu można
+ocenić, czy tekst ma pozytywny, negatywny czy neutralny charakter.</p>
+<pre class="r"><code>bing_sentiments &lt;- get_sentiments(&quot;bing&quot;)
+
+eighty_days_sentiments_bing =
+  inner_join(eighty_days_tokens, bing_sentiments, by = &quot;word&quot;)
+all_moon_sentiments_bing =
+  inner_join(all_moon_tokens, bing_sentiments, by = &quot;word&quot;)</code></pre>
+<ul>
+<li><strong>“W 80 dnii dookoła świata”</strong></li>
+</ul>
+<pre class="r"><code>eighty_days_bing &lt;- eighty_days_tokens %&gt;%
+  inner_join(bing_sentiments, by = &quot;word&quot;) %&gt;%
+  count(chapter, sentiment) %&gt;%
+  spread(sentiment, n, fill = 0) %&gt;%
+  mutate(sentiment = positive - negative)
+
+
+ggplot(eighty_days_bing, aes(x = chapter, y = sentiment)) +
+  geom_bar(stat = &quot;identity&quot;, show.legend = FALSE, fill = &quot;steelblue&quot;) +
+  labs(title = &quot;Wskaźnik nastroju w &#39;W 80 dni dookoła świata&#39; J. Verne wg leksykonu Bing&quot;,
+       x = &quot;Rozdział&quot;,
+       y = &quot;Sentyment&quot;)</code></pre>
+<p><img src="sentyment_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Z wskaźnik nastroju (pozytywne-negatywne emocje) w książce ‘W 80 dni
+dookoła świata’ można wyciągnąć kilka wniosków:</p>
+<ul>
+<li><p>w początkowych rozdziałach (1-10) dominuje pozytywny sentyment,
+co sugeruje początkową beztroskę i optymizm w narracji.</p></li>
+<li><p>następnie, w rozdziałach 11-15, pojawia się wyraźny spadek
+nastroju, gdzie negatywny sentyment staje się bardziej widoczny, jednka
+w rozdziale 14 mamy nagly wzrost nastroju, największy dla całej książki.
+To może wskazywać na rozwijającą się intrygę lub pojawienie się
+trudności dla bohaterów,</p></li>
+<li><p>w kolejnych rozdziałach (16-20) obserwuje się pewne zrównoważenie
+między pozytywnym a negatywnym sentymentem, co sugeruje pewien stabilny
+przebieg wydarzeń,</p></li>
+<li><p>jednak w późniejszych rozdziałach (21-37) znowu pojawia się
+częsty spadek nastroju, gdzie negatywny sentyment przeważa. To może
+oznaczać kluczowe momenty konfliktu lub trudności, które bohaterowie
+muszą pokonać,</p></li>
+<li><p>książka kończy się pozytywnym nastrojem, lecz niezbyt
+wysokim.</p></li>
+</ul>
+<pre class="r"><code>ggplot(eighty_days_bing, aes(x = chapter)) +
+  geom_bar(aes(y = positive, fill = &quot;Positive&quot;), stat = &quot;identity&quot;, alpha = 0.7) +
+  geom_bar(aes(y = negative, fill = &quot;Negative&quot;), stat = &quot;identity&quot;, alpha = 0.7) +
+  labs(title = &quot;Sentyment w &#39;W 80 dni dookoła świata&#39; J. Verne wg leksykonu Bing&quot;,
+       x = &quot;Rozdział&quot;,
+       y = &quot;Sentyment&quot;,
+       fill = &quot;Sentyment&quot;) +
+  scale_fill_manual(values = c(&quot;Positive&quot; = &quot;lightseagreen&quot;, &quot;Negative&quot; = &quot;red&quot;)) +
+  guides(fill = guide_legend(title = &quot;Sentyment&quot;))</code></pre>
+<p><img src="sentyment_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>W celu głębszej analizy przedstawiono również wykres, na którym można
+porównać ilość pozytywnych i negatywnych emocji. Na jego podstawie
+wyciągnięto dodatkowe wnisoki:</p>
+<ul>
+<li><p>można powiedzieć że w książce “w 80 dnii dookoła świata”
+przeważają pozytywne emocje,</p></li>
+<li><p>ilość negaywtnych emocji przeważa na przełomie 1/3 książki
+(rozdziały 11-13) oraz w pojedyńczych rozdziałach w drugiej połowie -
+rozdziały 21, 28, 30 i 34,</p></li>
+<li><p>Najbardziej emocjonalne rozdziały, w których jednocześnie ciężko
+jednoznacznie roztrzygnąć o emocjach również znajdują się w drugiej
+połowie książki, są to 21 oraz 33,</p></li>
+<li><p>przewagę pozytywnych emocjii nad negatywynymi można jednoznczanie
+zauważyć na początku ksiązki, na jej końcu obserwuje się zauważalny
+spadek pozytywności.</p></li>
+</ul>
+<p>Analiza sentymentu według słownika Bing w książce “W 80 dni dookoła
+świata” pozwala zauważyć, że nastroje w narracji są zróżnicowane. Na
+początku dominuje pozytywny sentyment, co odzwierciedla beztroską
+atmosferę i optymizm. Jednak w środkowych rozdziałach występuje wyraźny
+spadek nastroju, zaznaczający się większą ilością negatywnych emocji. W
+pewnym momencie następuje jednak nagły wzrost nastroju, najwyższy w
+całej książce. W drugiej połowie książki negatywny sentyment jest
+zauważalny ale neutralizowany przez pozytwyny, co może wskazywać na
+kluczowe momenty konfliktu i trudności. Mimo to, książka kończy się z
+umiarkowanie pozytywnym nastrojem. Ogólnie rzecz biorąc, analiza danych
+sentymentalnych wskazuje na dynamiczną naturę fabuły, z różnymi
+emocjonalnymi momentami.</p>
+<p>------------------------------------------------------------------------------------------</p>
+<ul>
+<li><strong>“Wokół księżyca”</strong></li>
+</ul>
+<pre class="r"><code>all_moons_bing &lt;- all_moon_tokens %&gt;%
+  inner_join(bing_sentiments, by = &quot;word&quot;) %&gt;%
+  count(chapter, sentiment) %&gt;%
+  spread(sentiment, n, fill = 0) %&gt;%
+  mutate(sentiment = positive - negative)
+
+
+ggplot(all_moons_bing, aes(x = chapter, y = sentiment)) +
+  geom_bar(stat = &quot;identity&quot;, show.legend = FALSE, fill = &quot;steelblue&quot;) +
+  labs(title = &quot;Wskaźnik nastroju w &#39;Wokół księżyca&#39; J. Verne wg leksykonu Bing&quot;,
+       x = &quot;Rozdział&quot;,
+       y = &quot;Sentyment&quot;)</code></pre>
+<p><img src="sentyment_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Na podstawie wykresu przedstawiającego wskaźnik nastroju w powieści
+‘Wokół księżyca’ można powiedzieć:</p>
+<ul>
+<li>pozytywny sentyment definitywnie towarzyszy czytelnikowi całą
+książke,</li>
+<li>rozdziały 15 i 16 mają negatywny sentyment, co stanowi kontrast w
+stosunku do innych rozdziałów. To może wskazywać na momenty konfliktu
+lub trudności, które dodają napięcia i zmieniają ton narracji,</li>
+<li>istnieje kilka rozdziałów (10 i 22), gdzie sentyment jest relatywnie
+niski,</li>
+<li>ostatnie rozdziały prezentują coraz to weselszą atmosferę. Końcowy
+rozdział charakteryzuje się największym wynikiem wskaźnika, co sugeruje
+zdecydowany happy end.</li>
+</ul>
+<pre class="r"><code>ggplot(all_moons_bing, aes(x = chapter)) +
+  geom_bar(aes(y = positive, fill = &quot;Positive&quot;), stat = &quot;identity&quot;, alpha = 0.7) +
+  geom_bar(aes(y = negative, fill = &quot;Negative&quot;), stat = &quot;identity&quot;, alpha = 0.7) +
+  labs(title = &quot;Sentyment w &#39;Wokół księżyca&#39; J. Verne wg leksykonu Bing&quot;,
+       x = &quot;Rozdział&quot;,
+       y = &quot;Sentyment&quot;,
+       fill = &quot;Sentyment&quot;) +
+  scale_fill_manual(values = c(&quot;Positive&quot; = &quot;lightseagreen&quot;, &quot;Negative&quot; = &quot;red&quot;)) +
+  guides(fill = guide_legend(title = &quot;Sentyment&quot;))</code></pre>
+<p><img src="sentyment_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>W celu głębszej analizy przedstawiono również wykres, na którym
+pozytywne i negatywne sentymenty są rozdzielone. Na jego podstawie
+wyciągnięto dodatkowe wnioski:</p>
+<ul>
+<li><p>rozdział 3 ma najwyższy pozytywny i negatywny sentyment, co
+sugeruje obecność zarówno negatywnych, jak i pozytywnych wydarzeń lub
+emocji w tym rozdziale. Może to wskazywać na złożoność fabuły lub
+konflikty,</p></li>
+<li><p>ogólny wysoki pozytywny sentyment w rozdziale 3 zauważony na
+poprzednim wykresie składa się z bardzo wysokiego zarówno pozytywnego
+jak i negatywnego sentymentu. Może to wskazywać na złożoność fabuły i
+emocjonalny czas.</p></li>
+<li><p>podobnie rozdziały 15 i 16 charakteryzują się jednocześnie
+wysokim wskaźnikiem pozytywności jak i negatywności, z przewagą tego
+drugiego, stąd sumarycznie negatywny wydźwięk zauważony na poprzednim
+wykresie. Tu również czytelnik może odczuć emocjonalny czas dla
+bohaterów,</p></li>
+<li><p>na początku i na końcu książki obserwuje się niski wskaźnik
+negatywnego sentymentu (abstrahując od pozytywnego), a wraz z fabuła
+ogólnie rośnie wskaźnik pozytynego sentymentu.</p></li>
+<li><p>najwyższy pozytywny sentyment (abstrahując od negatywnego)
+występuje w rozdziale 3 i dwóch ostatnich: 24 i 25.</p></li>
+</ul>
+<p>Na podstawie analizy sentymentu według słownika Bing w książce “Wokół
+księżyca” można powiedzieć, że cała książka jest generalnie nacechowana
+pozytywnym sentymentem, co sugeruje, że optymizm i dobre emocje
+towarzyszą czytelnikowi przez całą fabułę. Rozdziały 15 i 16 wyróżniają
+się negatywnym sentymentem, stanowiąc kontrast w stosunku do reszty
+rozdziałów. Może to wskazywać na wystąpienie momentów konfliktu lub
+trudności, które dodają napięcia i zmieniają ton narracji. Ponadto
+wspomniane rozdziały wraz z 3 cechują się wysokim poziomem zarówno
+pozytywnego, jak i negatywnego sentymentu, co może wskazywać na
+intensywne emocje i dynamikę. Ostatni rozdział osiąga najwyższy wynik
+wskaźnika sentymentu, co sugeruje zdecydowany happy end.</p>
+<p>------------------------------------------------------------------------------------------</p>
+<ul>
+<li><strong>Podsumowanie</strong></li>
+</ul>
+<p>Porównując dwie analizy sentymentu w książkach “W 80 dni dookoła
+świata” i “Wokół księżyca”, można zauważyć pewne podobieństwa i różnice.
+W obu przypadkach analiza sentymentu wykazuje zróżnicowane nastroje w
+narracji, jednak w przypadku “Wokół księżyca” jest to dużo mniejsza
+dynamika niż w “W 80 dni dookoła świata”. Obie książki rzopocznają się
+pozytywnie i kończą happy endem. Sugerując czytelnikom, można
+powiedzieć, że “W 80 dni dookoła świata” oferuje dynamiczną fabułę z
+różnymi emocjonalnymi momentami, podczas gdy “Wokół księżyca” zapewnia
+optymizm i dobre emocje przez większość historii. Oba tytuły mogą być
+interesujące dla osób poszukujących różnorodności nastrojów i emocji w
+literaturze.</p>
+<p>------------------------------------------------------------------------------------------</p>
+</div>
+<div id="słownik-affin---ważony-wskaźnik-nastroju"
+class="section level2">
+<h2>Słownik AFFIN - ważony wskaźnik nastroju</h2>
+<p><u><strong>Słownik AFINN</strong></u> (Affinity Lexicon) to słownik,
+który przypisuje wartości sentymentalne słowom w tekście. Słowa są
+oceniane liczbowo na skali od -5 do +5, gdzie wartości ujemne oznaczają
+negatywny sentyment, a wartości dodatnie oznaczają pozytywny
+sentyment.</p>
+<p>Słownik AFINN zawiera mniejw wyrazów niż Bing, skupia się na słowach
+mających wyraźny wydźwięk sentymentalny, a jego głównym celem jest
+identyfikowanie i mierzenie emocjonalnej zawartości tekstu. Je</p>
+<pre class="r"><code>afinn_sentiments &lt;- get_sentiments(&quot;afinn&quot;)
+
+eighty_days_sentiments_afinn =
+  inner_join(eighty_days_tokens, afinn_sentiments, by = &quot;word&quot;)
+all_moon_sentiments_affin =
+  inner_join(all_moon_tokens, afinn_sentiments, by = &quot;word&quot;)</code></pre>
+<p>Jako że rezultat zastosowania słownika Affin jest bardzo podobny do
+wykresów wykonanych za pomocą słownika Bing, poniższa analiza jest w
+formie porównawczej aby nie powielać wniosków.</p>
+<ul>
+<li><strong>“W 80 dnii dookoła świata”</strong></li>
+</ul>
+<pre class="r"><code>eighty_days_afinn &lt;- eighty_days_sentiments_afinn %&gt;%
+  group_by(chapter) %&gt;%
+  summarise(value = sum(value))
+
+eighty_days_bing_comparison &lt;- eighty_days_bing %&gt;%
+  rename(value = sentiment)
+
+combined_sentiments &lt;- rbind(
+  transform(eighty_days_afinn, lexicon = &quot;Afinn&quot;),
+  transform(eighty_days_bing_comparison[c(1,4)], lexicon = &quot;Bing&quot;)
+)
+
+ggplot(combined_sentiments, aes(x = chapter, y = value, fill = lexicon)) +
+  geom_col(position = &quot;identity&quot;, alpha = 0.7) +
+  labs(title = &quot;Porównanie sentymentu w powieściach&quot;,
+       x = &quot;Rozdział&quot;,
+       y = &quot;Sentyment&quot;,
+       fill = &quot;Leksykon&quot;) +
+  scale_fill_manual(values = c(&quot;Afinn&quot; = &quot;steelblue&quot;, &quot;Bing&quot; = &quot;peachpuff&quot;)) +
+  theme_minimal()</code></pre>
+<p><img src="sentyment_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Porównując sentyment według dwóch słowników, Affin i Bing, w książce
+“80 dni dookoła świata”, można zauważyć pewne różnice w interpretacji
+nastroju:</p>
+<ul>
+<li><p>pierwsze rozdziały są bardziej pozytywne w przypadku Affin, z
+odwróceniem sentymentu w rozdziale 5. Może sugerować to trudności na
+drodze bohaterów, nie wykryte przez słownik Bing,</p></li>
+<li><p>środek książki (rozdziały 17-27) jest znacząco bardziej pozytywny
+niż sugerował to Bing,</p></li>
+<li><p>na końcu książki za pomocą słownika Affin w odróżnieniu do Bing
+można zauważyć przewagę negatywności (rozdziały 32-36) z happy endem
+(pozytywność na poziomie początku książki),</p></li>
+<li><p>wiele sentymentów zostało odwróconych według Affin, sugerując
+inną dynamikę</p>
+<ul>
+<li><p>do negatywnych rozdziałów należą: 5 (Bing: pozytywny), 8 (Bing:
+neutralny),16 (Bing: pozytywny), 32-33, 35 (Bing: pozytywny),</p></li>
+<li><p>a do pozytywnych: 18 (Bing: negaytwyny), 21 (Bing:
+neutralny)</p></li>
+</ul></li>
+<li><p>według obu słowników najbardziej pozytywnym rozdziałem jest 14.
+Podobnie w przypadku negatywnego, oba słowniki są zgodne co do rozdziału
+30, jednakże affin sugeruje, że podobnie negatywny wydźwięk ma rozdział
+15. To może być najbardziej emocjonalny moment książki, gdyż po dużym
+pozytywiźmie następuje duży negatywizm. Bohaterzy mogli przykładowo
+doświadzczyć tutaj straty.</p></li>
+</ul>
+<p>Słownik Affin wydaje się bardziej skłonny do wykrywania pozytywnych
+sentymentów niż Bing w książce “80 dni dookoła świata”. Ogólnie rzecz
+biorąc, sentymenty według Affin są wyższe niż według Bing. Istnieją
+również różnice interpretacji nastroju w poszczególnych rozdziałach,
+gdzie Affin często odwraca sentymenty w porównaniu do Bing.</p>
+<p>------------------------------------------------------------------------------------------</p>
+<ul>
+<li><strong>“Wokół księżyca”</strong></li>
+</ul>
+<pre class="r"><code>all_moon_afinn &lt;- all_moon_sentiments_affin %&gt;%
+  group_by(chapter) %&gt;%
+  summarise(value = sum(value))
+
+all_moon_bing_comparison &lt;- all_moons_bing %&gt;%
+  rename(value = sentiment)
+
+combined_sentiments &lt;- rbind(
+  transform(all_moon_afinn, lexicon = &quot;Afinn&quot;),
+  transform(all_moon_bing_comparison[c(1,4)], lexicon = &quot;Bing&quot;)
+)
+
+ggplot(combined_sentiments, aes(x = chapter, y = value, fill = lexicon)) +
+  geom_col(position = &quot;identity&quot;, alpha = 0.7) +
+  labs(title = &quot;Porównanie sentymentu w powieściach&quot;,
+       x = &quot;Rozdział&quot;,
+       y = &quot;Sentyment&quot;,
+       fill = &quot;Leksykon&quot;) +
+  scale_fill_manual(values = c(&quot;Afinn&quot; = &quot;steelblue&quot;, &quot;Bing&quot; = &quot;peachpuff&quot;)) +
+  theme_minimal()</code></pre>
+<p><img src="sentyment_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Porównując sentyment według dwóch słowników, Affin i Bing, w książce
+“Wokół księżyca”, można wyciągnąc wnioski:</p>
+<ul>
+<li><p>słownik Affin wykrywa wyższe sentymenty niż Bing w trakcie całej
+książki, poza rozdziałami 2 i 5,</p></li>
+<li><p>według Affin żaden rozdział nie jest zaklafikowany jako
+negatywny, Bing wymienił 15 i 16,</p></li>
+<li><p>ponadto rozdziałami o najniższym sentymencie są teraz 2 i 5, co
+może sugerować mniejszy optymizm na początku przygody lub większe
+problemy. Ogólnie rzecz biorąc początek książki według Affin jest
+bardziej dynamiczny jeżeli chodzi o sentyment niż według Bing,</p></li>
+<li><p>koniec książki bardziej wyróżnia się pozytywnym zakończeniem
+aniżeli w przypadku słownika Bing.</p></li>
+</ul>
+<p>Podsumowując, analiza sentymentu za pomocą słowników Affin i Bing w
+książce “Wokół księżyca” ukazuje różnice w interpretacji nastroju, ze
+szczególnym uwzględnieniem pozytywnych aspektów. Słownik Affin wykazuje
+tendencję do wykrywania większej liczby pozytywnych sentymentów niż
+Bing, co wpływa na ogólny odbiór emocjonalny książki.</p>
+<div id="podsumowanie-słowników-bing-i-affin-w-powieściach"
+class="section level4">
+<h4><strong>Podsumowanie słowników Bing i Affin w
+powieściach</strong></h4>
+<pre class="r"><code>eight &lt;- (abs((eighty_days_afinn[2] - eighty_days_bing_comparison[4])))
+eight &lt;- as.list(eight)[[1]]
+moon &lt;- (abs((all_moon_afinn[2] - all_moon_bing_comparison[4])))
+moon &lt;- as.list(moon)[[1]]
+
+mean_eight = mean(eight) 
+max_eight = max(eight)
+
+mean_moon = mean(moon) 
+max_moon = max(moon)
+
+max_eight_chapter &lt;- which.max(eight)
+max_moon_chapter &lt;- which.max(moon)
+
+same_sentiment_eight &lt;- (sum(eighty_days_afinn[2] - eighty_days_bing_comparison[4] == 0))/ length(eight) * 100
+same_sentiment_eight_chapters &lt;- which(eighty_days_afinn[2] - eighty_days_bing_comparison[4] == 0)
+
+same_sentiment_moon &lt;- (sum(all_moon_afinn[2] - all_moon_bing_comparison[4] == 0))/ length(moon) * 100
+
+positive_negative_count_eighty &lt;- sum(sign(eighty_days_afinn[2]) == sign(eighty_days_bing_comparison[4]) * -1)
+positive_negative_count_moon &lt;- sum(sign(all_moon_afinn[2]) == sign(all_moon_bing_comparison[4]) * -1)
+
+percent_eighty &lt;- positive_negative_count_eighty/length(eight) * 100
+percent_moon &lt;- positive_negative_count_moon/length(moon) * 100
+
+cat(&quot;Różnica w sentymentach w &#39;W 80 dni dookoła świata&#39;: \n&quot;,
+    &quot;Średnia:&quot;, mean_eight, &quot;\n Maksymalna:&quot;, max_eight, &quot;\n Dla rozdziału:&quot;, max_eight_chapter, &quot;\n Procent niezmienności:&quot;, sprintf(&quot;%.3f%%&quot;, same_sentiment_eight), &quot;\n Dla rozdziałów:&quot;, same_sentiment_eight_chapters, &quot;\n Zmiana pozytywne/negatywne:&quot;, positive_negative_count_eighty, &quot;\n Procentowa zmiana pozytywne/negatywne:&quot;, sprintf(&quot;%.3f%%&quot;, percent_eighty), &quot;\n \n&quot;,
+    &quot;Różnica w sentymentach w &#39;Wokół księżyca&#39;: \n&quot;,
+    &quot;Średnia:&quot;, mean_moon, &quot;\n Maksymalna:&quot;, max_moon, &quot;\n Dla rozdziału:&quot;, max_moon_chapter, &quot;\n Procent niezmienności:&quot;, sprintf(&quot;%.3f%%&quot;, same_sentiment_moon), &quot;\n Zmiana pozytywne/negatywne:&quot;, positive_negative_count_moon, &quot;\n Procentowa zmiana pozytywne/negatywne:&quot;, sprintf(&quot;%.3f%%&quot;, percent_moon), &quot;\n&quot;)</code></pre>
+<pre><code>## Różnica w sentymentach w &#39;W 80 dni dookoła świata&#39;: 
+##  Średnia: 19.81081 
+##  Maksymalna: 69 
+##  Dla rozdziału: 25 
+##  Procent niezmienności: 5.405% 
+##  Dla rozdziałów: 7 29 
+##  Zmiana pozytywne/negatywne: 7 
+##  Procentowa zmiana pozytywne/negatywne: 18.919% 
+##  
+##  Różnica w sentymentach w &#39;Wokół księżyca&#39;: 
+##  Średnia: 60.6 
+##  Maksymalna: 182 
+##  Dla rozdziału: 25 
+##  Procent niezmienności: 0.000% 
+##  Zmiana pozytywne/negatywne: 2 
+##  Procentowa zmiana pozytywne/negatywne: 8.000%</code></pre>
+<p>W celu dodatkowego porównania analizy wedlug słownika Bing i Afinn
+zostały przedstawione powyższe statystyki. Na podstawie średniej różnicy
+w sentymentach (wartość bezwględna) możemy zauważyć, że analiza dla
+powieści “Wokół księżyca” jest bardziej zróżnicowana pod względem
+sentymentu, a największa różnica w wartości wynosi 182 dla ostatniego
+rozdziału. Jednakże należy mieć na uwadzę na podstawie poprzednich
+analiz, że słownik Affin dla tej powieści ustanowił pozytywny sentyment
+dla każdego rozdziału, ponadto prawie wszystkie rozdziały (poza dwoma)
+ocenił na pozytywniejsze niż Bing. Średnia różnica sentymentu w “W 80
+dni dookoła świata” natomiast jest dużo mniejsza, ponieważ wynosi 19.81,
+przy maksymalnej różnicy 69 dla rozdziału 25, co sugeruje większą
+zgodność podejść słowników, jednakże na poprzednich wykresach zauważona
+została większa różnorodność - zamiana sentymentu dla konkretnych
+rozdziałów.</p>
+<p>Dodatkowo procent niezmienności dla pierwszej książki wskazuje 5,4%
+przypadków (rozdziałów), dla których sentyment według obu słowników jest
+identyczny. Dla porównania z analizy wynika, że dla drugiej książki nie
+ma rozdziałów, w których sentymenty według obu słowników są identyczne,
+co również można już było zaobserować na wykresach.</p>
+<p>Analiza wykazuje najwięcej zmian kategorii sentymentu w rozdziałach
+dla pierwszej powieści, dotyczy aż 7, co stanowi 19.9% wszystkich
+rozdziałów. W przypadku drugiej książki mowa o zaledwie 2 rozdziałach,
+które stanowią 8% wszystkich dla tej powieści.</p>
+<p>Podsumowując, z podanych statystyk wynika, że dwa podejścia różniły
+się mniej w przypadku pierwszej książki, a więcej w przypadku drugiej.
+Co może oznaczać większą pewność intepretacji dla “W 80 dni dookoła
+świata”. Jednak biorąc pod uwagę procentową zmianę kategorii sentymentu
+oraz całą analizę, można powiedzieć, że w przypadku powieści “Wokół
+księzyca” analiza i intepretacja sentymentu jest bardziej jednoznaczna
+jeżeli chodzi o ‘kierunek’ - najczęstsze zmiany dotyczyły podwyższenia
+sentymentu za pomocą słownika Affin, który już był pozytywny w przypadku
+Bing.</p>
+<p>------------------------------------------------------------------------------------------</p>
+</div>
+</div>
+<div id="słownik-nrc---rozpoznanie-emocji" class="section level2">
+<h2>Słownik NRC - rozpoznanie emocji</h2>
+<p><u><strong>Słownik NRC</strong></u> (National Research Council) to
+słownik, który zawiera kategorie emocji, a nie tylko wartości
+sentymentalne słów. Zamiast przypisywać wartości liczbowe, słownik NRC
+identyfikuje obecność lub brak pewnych emocji w tekście. Słowa są
+przyporządkowane do różnych kategorii emocji, takich jak radość, smutek,
+gniew, strach, zaufanie itp. Słownik NRC pozwala na bardziej szczegółową
+analizę emocji obecnych w tekście, a nie tylko ogólną ocenę
+sentymentu.</p>
+<pre class="r"><code>nrc_sentiments &lt;- get_sentiments(&quot;nrc&quot;)
+
+eighty_days_sentiments_nrc =
+  inner_join(eighty_days_tokens, nrc_sentiments, by = &quot;word&quot;)
+
+all_moon_sentiments_nrc =
+  inner_join(all_moon_tokens, nrc_sentiments, by = &quot;word&quot;)</code></pre>
+<ul>
+<li><strong>“W 80 dnii dookoła świata” i “Wokół księżyca”</strong></li>
+</ul>
+<pre class="r"><code>combined_sentiments_nrc &lt;- rbind(
+  mutate(all_moon_sentiments_nrc, ksiażka = &quot;Wokół księżyca&quot;),
+  mutate(eighty_days_sentiments_nrc, ksiażka = &quot;W 80 dni dookoła świata&quot;)
+)
+
+emotion_counts &lt;- combined_sentiments_nrc %&gt;%
+  group_by(ksiażka, sentiment) %&gt;%
+  summarise(total = n()) %&gt;%
+  ungroup() %&gt;%
+  arrange(sentiment, desc(total))
+
+ggplot(emotion_counts, aes(x = reorder(sentiment, -total), y = total, fill = ksiażka)) +
+  geom_bar(stat = &quot;identity&quot;, position = &quot;identity&quot;, show.legend = TRUE, alpha = 0.7) +
+  labs(x = &quot;Emocje&quot;, 
+       y = &quot;Liczba wystąpień&quot;, 
+       title = &quot;Emocje w książkach J. Verne&#39;a wg słownika NRC&quot;) +
+  scale_fill_manual(values = c(&quot;Wokół księżyca&quot; = &quot;peachpuff&quot;, &quot;W 80 dni dookoła świata&quot; = &quot;steelblue&quot;)) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45))</code></pre>
+<p><img src="sentyment_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Analizując wykres przedstawiający częstości występowania emocji w
+książkach “W 80 dni dookoła świata” i “Wokół księżyca”, można zauważyć
+interesujące podobieństwa oraz pewne różnice. Zarówno w jednej, jak i
+drugiej książce dominują emocje pozytywne, co wskazuje na optymistyczny
+charakter opisywanych wydarzeń. Emocje takie jak “positive”, “trust”,
+“trust” i “anticipation” zajmują czołowe pozycje w obu przypadkach, co
+sugeruje ogólny pozytywizm obecny w fabule.</p>
+<p>Jednak warto zwrócić uwagę na różnice w występowaniu emocji
+“surprise” i “anger” pomiędzy dwiema książkami. W “W 80 dni dookoła
+świata” emocja “anger” zajmuje wyraźnie niższe miejsce niż “surprise”,
+podczas gdy w “Wokół księżyca” jest odwrotnie. Może to wskazywać na
+nieco inną dynamikę narracji oraz inne czynniki wpływające na napięcie
+emocjonalne czy zaskoczenie czytelnika.</p>
+<p>Podsumowując, obie książki Jules’a Verne’a charakteryzują się
+dominacją pozytywnych emocji. Mimo pewnych podobieństw w rankingu
+emocji, występują również subtelne różnice, które mogą wynikać z
+unikalnego charakteru każdej z powieści. Ta analiza sugeruje, że obie
+książki mają bardzo podobny sentyment, co wyklucza się z poprzednimi
+analizami, które uznaje się za wiarygodniejsze z powodu większej
+szczególowości.</p>
+<p>------------------------------------------------------------------------------------------</p>
+</div>
+<div id="podsumowanie" class="section level2">
+<h2>Podsumowanie</h2>
+<p>Analiza sentymentu dla powieści “W 80 dni dookoła świata” i “Wokół
+księżyca” ujawnia różnice w nastrojach i emocjach obecnych w tych
+książkach. Obie powieści charakteryzują się dynamiką narracji, która
+przechodzi od momentów optymizmu do trudności. Wyniki analizy mogą być
+zróżnicowane w zależności od zastosowanego słownika sentymentalnego.</p>
+<p>“W 80 dni dookoła świata” prezentuje mieszane nastroje, począwszy od
+początkowego entuzjazmu, a następnie zmagając się z różnymi wyzwaniami i
+trudnościami. Pomimo tego, kończy się umiarkowanie pozytywnie, dając
+czytelnikom pewne poczucie optymizmu. Może to być pozycja dla miłośników
+przygód, którzy lupią napięcie i dynamikę emocji.</p>
+<p>“Wokół księżyca” natomiast przeważnie emanuje pozytywnym sentymentem
+przez całą powieść. Narracja jest pełna optymizmu i fascynacji podróżą
+kosmiczną, co może wywoływać u czytelników uczucia inspiracji i radości.
+Może to być lektura dla osób lubiących czytać o pozytwynych przygodach
+bohaterów, z elementami science fiction.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
