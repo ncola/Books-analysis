@@ -16,7 +16,7 @@
 <script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -33,8 +33,6 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -45,18 +43,110 @@
   ul.task-list{list-style: none;}
     </style>
 
-<style type="text/css">code{white-space: pre;}</style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
   }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
-
-
 
 
 
@@ -281,6 +371,12 @@ div.tocify {
   border-radius: 0px;
 }
 
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
 
 </style>
 
@@ -314,7 +410,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+      <a class="navbar-brand" href="index.html">Analiza książek Juliusza Verne'a</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -360,19 +456,20 @@ div.tocify {
 
 
 <div id="niezależne" class="section level2">
-<h2>Niezależne</h2>
+<h2>1. Niezależne</h2>
+<p><br></p>
 <div id="słowa-dla-powieści-w-80-dni-dookoła-świata"
 class="section level3">
 <h3>Słowa dla powieści “W 80 dni dookoła świata”</h3>
-<pre class="r"><code>termy &lt;- unlist(eighty_days_lem$word_lemma)
-unikaty &lt;- unique(termy)
-
-bow &lt;- sapply(unikaty, function(x) sum(termy == x[1]))
-bow_sort &lt;- sort(bow, decreasing = T)
-
-color &lt;- brewer.pal(8, &quot;Dark2&quot;)
-
-wordcloud(names(bow_sort), bow_sort, max.words = 50, colors = color, random.color = FALSE, random.order = FALSE, scale = c(3,.3))</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>termy <span class="ot">&lt;-</span> <span class="fu">unlist</span>(eighty_days_lem<span class="sc">$</span>word_lemma)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>unikaty <span class="ot">&lt;-</span> <span class="fu">unique</span>(termy)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>bow <span class="ot">&lt;-</span> <span class="fu">sapply</span>(unikaty, <span class="cf">function</span>(x) <span class="fu">sum</span>(termy <span class="sc">==</span> x[<span class="dv">1</span>]))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>bow_sort <span class="ot">&lt;-</span> <span class="fu">sort</span>(bow, <span class="at">decreasing =</span> T)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>color <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&quot;Dark2&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(<span class="fu">names</span>(bow_sort), bow_sort, <span class="at">max.words =</span> <span class="dv">50</span>, <span class="at">colors =</span> color, <span class="at">random.color =</span> <span class="cn">FALSE</span>, <span class="at">random.order =</span> <span class="cn">FALSE</span>, <span class="at">scale =</span> <span class="fu">c</span>(<span class="dv">3</span>,.<span class="dv">3</span>))</span></code></pre></div>
 <p><img src="chmury_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Analizując najczęściej występujące słowa w książce “W 80 dni dookoła
 świata”, możemy wyciągnąć kilka wniosków:</p>
@@ -402,17 +499,18 @@ miejsca, z naciskiem na element czasu i dynamiczną akcję. Postacie,
 którymi podróżnik spotyka w trakcie swojej podróży, odgrywają istotną
 rolę w rozwinięciu fabuły. Książka przedstawia zróżnicowane lokalizacje
 i kultury, co dodaje jej różnorodności i interesującej atmosfery.</p>
+<p><br></p>
 </div>
 <div id="słowa-dla-powieści-wokół-księżyca" class="section level3">
 <h3>Słowa dla powieści “Wokół księżyca”</h3>
-<pre class="r"><code>termy2 &lt;- unlist(all_moon_lem$word_lemma)
-unikaty2 &lt;- unique(termy2)
-
-bow2 &lt;- sapply(unikaty2, function(x) sum(termy2 == x[1])) 
-bow_sort2 &lt;- sort(bow2, decreasing = T)
-
-color2 &lt;- brewer.pal(8, &quot;Dark2&quot;)
-wordcloud(names(bow_sort2), bow_sort2, max.words = 50, colors = color2, random.color = FALSE, random.order = FALSE)</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>termy2 <span class="ot">&lt;-</span> <span class="fu">unlist</span>(all_moon_lem<span class="sc">$</span>word_lemma)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>unikaty2 <span class="ot">&lt;-</span> <span class="fu">unique</span>(termy2)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>bow2 <span class="ot">&lt;-</span> <span class="fu">sapply</span>(unikaty2, <span class="cf">function</span>(x) <span class="fu">sum</span>(termy2 <span class="sc">==</span> x[<span class="dv">1</span>])) </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>bow_sort2 <span class="ot">&lt;-</span> <span class="fu">sort</span>(bow2, <span class="at">decreasing =</span> T)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>color2 <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&quot;Dark2&quot;</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(<span class="fu">names</span>(bow_sort2), bow_sort2, <span class="at">max.words =</span> <span class="dv">50</span>, <span class="at">colors =</span> color2, <span class="at">random.color =</span> <span class="cn">FALSE</span>, <span class="at">random.order =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p><img src="chmury_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Analizując najczęściej występujące słowa w książce “Wokół księżyca”,
 możemy wyciągnąć następujące wnioski:</p>
@@ -445,25 +543,30 @@ księżycowego krajobrazu. Przyjaźń i relacje międzyludzkie mogą odgrywać
 istotną rolę w rozwoju fabuły. Czas jest istotnym elementem podróży
 kosmicznej, a pomiar czasu i obserwacja mają duże znaczenie w
 narracji.</p>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<p><br></p>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 </div>
 <div id="przecięcia" class="section level2">
-<h2>Przecięcia</h2>
+<h2>2. Przecięcia</h2>
+<p><br></p>
 <div id="słowa-wspólne-dla-obu-powieści" class="section level3">
 <h3>Słowa wspólne dla obu powieści</h3>
-<pre class="r"><code># Znalezienie elementów, które występują w obu wektorach
-slowa &lt;- intersect(termy, termy2) 
-
-# Wyznaczenie czestosci słów
-czestosci_temat1 &lt;- table(termy)[slowa] #wektor zawierajacy liczby wystąpień elementów z wektora slowa w wektorze slowa_temat
-czestosci_temat2 &lt;- table(termy2)[slowa]
-
-# Obliczenie sumy czestosci słów
-czestosci_suma &lt;- czestosci_temat1 + czestosci_temat2
-
-color3 &lt;- brewer.pal(8, &quot;Dark2&quot;)
-wordcloud(slowa, czestosci_suma, max.words = 50, colors = color3, random.color = FALSE, random.order = FALSE, scale = c(3,.3))</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Znalezienie elementów, które występują w obu wektorach</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>slowa <span class="ot">&lt;-</span> <span class="fu">intersect</span>(termy, termy2) </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Wyznaczenie czestosci słów</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>czestosci_temat1 <span class="ot">&lt;-</span> <span class="fu">table</span>(termy)[slowa] <span class="co">#wektor zawierajacy liczby wystąpień elementów z wektora slowa w wektorze slowa_temat</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>czestosci_temat2 <span class="ot">&lt;-</span> <span class="fu">table</span>(termy2)[slowa]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Obliczenie sumy czestosci słów</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>czestosci_suma <span class="ot">&lt;-</span> czestosci_temat1 <span class="sc">+</span> czestosci_temat2</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>color3 <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&quot;Dark2&quot;</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(slowa, czestosci_suma, <span class="at">max.words =</span> <span class="dv">50</span>, <span class="at">colors =</span> color3, <span class="at">random.color =</span> <span class="cn">FALSE</span>, <span class="at">random.order =</span> <span class="cn">FALSE</span>, <span class="at">scale =</span> <span class="fu">c</span>(<span class="dv">3</span>,.<span class="dv">3</span>))</span></code></pre></div>
 <p><img src="chmury_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p><br />
 Z chmury dotyczącej wspólnych słów występujących w książkach “W 80 dni
@@ -495,11 +598,11 @@ elementy podróży, czasu, odległości i wielkości. Można powiedzieć, że
 księżyc jest ważnym motywem zarówno w “W 80 dni dookoła świata”, jak i w
 “Wokół księżyca”. Podróżowanie i komunikacja są istotne w obu książkach,
 choć w różny sposób. Czas odgrywa ważną rolę w narracji obu dzieł.</p>
-<pre class="r"><code>eighty_moon &lt;- bow[&quot;moon&quot;] 
-moon_moon &lt;- bow2[&quot;moon&quot;]
-
-cat(&quot;Występowanie słowa &#39;moon&#39; w książce &#39;W 80 dni dookoła świata&#39;:&quot;, eighty_moon, &quot;\n&quot;,
-    &quot;Występowanie słowa &#39;moon&#39; w książce &#39;Wokół księżyca&#39;:&quot;, moon_moon, &quot;\n&quot;)</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>eighty_moon <span class="ot">&lt;-</span> bow[<span class="st">&quot;moon&quot;</span>] </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>moon_moon <span class="ot">&lt;-</span> bow2[<span class="st">&quot;moon&quot;</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Występowanie słowa &#39;moon&#39; w książce &#39;W 80 dni dookoła świata&#39;:&quot;</span>, eighty_moon, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Występowanie słowa &#39;moon&#39; w książce &#39;Wokół księżyca&#39;:&quot;</span>, moon_moon, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
 <pre><code>## Występowanie słowa &#39;moon&#39; w książce &#39;W 80 dni dookoła świata&#39;: 5 
 ##  Występowanie słowa &#39;moon&#39; w książce &#39;Wokół księżyca&#39;: 468</code></pre>
 <p>Należy jednak zauważyć, że słowa te są liczone wartością bezwzlędną,
@@ -508,20 +611,21 @@ księżyca w obu książkach jest oczywiście błędny, jednakże nie znając
 fabuły możemy uznać go za prawdziwy. Przy bliższej analizie mozemy
 zauważyć, że książka “W 80 dni dookoła świata” wspomina o księżycu,
 jednakże zaledwie kilka razy, nie może to mieć wpływu na fabułe.</p>
+<p><br></p>
 </div>
 <div
 id="słowa-charakterystyczne-tylko-dla-powieści-w-80-dni-dookoła-świata"
 class="section level3">
 <h3>Słowa charakterystyczne tylko dla powieści “W 80 dni dookoła
 świata”</h3>
-<pre class="r"><code># Wyznaczenie słów występujących w termy, ale nie występujących w termy2
-slowa &lt;- setdiff(termy, termy2) #elementy z wektora termy, które nie występują w wektorze termy2
-
-# Wyznaczenie czestosci słów
-czestosci &lt;- table(termy)[slowa]
-
-color &lt;- brewer.pal(8, &quot;Dark2&quot;)
-wordcloud(slowa, czestosci, max.words = 50, colors = color, random.color = FALSE, random.order = FALSE, scale = c(4,.3))</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wyznaczenie słów występujących w termy, ale nie występujących w termy2</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>slowa <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(termy, termy2) <span class="co">#elementy z wektora termy, które nie występują w wektorze termy2</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Wyznaczenie czestosci słów</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>czestosci <span class="ot">&lt;-</span> <span class="fu">table</span>(termy)[slowa]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>color <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&quot;Dark2&quot;</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(slowa, czestosci, <span class="at">max.words =</span> <span class="dv">50</span>, <span class="at">colors =</span> color, <span class="at">random.color =</span> <span class="cn">FALSE</span>, <span class="at">random.order =</span> <span class="cn">FALSE</span>, <span class="at">scale =</span> <span class="fu">c</span>(<span class="dv">4</span>,.<span class="dv">3</span>))</span></code></pre></div>
 <p><img src="chmury_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Z powyższej chmury, przedstawiającej słowa charakterystyczne tylko
 dla książki “W 80 dni dookoła świata”, można wyciągnąć poniższe
@@ -543,18 +647,19 @@ związanych z podróżami, kulturą i zdarzeniami w książce. Nadają one
 charakterystyczny wydźwięk narracji i odzwierciedlają specyficzny
 kontekst historii.</p></li>
 </ol>
+<p><br></p>
 </div>
 <div id="słowa-charakterystyczne-tylko-dla-powieści-wokół-księżyca"
 class="section level3">
 <h3>Słowa charakterystyczne tylko dla powieści “Wokół księżyca”</h3>
-<pre class="r"><code># Wyznaczenie słów występujących w termy2, ale nie występujących w termy
-slowa2 &lt;- setdiff(termy2, termy)
-
-# Wyznaczenie czestosci słów
-czestosci2 &lt;- table(termy2)[slowa2]
-
-color &lt;- brewer.pal(8, &quot;Dark2&quot;)
-wordcloud(slowa2, czestosci2, max.words = 50, colors = color, random.color = FALSE, random.order = FALSE, scale = c(6,.4))</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Wyznaczenie słów występujących w termy2, ale nie występujących w termy</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>slowa2 <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(termy2, termy)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Wyznaczenie czestosci słów</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>czestosci2 <span class="ot">&lt;-</span> <span class="fu">table</span>(termy2)[slowa2]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>color <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&quot;Dark2&quot;</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">wordcloud</span>(slowa2, czestosci2, <span class="at">max.words =</span> <span class="dv">50</span>, <span class="at">colors =</span> color, <span class="at">random.color =</span> <span class="cn">FALSE</span>, <span class="at">random.order =</span> <span class="cn">FALSE</span>, <span class="at">scale =</span> <span class="fu">c</span>(<span class="dv">6</span>,.<span class="dv">4</span>))</span></code></pre></div>
 <p><img src="chmury_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Analizując najczęściej występujące słowa charakterystyczne tylko dla
 książki “Wokół księżyca”, można wyciągnąć kilka dodatkowych wniosków
@@ -578,7 +683,11 @@ eksploracją.</p></li>
 “illustration” sugerują obecność opisów, ilustracji i porównań w
 książce, może to się wiązać z aspektem naukowym.</p></li>
 </ol>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<p><br></p>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 </div>
 <div id="podsumowanie" class="section level2">
@@ -685,7 +794,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = true;
+    options.showAndHide = false;
     options.smoothScroll = true;
 
     // tocify

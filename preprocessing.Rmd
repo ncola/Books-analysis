@@ -3,15 +3,19 @@ title: "Przygotowanie"
 output: 
   html_document:
     toc: true
-    toc_float: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    highlight: pygments
+    theme: lumen
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 ```
-
+<br>
+Niezbędne biblioteki do całej analizy:
 ```{r}
-
 library(tidytext)
 library(dplyr)
 library(textstem)
@@ -32,11 +36,16 @@ library(rmdformats)
 library(knitr)
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 # Wczytanie danych
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 Poddane analizie są książki Juliusza Verne'a:
 
@@ -75,15 +84,20 @@ all_moon <- readLines(url2) %>%
 
 wys2 <- head(all_moon$text,5)
 wyswietlenie2 <- tibble(Chapter = 1:5, "Część tekstu" = paste0(substr(wys2, 1, 250), "[...]"))
-kable(wyswietlenie2, format = "html", align = "c", table.attr = "class='table table-striped'", row.names = FALSE, caption = "W 80 dni dookoła świata w podziale na rozdziały") %>%
+kable(wyswietlenie2, format = "html", align = "c", table.attr = "class='table table-striped'", row.names = FALSE, caption = "Wokół księżyca w podziale na rozdziały") %>%
   kable_styling()
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 # Przygotowanie danych
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Wstępne czyszczenie
 
@@ -103,7 +117,9 @@ eighty_days <- clean_text(eighty_days)
 all_moon <- clean_text(all_moon)
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Tokenizacja
 
@@ -115,7 +131,9 @@ all_moon_tokens <- all_moon %>%
   unnest_tokens(word, text)
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Usunięcie stopwords
 
@@ -174,7 +192,9 @@ Można zauważyć, że w w powieści "80 dnii dookoła świata" zostało usunię
 
 Ogólnie rzecz biorąc, usunięcie stopwords znacznie zmniejszyło liczbę tokenów w obu przypadkach. Pozwala to na bardziej precyzyjne analizowanie istotnych słów w tekście, eliminując słowa powszechnie używane, które nie niosą dużo informacji.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Lemmatyzacja
 
@@ -196,7 +216,9 @@ all_moon_lem <- all_moon_tidy %>%
   select(chapter, word_lemma)
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Złączenie gotowych tokenów
 
@@ -214,7 +236,9 @@ all_moon_text <- books_list <- all_moon_lem %>%
   ungroup() 
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Połączenie książek
 
@@ -223,8 +247,8 @@ books_docs <- rbind(eighty_days_text, all_moon_text)
 nrow(books_docs)
 ```
 
-Mamy 62 rozdziały (dokumety) z dwóch książek:
+Mamy 62 rozdziały (dokumenty) z dwóch książek:
 
--   wiersze 1:37 - "w 80 dni dookola swiata",
+-   wiersze 1:37 - "W 80 dni dookoła świata",
 
--   wiersze 38:62 - "wokół ksieżyca"
+-   wiersze 38:62 - "Wokół ksieżyca"

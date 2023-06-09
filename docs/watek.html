@@ -16,7 +16,7 @@
 <script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -33,8 +33,6 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -47,18 +45,110 @@
   ul.task-list{list-style: none;}
     </style>
 
-<style type="text/css">code{white-space: pre;}</style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
   }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
-
-
 
 
 
@@ -316,7 +406,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+      <a class="navbar-brand" href="index.html">Analiza książek Juliusza Verne'a</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -364,15 +454,15 @@ div.tocify {
 <div id="przygotowanie-danych" class="section level2">
 <h2>Przygotowanie danych</h2>
 <p>Korpus:</p>
-<pre class="r"><code>books_list &lt;- list(books_docs$text)[[1]]
-books_corpus &lt;- VCorpus(VectorSource(books_list))</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>books_list <span class="ot">&lt;-</span> <span class="fu">list</span>(books_docs<span class="sc">$</span>text)[[<span class="dv">1</span>]]</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>books_corpus <span class="ot">&lt;-</span> <span class="fu">VCorpus</span>(<span class="fu">VectorSource</span>(books_list))</span></code></pre></div>
 <p>Macierz wystąpień:</p>
-<pre class="r"><code>dtm_tf &lt;- DocumentTermMatrix(books_corpus, 
-                                control = list(
-                                                bounds = list(global = c(2, Inf)), # oznacza, że terminy muszą mieć co najmniej 2 znaki
-                                                weighting = weightTf))
-
-dtm_tf</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dtm_tf <span class="ot">&lt;-</span> <span class="fu">DocumentTermMatrix</span>(books_corpus, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">control =</span> <span class="fu">list</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">bounds =</span> <span class="fu">list</span>(<span class="at">global =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="cn">Inf</span>)), <span class="co"># oznacza, że terminy muszą mieć co najmniej 2 znaki</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">weighting =</span> weightTf))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>dtm_tf</span></code></pre></div>
 <pre><code>## &lt;&lt;DocumentTermMatrix (documents: 62, terms: 4597)&gt;&gt;
 ## Non-/sparse entries: 33034/251980
 ## Sparsity           : 88%
@@ -385,12 +475,16 @@ dwa znaki z kilku powodów:</p>
 rzadko i nie wnosiły istotnej informacji do analizy,</p></li>
 <li><p>skrócenie czasu obliczeń</p></li>
 </ul>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 <div id="lda---budowa" class="section level2">
 <h2>LDA - budowa</h2>
-<pre class="r"><code>lda &lt;- LDA(dtm_tf, 2, control = list(seed = 1652))
-str(lda)</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lda <span class="ot">&lt;-</span> <span class="fu">LDA</span>(dtm_tf, <span class="dv">2</span>, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="dv">1652</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(lda)</span></code></pre></div>
 <pre><code>## Formal class &#39;LDA_VEM&#39; [package &quot;topicmodels&quot;] with 14 slots
 ##   ..@ alpha          : num 0.033
 ##   ..@ call           : language LDA(x = dtm_tf, k = 2, control = list(seed = 1652))
@@ -437,32 +531,40 @@ poszczególnych dokumentach, wynosi 0.033,</p></li>
 <li><p>zbiór dokumentów składa się z jak dotychczas 62 dokumentów
 (rozdziałów z dwóch książek)</p></li>
 </ul>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 <p><u><strong>Dane potrzebne do klasyfikacji w następnym
 rozdziale</strong></u></p>
 <ul>
 <li><strong>Wyodrębnione termy tematów</strong>, które zostaną użyte
 jako klasy:</li>
 </ul>
-<pre class="r"><code>tematy_term &lt;- terms(lda)
-tematy &lt;- topics(lda)
-
-tematy_term</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tematy_term <span class="ot">&lt;-</span> <span class="fu">terms</span>(lda)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tematy <span class="ot">&lt;-</span> <span class="fu">topics</span>(lda)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>tematy_term</span></code></pre></div>
 <pre><code>## Topic 1 Topic 2 
 ##   &quot;day&quot;  &quot;moon&quot;</code></pre>
 <ul>
 <li>zmienna, która zawiera przypisane wątki w odpowiendnie
 kolejnośći</li>
 </ul>
-<pre class="r"><code>tematy &lt;- topics(lda)</code></pre>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tematy <span class="ot">&lt;-</span> <span class="fu">topics</span>(lda)</span></code></pre></div>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 <div id="termy-charakterystyczne-dla-obu-wątków" class="section level2">
 <h2>Termy charakterystyczne dla obu wątków</h2>
-<pre class="r"><code>tematy_termy8 &lt;- terms(lda, 8)
-
-kable(tematy_termy8, format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Termy w poszczególnych tematach&quot;) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tematy_termy8 <span class="ot">&lt;-</span> <span class="fu">terms</span>(lda, <span class="dv">8</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(tematy_termy8, <span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">caption =</span> <span class="st">&quot;Termy w poszczególnych tematach&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>))</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
 <caption>
 Termy w poszczególnych tematach
@@ -578,12 +680,12 @@ obie książki mogą eksplorować tematy podróży, odkrywania nieznanych
 miejsc i pokonywania wyzwań. Temat 1 może skupiać się na podróży dookół
 Ziemi (train), podczas gdy temat 2 może dotyczyć podróży kosmicznych
 (projectile), zwłaszcza w kontekście Księżyca.</p>
-<pre class="r"><code>tematy_termy8_string &lt;- apply(tematy_termy8, 2, paste, collapse = &quot; / &quot;)
-
-tematy8_df &lt;- tibble(Dokument = 1:62, &quot;Część tekstu&quot; = paste0(substr(books_list, 1, 100), &quot;[...]&quot;), Wątek = tematy, Książka = c(rep(&quot;W 80 dni dookoła świata&quot;, 37), rep(&quot;Wokół księżyca&quot;, 25)), Termy = tematy_termy8_string[tematy])
-
-kable(tematy8_df, format = &quot;html&quot;, align = &quot;c&quot;, table.attr = &quot;class=&#39;table table-striped&#39;&quot;, row.names = FALSE, caption = &quot;Przypisane wątki do konkretnych dokumentów&quot;) %&gt;%
-  kable_styling()</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tematy_termy8_string <span class="ot">&lt;-</span> <span class="fu">apply</span>(tematy_termy8, <span class="dv">2</span>, paste, <span class="at">collapse =</span> <span class="st">&quot; / &quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>tematy8_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Dokument =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">62</span>, <span class="st">&quot;Część tekstu&quot;</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">substr</span>(books_list, <span class="dv">1</span>, <span class="dv">100</span>), <span class="st">&quot;[...]&quot;</span>), Wątek <span class="ot">=</span> tematy, Książka <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">&quot;W 80 dni dookoła świata&quot;</span>, <span class="dv">37</span>), <span class="fu">rep</span>(<span class="st">&quot;Wokół księżyca&quot;</span>, <span class="dv">25</span>)), <span class="at">Termy =</span> tematy_termy8_string[tematy])</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(tematy8_df, <span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">table.attr =</span> <span class="st">&quot;class=&#39;table table-striped&#39;&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">caption =</span> <span class="st">&quot;Przypisane wątki do konkretnych dokumentów&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code></pre></div>
 <table class="table table-striped table" style="margin-left: auto; margin-right: auto;">
 <caption>
 Przypisane wątki do konkretnych dokumentów
@@ -1732,7 +1834,11 @@ księżyca” drugi, z wyjątkiem dokumentu 60, któremu został przypisany
 piewrszy wątek. Możliwe, że na przykład w tym rodziale (tj. 24,
 przedostatni) czas ma większe znaczenie niż zwykle, co jest bardziej
 charakterystyczne dla pierwszego wątku.</p>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 <div id="wizualizacja-wartości-beta-i-gamma" class="section level2">
 <h2>Wizualizacja wartości beta i gamma</h2>
@@ -1752,27 +1858,31 @@ dokumentu. Dla każdego dokumentu w korpusie, wartość gamma dla każdego
 tematu wskazuje, jak bardzo ten temat jest obecny w danym
 dokumencie.</li>
 </ul>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 <div id="beta" class="section level3">
 <h3>Beta</h3>
-<pre class="r"><code>beta_df &lt;- data_frame(term = lda@terms, wątek1 = exp(lda@beta[1, ]), wątek2 = exp(lda@beta[2, ]))</code></pre>
-<pre class="r"><code>beta_tidy &lt;- beta_df %&gt;% 
-  pivot_longer(-term, names_to = &quot;watek&quot;, values_to = &quot;beta&quot;)
-
-beta_top &lt;- beta_tidy %&gt;% 
-  group_by(watek) %&gt;% 
-  top_n(8, beta) %&gt;% 
-  ungroup() %&gt;% 
-  arrange(watek, -beta)</code></pre>
-<pre class="r"><code>beta_top %&gt;% 
-ggplot(aes(beta, tidytext::reorder_within(term, beta, watek), fill = watek)) +
-  geom_col(show.legend = FALSE) +
-  scale_fill_manual(values = c(&quot;steelblue&quot;, &quot;lightgreen&quot;)) +
-  facet_wrap(vars(watek), scales = &quot;free_y&quot;) +
-  labs(x = &quot;Termy&quot;) +
-  tidytext::scale_y_reordered() +
-  labs(x = expression(beta), y = NULL) +
-  theme_bw()</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>beta_df <span class="ot">&lt;-</span> <span class="fu">data_frame</span>(<span class="at">term =</span> lda<span class="sc">@</span>terms, wątek1 <span class="ot">=</span> <span class="fu">exp</span>(lda<span class="sc">@</span>beta[<span class="dv">1</span>, ]), wątek2 <span class="ot">=</span> <span class="fu">exp</span>(lda<span class="sc">@</span>beta[<span class="dv">2</span>, ]))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>beta_tidy <span class="ot">&lt;-</span> beta_df <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>term, <span class="at">names_to =</span> <span class="st">&quot;watek&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;beta&quot;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>beta_top <span class="ot">&lt;-</span> beta_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(watek) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">8</span>, beta) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(watek, <span class="sc">-</span>beta)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>beta_top <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(beta, tidytext<span class="sc">::</span><span class="fu">reorder_within</span>(term, beta, watek), <span class="at">fill =</span> watek)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;steelblue&quot;</span>, <span class="st">&quot;lightgreen&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(watek), <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Termy&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">scale_y_reordered</span>() <span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(beta), <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <p><img src="watek_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Wspomniane i zinterpretowane już wcześniej słowa charaktertystyczne
 dla obu wątków na wykresie powyżej zostały ponownie przedstawione, wraz
@@ -1789,23 +1899,27 @@ największe prawdopodobieństwo przynależności do wątku drugiego.</p>
 wątków. Okazuje się, charakteryzuje się niższym prawdopdobieństwem
 przynależności do wątku pierwszego (beta = 0.006) aniżeli drugiego (beta
 = 0.007).</p>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 <div id="gamma" class="section level3">
 <h3>Gamma</h3>
-<pre class="r"><code>gamma_df &lt;- data_frame(dokument = lda@documents, wątek1 = lda@gamma[, 1], wątek2 = lda@gamma[, 2])</code></pre>
-<pre class="r"><code>gamma_tidy &lt;- gamma_df %&gt;% 
-  pivot_longer(-dokument, names_to = &quot;watek&quot;, values_to = &quot;gamma&quot;)
-
-gamma_tidy %&gt;% 
-  ggplot(aes(dokument, gamma, fill = watek)) + 
-  geom_col(position = &quot;stack&quot;) +
-  scale_fill_manual(values = c(&quot;steelblue&quot;, &quot;lightgreen&quot;)) +
-  geom_hline(yintercept = 0.5, linetype = 2) +
-  coord_flip() +
-  labs(fill = &quot;Wątki&quot;) +
-  labs(x = &quot;Dokument&quot;, y = &quot;Gamma&quot;, title = &quot;Rozkład tematów w rozdziałach&quot;) +
-  theme_bw()</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>gamma_df <span class="ot">&lt;-</span> <span class="fu">data_frame</span>(<span class="at">dokument =</span> lda<span class="sc">@</span>documents, wątek1 <span class="ot">=</span> lda<span class="sc">@</span>gamma[, <span class="dv">1</span>], wątek2 <span class="ot">=</span> lda<span class="sc">@</span>gamma[, <span class="dv">2</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gamma_tidy <span class="ot">&lt;-</span> gamma_df <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>dokument, <span class="at">names_to =</span> <span class="st">&quot;watek&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;gamma&quot;</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>gamma_tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(dokument, gamma, <span class="at">fill =</span> watek)) <span class="sc">+</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">&quot;stack&quot;</span>) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;steelblue&quot;</span>, <span class="st">&quot;lightgreen&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.5</span>, <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;Wątki&quot;</span>) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Dokument&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Gamma&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Rozkład tematów w rozdziałach&quot;</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <p><img src="watek_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Na wykresie powyżej przedstawiony został rozkład wątków w
 poszczególnych rozdziałach. Na pierwszy rzut oka widać, że dominuje

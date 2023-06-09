@@ -16,7 +16,7 @@
 <script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -33,8 +33,6 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -47,18 +45,110 @@
   ul.task-list{list-style: none;}
     </style>
 
-<style type="text/css">code{white-space: pre;}</style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
   }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
-
-
 
 
 
@@ -283,6 +373,12 @@ div.tocify {
   border-radius: 0px;
 }
 
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
 
 </style>
 
@@ -316,7 +412,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+      <a class="navbar-brand" href="index.html">Analiza książek Juliusza Verne'a</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -364,12 +460,12 @@ div.tocify {
 <div id="przygotowanie-tekstu" class="section level2">
 <h2>Przygotowanie tekstu</h2>
 <p>Dopisujemy klasy wyłonione z analizy wątku</p>
-<pre class="r"><code>eighty_days_text$type &lt;- tematy_term[tematy][1:37]
-all_moon_text$type &lt;- tematy_term[tematy][38:62]</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>eighty_days_text<span class="sc">$</span>type <span class="ot">&lt;-</span> tematy_term[tematy][<span class="dv">1</span><span class="sc">:</span><span class="dv">37</span>]</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>all_moon_text<span class="sc">$</span>type <span class="ot">&lt;-</span> tematy_term[tematy][<span class="dv">38</span><span class="sc">:</span><span class="dv">62</span>]</span></code></pre></div>
 <p>Łączymy dokumenty</p>
-<pre class="r"><code>books_df &lt;- rbind(eighty_days_text, all_moon_text)</code></pre>
-<pre class="r"><code>kable(table(books_df$type), format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Ilość klas&quot;) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>books_df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(eighty_days_text, all_moon_text)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">table</span>(books_df<span class="sc">$</span>type), <span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">caption =</span> <span class="st">&quot;Ilość klas&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>))</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
 <caption>
 Ilość klas
@@ -403,35 +499,39 @@ moon
 </tr>
 </tbody>
 </table>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 <div id="budowa-modelu" class="section level2">
 <h2>Budowa modelu</h2>
 <p>Do budowy algorytmu wybrano Naiwny Klasyfikator Bayesa.</p>
 <p>Zamiana typu zmiennych i stworzenie korpusu</p>
-<pre class="r"><code>books_df$type &lt;- factor(books_df$type)
-
-books_corpus &lt;- Corpus(VectorSource(books_df$text))</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>books_df<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">factor</span>(books_df<span class="sc">$</span>type)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>books_corpus <span class="ot">&lt;-</span> <span class="fu">Corpus</span>(<span class="fu">VectorSource</span>(books_df<span class="sc">$</span>text))</span></code></pre></div>
 <div id="wagi-binarne" class="section level3">
 <h3>1. Wagi binarne</h3>
 <p>Macierz DTM</p>
-<pre class="r"><code>dtm_binary &lt;- DocumentTermMatrix(books_corpus, control = list(weighting = weightBin))
-
-dtm_bin &lt;- data.frame(as.matrix(dtm_binary))
-dtm_bin$type &lt;- factor(tematy_term[tematy][1:62])</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dtm_binary <span class="ot">&lt;-</span> <span class="fu">DocumentTermMatrix</span>(books_corpus, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">weighting =</span> weightBin))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dtm_bin <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">as.matrix</span>(dtm_binary))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>dtm_bin<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">factor</span>(tematy_term[tematy][<span class="dv">1</span><span class="sc">:</span><span class="dv">62</span>])</span></code></pre></div>
 <p>Utworzenie treningowego i testowego zbioru NOWE</p>
-<pre class="r"><code># Losowe wybranie zbioru treningowego
-set.seed(123)
-train_indices &lt;- createDataPartition(dtm_bin$type, p = 0.75, list = FALSE)
-
-# Zbiór treningowy
-dtm_train_bin &lt;- dtm_bin[train_indices, ]
-
-# Zbiór testowy
-dtm_test_bin &lt;- dtm_bin[-train_indices, ]</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Losowe wybranie zbioru treningowego</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>train_indices <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(dtm_bin<span class="sc">$</span>type, <span class="at">p =</span> <span class="fl">0.75</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Zbiór treningowy</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>dtm_train_bin <span class="ot">&lt;-</span> dtm_bin[train_indices, ]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Zbiór testowy</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>dtm_test_bin <span class="ot">&lt;-</span> dtm_bin[<span class="sc">-</span>train_indices, ]</span></code></pre></div>
 <p>Sprawdzenie rozkładu klas w zbiorach</p>
-<pre class="r"><code>kable(table(dtm_test_bin$type), format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Ilosciowo klasy w zbiorze testowym&quot;) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">table</span>(dtm_test_bin<span class="sc">$</span>type), <span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">caption =</span> <span class="st">&quot;Ilosciowo klasy w zbiorze testowym&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>))</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
 <caption>
 Ilosciowo klasy w zbiorze testowym
@@ -465,8 +565,8 @@ moon
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>kable(prop.table(table(dtm_train_bin$type)), format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Proporcje klas w zbiorze treningowym&quot;) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(dtm_train_bin<span class="sc">$</span>type)), <span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">caption =</span> <span class="st">&quot;Proporcje klas w zbiorze treningowym&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>))</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
 <caption>
 Proporcje klas w zbiorze treningowym
@@ -500,8 +600,8 @@ moon
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>kable(prop.table(table(dtm_test_bin$type)), format = &quot;html&quot;, align = &quot;c&quot;, caption = &quot;Proporcje klas w zbiorze testowym&quot;) %&gt;%
-  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;, &quot;responsive&quot;))</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(dtm_test_bin<span class="sc">$</span>type)), <span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">caption =</span> <span class="st">&quot;Proporcje klas w zbiorze testowym&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>, <span class="st">&quot;responsive&quot;</span>))</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
 <caption>
 Proporcje klas w zbiorze testowym
@@ -537,51 +637,55 @@ moon
 </table>
 <p>Rozkład jest w porządku, można kontynuować.</p>
 <p>Niezbędne przeksztalcenia</p>
-<pre class="r"><code>levels(dtm_test_bin$type) &lt;- levels(dtm_train_bin$type)</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(dtm_test_bin<span class="sc">$</span>type) <span class="ot">&lt;-</span> <span class="fu">levels</span>(dtm_train_bin<span class="sc">$</span>type)</span></code></pre></div>
 <p>Utworzenie i testowanie modelu</p>
-<pre class="r"><code>classifier_bin &lt;- naiveBayes(type ~ ., data = dtm_train_bin)
-predictions_bin &lt;- predict(classifier_bin, newdata = dtm_test_bin)</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>classifier_bin <span class="ot">&lt;-</span> <span class="fu">naiveBayes</span>(type <span class="sc">~</span> ., <span class="at">data =</span> dtm_train_bin)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>predictions_bin <span class="ot">&lt;-</span> <span class="fu">predict</span>(classifier_bin, <span class="at">newdata =</span> dtm_test_bin)</span></code></pre></div>
 </div>
 <div id="wagi-logarytmiczne" class="section level3">
 <h3>2. Wagi logarytmiczne</h3>
 <p>Macierz DTM</p>
-<pre class="r"><code>dtm_tf &lt;- DocumentTermMatrix(books_corpus, control = list(weighting = weightTf))
-
-dtm_log &lt;- log2(as.matrix(dtm_tf) + 1) #Przekształcenie macierzy tf na macierz z wagami logarytmicznymi
-
-dtm_log &lt;- data.frame(dtm_log)
-dtm_log$type &lt;- factor(tematy_term[tematy][1:62])</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dtm_tf <span class="ot">&lt;-</span> <span class="fu">DocumentTermMatrix</span>(books_corpus, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">weighting =</span> weightTf))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>dtm_log <span class="ot">&lt;-</span> <span class="fu">log2</span>(<span class="fu">as.matrix</span>(dtm_tf) <span class="sc">+</span> <span class="dv">1</span>) <span class="co">#Przekształcenie macierzy tf na macierz z wagami logarytmicznymi</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>dtm_log <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(dtm_log)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>dtm_log<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">factor</span>(tematy_term[tematy][<span class="dv">1</span><span class="sc">:</span><span class="dv">62</span>])</span></code></pre></div>
 <p>Utworzenie treningowego i testowego zbioru</p>
-<pre class="r"><code># Zbiór treningowy
-dtm_train_log &lt;- dtm_log[train_indices, ]
-# Zbiór testowy
-dtm_test_log &lt;- dtm_log[-train_indices, ]</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zbiór treningowy</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>dtm_train_log <span class="ot">&lt;-</span> dtm_log[train_indices, ]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Zbiór testowy</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>dtm_test_log <span class="ot">&lt;-</span> dtm_log[<span class="sc">-</span>train_indices, ]</span></code></pre></div>
 <p>Niezbędne przeksztalcenia</p>
-<pre class="r"><code>levels(dtm_test_log$type) &lt;- levels(dtm_train_log$type)</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(dtm_test_log<span class="sc">$</span>type) <span class="ot">&lt;-</span> <span class="fu">levels</span>(dtm_train_log<span class="sc">$</span>type)</span></code></pre></div>
 <p>Utworzenie i testowanie modelu</p>
-<pre class="r"><code>classifier_log &lt;- naiveBayes(type ~ ., data = dtm_train_log)
-predictions_log &lt;- predict(classifier_log, newdata = dtm_test_log)</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>classifier_log <span class="ot">&lt;-</span> <span class="fu">naiveBayes</span>(type <span class="sc">~</span> ., <span class="at">data =</span> dtm_train_log)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>predictions_log <span class="ot">&lt;-</span> <span class="fu">predict</span>(classifier_log, <span class="at">newdata =</span> dtm_test_log)</span></code></pre></div>
 </div>
 <div id="wagi-tfidf" class="section level3">
 <h3>3. Wagi TfIdf</h3>
 <p>Macierz DTM</p>
-<pre class="r"><code>dtm_tfidf &lt;- DocumentTermMatrix(books_corpus, control = list(weighting = weightTfIdf))
-
-dtm_tfidf &lt;- data.frame(as.matrix(dtm_tfidf))
-dtm_tfidf$type &lt;- tematy_term[tematy][1:62]</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dtm_tfidf <span class="ot">&lt;-</span> <span class="fu">DocumentTermMatrix</span>(books_corpus, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">weighting =</span> weightTfIdf))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>dtm_tfidf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">as.matrix</span>(dtm_tfidf))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>dtm_tfidf<span class="sc">$</span>type <span class="ot">&lt;-</span> tematy_term[tematy][<span class="dv">1</span><span class="sc">:</span><span class="dv">62</span>]</span></code></pre></div>
 <p>Utworzenie treningowego i testowego zbioru</p>
-<pre class="r"><code># Zbiór treningowy
-dtm_train_tfidf &lt;- dtm_tfidf[train_indices, ]
-# Zbiór testowy
-dtm_test_tfidf &lt;- dtm_tfidf[-train_indices, ]</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zbiór treningowy</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dtm_train_tfidf <span class="ot">&lt;-</span> dtm_tfidf[train_indices, ]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Zbiór testowy</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>dtm_test_tfidf <span class="ot">&lt;-</span> dtm_tfidf[<span class="sc">-</span>train_indices, ]</span></code></pre></div>
 <p>Niezbędne przeksztalcenia</p>
-<pre class="r"><code>dtm_tfidf$type &lt;- factor(dtm_tfidf$type)
-
-dtm_test_tfidf$type &lt;- factor(dtm_test_tfidf$type, levels = levels(dtm_tfidf$type))</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dtm_tfidf<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">factor</span>(dtm_tfidf<span class="sc">$</span>type)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>dtm_test_tfidf<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">factor</span>(dtm_test_tfidf<span class="sc">$</span>type, <span class="at">levels =</span> <span class="fu">levels</span>(dtm_tfidf<span class="sc">$</span>type))</span></code></pre></div>
 <p>Utworzenie i testowanie modelu</p>
-<pre class="r"><code>classifier_tdidf &lt;- naiveBayes(type ~ ., data = dtm_tfidf)
-predictions_tfidf &lt;- predict(classifier_tdidf, newdata = dtm_test_tfidf)</code></pre>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>classifier_tdidf <span class="ot">&lt;-</span> <span class="fu">naiveBayes</span>(type <span class="sc">~</span> ., <span class="at">data =</span> dtm_tfidf)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>predictions_tfidf <span class="ot">&lt;-</span> <span class="fu">predict</span>(classifier_tdidf, <span class="at">newdata =</span> dtm_test_tfidf)</span></code></pre></div>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 </div>
 <div id="ocena-modeli" class="section level2">
@@ -589,8 +693,8 @@ predictions_tfidf &lt;- predict(classifier_tdidf, newdata = dtm_test_tfidf)</cod
 <ul>
 <li><strong>liczebność ważona wagami binarnymi</strong></li>
 </ul>
-<pre class="r"><code>confusion_matrix_bin &lt;- confusionMatrix(predictions_bin, dtm_test_bin$type)
-confusion_matrix_bin</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>confusion_matrix_bin <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(predictions_bin, dtm_test_bin<span class="sc">$</span>type)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>confusion_matrix_bin</span></code></pre></div>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -659,8 +763,8 @@ skuteczność w identyfikowaniu obu klas.</p>
 <ul>
 <li><strong>liczebność ważona wagami logarytmicznymi</strong></li>
 </ul>
-<pre class="r"><code>confusion_matrix_log &lt;- confusionMatrix(predictions_log, dtm_test_log$type)
-confusion_matrix_log</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>confusion_matrix_log <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(predictions_log, dtm_test_log<span class="sc">$</span>type)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>confusion_matrix_log</span></code></pre></div>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -726,8 +830,8 @@ klas.</p>
 <ul>
 <li><strong>liczebność ważona wagami tfidf</strong></li>
 </ul>
-<pre class="r"><code>confusion_matrix_tfidf &lt;- confusionMatrix(predictions_tfidf, dtm_test_tfidf$type)
-confusion_matrix_tfidf</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>confusion_matrix_tfidf <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(predictions_tfidf, dtm_test_tfidf<span class="sc">$</span>type)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>confusion_matrix_tfidf</span></code></pre></div>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
@@ -792,8 +896,13 @@ przypadków “day”.</p>
 sklasyfikowanych przez algorytm należy do klasy “day”.</p>
 <p><em>Balanced Accuracy</em>: 1 wskazuje na doskonałe wyważenie między
 wrażliwością a swoistością.</p>
-<div id="podsumowanie-i-wybór-modelu" class="section level4">
-<h4>Podsumowanie i wybór modelu</h4>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
+<div id="podsumowanie-i-wybór-modelu" class="section level3">
+<h3>Podsumowanie i wybór modelu</h3>
 <p>Na podstawie powyższych wyników można stwierdzić, że klasyfikator
 oparty na wagach tfidf osiąga najlepsze rezultaty we wszystkich
 mierzonych metrykach. Posiada on dokładność wynoszącą 1, co oznacza, że
@@ -866,7 +975,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = true;
+    options.showAndHide = false;
     options.smoothScroll = true;
 
     // tocify

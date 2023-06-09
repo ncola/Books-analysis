@@ -3,7 +3,11 @@ title: "Analiza sentymentu"
 output: 
   html_document:
     toc: true
-    toc_float: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    highlight: pygments
+    theme: lumen
 ---
 
 ```{r setup, include=FALSE}
@@ -78,7 +82,21 @@ all_moon_lem <- all_moon_tidy %>%
   select(chapter, word_lemma)
 ```
 
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
+
 ## Słownik BING - zero jedynkowy wskaźnik nastroju
+
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 [**Słownik Bing**]{.underline} to zbiór słów kluczowych z przypisanymi wartościami sentymentalnymi:
 
@@ -152,7 +170,12 @@ W celu głębszej analizy przedstawiono również wykres, na którym można por�
 
 Analiza sentymentu według słownika Bing w książce "W 80 dni dookoła świata" pozwala zauważyć, że nastroje w narracji są zróżnicowane. Na początku dominuje pozytywny sentyment, co odzwierciedla beztroską atmosferę i optymizm. Jednak w środkowych rozdziałach występuje wyraźny spadek nastroju, zaznaczający się większą ilością negatywnych emocji. W pewnym momencie następuje jednak nagły wzrost nastroju, najwyższy w całej książce. W drugiej połowie książki negatywny sentyment jest zauważalny ale neutralizowany przez pozytwyny, co może wskazywać na kluczowe momenty konfliktu i trudności. Mimo to, książka kończy się z umiarkowanie pozytywnym nastrojem. Ogólnie rzecz biorąc, analiza danych sentymentalnych wskazuje na dynamiczną naturę fabuły, z różnymi emocjonalnymi momentami.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 -   **"Wokół księżyca"**
 
@@ -204,15 +227,32 @@ W celu głębszej analizy przedstawiono również wykres, na którym pozytywne i
 
 Na podstawie analizy sentymentu według słownika Bing w książce "Wokół księżyca" można powiedzieć, że cała książka jest generalnie nacechowana pozytywnym sentymentem, co sugeruje, że optymizm i dobre emocje towarzyszą czytelnikowi przez całą fabułę. Rozdziały 15 i 16 wyróżniają się negatywnym sentymentem, stanowiąc kontrast w stosunku do reszty rozdziałów. Może to wskazywać na wystąpienie momentów konfliktu lub trudności, które dodają napięcia i zmieniają ton narracji. Ponadto wspomniane rozdziały wraz z 3 cechują się wysokim poziomem zarówno pozytywnego, jak i negatywnego sentymentu, co może wskazywać na intensywne emocje i dynamikę. Ostatni rozdział osiąga najwyższy wynik wskaźnika sentymentu, co sugeruje zdecydowany happy end.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 -   **Podsumowanie**
 
 Porównując dwie analizy sentymentu w książkach "W 80 dni dookoła świata" i "Wokół księżyca", można zauważyć pewne podobieństwa i różnice. W obu przypadkach analiza sentymentu wykazuje zróżnicowane nastroje w narracji, jednak w przypadku "Wokół księżyca" jest to dużo mniejsza dynamika niż w "W 80 dni dookoła świata". Obie książki rzopocznają się pozytywnie i kończą happy endem. Sugerując czytelnikom, można powiedzieć, że "W 80 dni dookoła świata" oferuje dynamiczną fabułę z różnymi emocjonalnymi momentami, podczas gdy "Wokół księżyca" zapewnia optymizm i dobre emocje przez większość historii. Oba tytuły mogą być interesujące dla osób poszukujących różnorodności nastrojów i emocji w literaturze.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ## Słownik AFFIN - ważony wskaźnik nastroju
+
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 [**Słownik AFINN**]{.underline} (Affinity Lexicon) to słownik, który przypisuje wartości sentymentalne słowom w tekście. Słowa są oceniane liczbowo na skali od -5 do +5, gdzie wartości ujemne oznaczają negatywny sentyment, a wartości dodatnie oznaczają pozytywny sentyment.
 
@@ -274,7 +314,12 @@ Porównując sentyment według dwóch słowników, Affin i Bing, w książce "80
 
 Słownik Affin wydaje się bardziej skłonny do wykrywania pozytywnych sentymentów niż Bing w książce "80 dni dookoła świata". Ogólnie rzecz biorąc, sentymenty według Affin są wyższe niż według Bing. Istnieją również różnice interpretacji nastroju w poszczególnych rozdziałach, gdzie Affin często odwraca sentymenty w porównaniu do Bing.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 -   **"Wokół księżyca"**
 
@@ -312,6 +357,13 @@ Porównując sentyment według dwóch słowników, Affin i Bing, w książce "Wo
 -   koniec książki bardziej wyróżnia się pozytywnym zakończeniem aniżeli w przypadku słownika Bing.
 
 Podsumowując, analiza sentymentu za pomocą słowników Affin i Bing w książce "Wokół księżyca" ukazuje różnice w interpretacji nastroju, ze szczególnym uwzględnieniem pozytywnych aspektów. Słownik Affin wykazuje tendencję do wykrywania większej liczby pozytywnych sentymentów niż Bing, co wpływa na ogólny odbiór emocjonalny książki.
+
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 #### **Podsumowanie słowników Bing i Affin w powieściach**
 
@@ -356,9 +408,21 @@ Analiza wykazuje najwięcej zmian kategorii sentymentu w rozdziałach dla pierws
 
 Podsumowując, z podanych statystyk wynika, że dwa podejścia różniły się mniej w przypadku pierwszej książki, a więcej w przypadku drugiej. Co może oznaczać większą pewność intepretacji dla "W 80 dni dookoła świata". Jednak biorąc pod uwagę procentową zmianę kategorii sentymentu oraz całą analizę, można powiedzieć, że w przypadku powieści "Wokół księzyca" analiza i intepretacja sentymentu jest bardziej jednoznaczna jeżeli chodzi o 'kierunek' - najczęstsze zmiany dotyczyły podwyższenia sentymentu za pomocą słownika Affin, który już był pozytywny w przypadku Bing.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ## Słownik NRC - rozpoznanie emocji
+
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 [**Słownik NRC**]{.underline} (National Research Council) to słownik, który zawiera kategorie emocji, a nie tylko wartości sentymentalne słów. Zamiast przypisywać wartości liczbowe, słownik NRC identyfikuje obecność lub brak pewnych emocji w tekście. Słowa są przyporządkowane do różnych kategorii emocji, takich jak radość, smutek, gniew, strach, zaufanie itp. Słownik NRC pozwala na bardziej szczegółową analizę emocji obecnych w tekście, a nie tylko ogólną ocenę sentymentu.
 
@@ -403,7 +467,12 @@ Jednak warto zwrócić uwagę na różnice w występowaniu emocji "surprise" i "
 
 Podsumowując, obie książki Jules'a Verne'a charakteryzują się dominacją pozytywnych emocji. Mimo pewnych podobieństw w rankingu emocji, występują również subtelne różnice, które mogą wynikać z unikalnego charakteru każdej z powieści. Ta analiza sugeruje, że obie książki mają bardzo podobny sentyment, co wyklucza się z poprzednimi analizami, które uznaje się za wiarygodniejsze z powodu większej szczególowości.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ## Podsumowanie
 

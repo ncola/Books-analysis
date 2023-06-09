@@ -3,7 +3,11 @@ title: "Macierze wystąpień"
 output: 
   html_document:
     toc: true
-    toc_float: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    theme: lumen
+    highlight: pygments
 ---
 
 ```{r setup, include=FALSE}
@@ -114,7 +118,12 @@ books_corpus_mw <- corpus(books)
 docnames(books_corpus_mw) <- c("Eighty_days", "All_moon")
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ### Częstość wystąpień
 
@@ -141,7 +150,12 @@ kable(top_words_tf, format = "html", align = "c", caption = "Najistotniejsze sł
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ### Wagi binarne
 
@@ -157,7 +171,12 @@ dtm_binary_mw_matrix <- as.data.frame(as.matrix(dtm_binary_mw))
 
 Na podstawie informacji o macierzy można powiedzieć, że istnieją dwa dokumenty, które mają znaczną liczbę unikalnych terminów (8901). Macierz jest względnie gęsta, a wagi terminów są binarne, co oznacza, że termy są traktowane jako obecne lub nieobecne w danym dokumencie.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ### Wagi logarytmiczne
 
@@ -183,7 +202,12 @@ kable(top_words_log, format = "html", align = "c", caption = "Najistotniejsze s�
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ### Wagi TF-IDF
 
@@ -212,7 +236,12 @@ kable(top_words_tfidf, format = "html", align = "c", caption = "Najistotniejsze 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ### Porównanie 10 najistotniejszych słów dla różnych wag
 
@@ -228,7 +257,7 @@ table_all_moon <- data.frame(Słowa = seq(1,10),
 
 Pod uwagę wzięte zostały częstość wys†epowania (tf), wagi logarytmiczna i tfidf. Waga binarna nie została wzięta pod uwagę gdyż nie da się wyodrębnić najpopularniejszych termów.
 
--   ***"W 80 dnii dookoła świata"***
+-   **"W 80 dni dookoła świata"**
 
 ```{r}
 kable(table_eighty_days, format = "html", align = "c", caption = "Najistotniejsze słowa wg częstości występowania oraz wag TfIdf") %>%
@@ -237,7 +266,7 @@ kable(table_eighty_days, format = "html", align = "c", caption = "Najistotniejsz
 
 Najczęściej występujące słowa w powieści "W 80 dni dookoła ziemi" na podstawie macierzy wystąpień (częstość) oraz wag TfIdf mają zarówno podobne, jak i różne cechy. W obu przypadkach często występują słowa takie jak "day", "make" i "time", co wskazuje na ich znaczenie w treści powieści. Jednak w macierzy wag TfIdf pojawiają się również specyficzne słowa, takie jak "detective", "hong", "kong", "servant" i "reform", które mogą odzwierciedlać szczególne tematy, lokalizacje lub aspekty powieści. Takie różnice w słowach podkreślają istotne elementy, które można wyróżnić, analizując powieść z różnych perspektyw.
 
--   ***"Wokół księżyca"***
+-   **"Wokół księżyca"**
 
 ```{r}
 kable(table_all_moon, format = "html", align = "c", caption = "Najistotniejsze słowa wg częstości występowania oraz wag TfIdf") %>%

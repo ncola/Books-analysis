@@ -3,8 +3,11 @@ title: "Chmury"
 output: 
   html_document:
     toc: true
-    toc_float: true
-    highlight: monokai
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    highlight: pygments
+    theme: lumen
 ---
 
 ```{r setup, include=FALSE}
@@ -63,7 +66,9 @@ all_moon_lem <- all_moon_tidy %>%
   select(chapter, word_lemma)
 ```
 
-## Niezależne
+## 1. Niezależne
+
+<br>
 
 ### Słowa dla powieści "W 80 dni dookoła świata"
 
@@ -93,6 +98,8 @@ Analizując najczęściej występujące słowa w książce "W 80 dni dookoła ś
 
 Interpretując te wnioski, można stwierdzić, że książka "W 80 dni dookoła świata" skupia się na podróży głównego bohatera, przez różne miejsca, z naciskiem na element czasu i dynamiczną akcję. Postacie, którymi podróżnik spotyka w trakcie swojej podróży, odgrywają istotną rolę w rozwinięciu fabuły. Książka przedstawia zróżnicowane lokalizacje i kultury, co dodaje jej różnorodności i interesującej atmosfery.
 
+<br>
+
 ### Słowa dla powieści "Wokół księżyca"
 
 ```{r}
@@ -120,9 +127,16 @@ Analizując najczęściej występujące słowa w książce "Wokół księżyca",
 
 Interpretując te wnioski, można stwierdzić, że książka "Wokół księżyca" skupia się na podróży kosmicznej, odkrywaniu i eksploracji kosmosu. Księżyc jest centralnym tematem książki, a postacie podróżujące na pokładzie rakiety mają okazję obserwować i odkrywać różne aspekty księżycowego krajobrazu. Przyjaźń i relacje międzyludzkie mogą odgrywać istotną rolę w rozwoju fabuły. Czas jest istotnym elementem podróży kosmicznej, a pomiar czasu i obserwacja mają duże znaczenie w narracji.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
 
-## Przecięcia
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
+
+## 2. Przecięcia
+
+<br>
 
 ### Słowa wspólne dla obu powieści
 
@@ -165,6 +179,8 @@ cat("Występowanie słowa 'moon' w książce 'W 80 dni dookoła świata':", eigh
 
 Należy jednak zauważyć, że słowa te są liczone wartością bezwzlędną, co może znacznie wpływać na intepretacje. Przykładowo wniosek o ważności księżyca w obu książkach jest oczywiście błędny, jednakże nie znając fabuły możemy uznać go za prawdziwy. Przy bliższej analizie mozemy zauważyć, że książka "W 80 dni dookoła świata" wspomina o księżycu, jednakże zaledwie kilka razy, nie może to mieć wpływu na fabułe.
 
+<br>
+
 ### Słowa charakterystyczne tylko dla powieści "W 80 dni dookoła świata"
 
 ```{r}
@@ -185,6 +201,8 @@ Z powyższej chmury, przedstawiającej słowa charakterystyczne tylko dla ksią�
 2.  **Postacie**: Słowa takie jak "detective", "servant", "reform", "parsee", "robber", "stuart", "consul" i "priest" odnoszą się do różnych postaci, które pojawiają się w książce. Może to sugerować obecność wątków kryminalnych, relacji międzyludzkich i różnorodności społecznej.
 
 3.  **Terminy podróżnicze**: Słowa takie jak "pagoda", "voyage", "sacrifice", "saturday" i "recognise" odnoszą się do terminów związanych z podróżami, kulturą i zdarzeniami w książce. Nadają one charakterystyczny wydźwięk narracji i odzwierciedlają specyficzny kontekst historii.
+
+<br>
 
 ### Słowa charakterystyczne tylko dla powieści "Wokół księżyca"
 
@@ -209,7 +227,12 @@ Analizując najczęściej występujące słowa charakterystyczne tylko dla ksią
 
 4.  **Elementy ilustracyjne i opisowe**: Słowa takie jak "illustration", "color", "detect", "ha", "comparison", "external", "illustration" sugerują obecność opisów, ilustracji i porównań w książce, może to się wiązać z aspektem naukowym.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+
+::: {style="border-top: 1px solid black;"}
+:::
+
+<br>
 
 ## Podsumowanie
 

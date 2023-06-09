@@ -6,3 +6,4 @@
 .Rcheck/
 .Rd2/
 *_cache/
+.DS_Store

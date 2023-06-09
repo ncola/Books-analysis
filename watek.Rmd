@@ -4,6 +4,8 @@ output:
   html_document:
     toc: true
     toc_float: true
+    theme: lumen
+    highlight: pygments
 ---
 
 ```{r setup, include=FALSE}
@@ -118,7 +120,9 @@ Macierz wystąpień została zredukowana do słówm które mają co najmniej dwa
 
 -   skrócenie czasu obliczeń
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## LDA - budowa
 
@@ -135,7 +139,9 @@ Model LDA:
 
 -   zbiór dokumentów składa się z jak dotychczas 62 dokumentów (rozdziałów z dwóch książek)
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 [**Dane potrzebne do klasyfikacji w następnym rozdziale**]{.underline}
 
@@ -154,7 +160,9 @@ tematy_term
 tematy <- topics(lda)
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Termy charakterystyczne dla obu wątków
 
@@ -190,7 +198,9 @@ kable(tematy8_df, format = "html", align = "c", table.attr = "class='table table
 
 Można zauważyć, że w procesie analizy wątku do powieści "W 80 dni dookoła świata" został przypisany pierwszy wątek, natomiast do "Wokół księżyca" drugi, z wyjątkiem dokumentu 60, któremu został przypisany piewrszy wątek. Możliwe, że na przykład w tym rodziale (tj. 24, przedostatni) czas ma większe znaczenie niż zwykle, co jest bardziej charakterystyczne dla pierwszego wątku.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Wizualizacja wartości beta i gamma
 
@@ -202,7 +212,9 @@ Można zauważyć, że w procesie analizy wątku do powieści "W 80 dni dookoła
 
 -   wartość gamma odnosi się do rozkładu tematów w danym dokumencie, reprezentuje proporcje przypisane do poszczególnych tematów dla danego dokumentu. Dla każdego dokumentu w korpusie, wartość gamma dla każdego tematu wskazuje, jak bardzo ten temat jest obecny w danym dokumencie.
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ### Beta
 
@@ -239,7 +251,9 @@ Ponadto słowo 'moon' zdecydowanie wyróżnie się na tle innych, osiągając wa
 
 Ciekawą słowem do intepretacji jest słowo 'time', istotne dla obu wątków. Okazuje się, charakteryzuje się niższym prawdopdobieństwem przynależności do wątku pierwszego (beta = 0.006) aniżeli drugiego (beta = 0.007).
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ### Gamma
 

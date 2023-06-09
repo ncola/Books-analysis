@@ -1,6 +1,9 @@
 ---
 title: "Analiza książek Verne'a"
-output: html_document
+output:
+  html_document:
+    theme: lumen
+    highlight: pygments
 ---
 
 ```{=html}
@@ -43,7 +46,6 @@ Analiza dotyczy dwóch książek Juliusza Verne'a: "W 80 dni dookoła świata" o
 <a href = "https://crumplab.github.io"> ![](images/logo.png) </a>
 :::
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
 
 # Podsumowanie analizy
 

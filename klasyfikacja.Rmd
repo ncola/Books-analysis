@@ -3,7 +3,11 @@ title: "Analiza wątku"
 output: 
   html_document:
     toc: true
-    toc_float: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    highlight: pygments
+    theme: lumen
 ---
 
 ```{r setup, include=FALSE}
@@ -127,7 +131,9 @@ kable(table(books_df$type), format = "html", align = "c", caption = "Ilość kla
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Budowa modelu
 
@@ -268,7 +274,9 @@ classifier_tdidf <- naiveBayes(type ~ ., data = dtm_tfidf)
 predictions_tfidf <- predict(classifier_tdidf, newdata = dtm_test_tfidf)
 ```
 
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
 
 ## Ocena modeli
 
@@ -377,7 +385,11 @@ Współczynnik *Kappa* wynosi 1, co wskazuje na doskonałą zgodność między k
 
 *Balanced Accuracy*: 1 wskazuje na doskonałe wyważenie między wrażliwością a swoistością.
 
-#### Podsumowanie i wybór modelu
+<br>
+<div style="border-top: 1px solid black;"></div>
+<br>
+
+### Podsumowanie i wybór modelu
 
 Na podstawie powyższych wyników można stwierdzić, że klasyfikator oparty na wagach tfidf osiąga najlepsze rezultaty we wszystkich mierzonych metrykach. Posiada on dokładność wynoszącą 1, co oznacza, że wszystkie obserwacje zostały poprawnie sklasyfikowane. Czułość, specyficzność i wyważona dokładność również wynoszą 1, co wskazuje na doskonałą zdolność klasyfikatora do identyfikacji zarówno pozytywnych, jak i negatywnych przypadków.
 

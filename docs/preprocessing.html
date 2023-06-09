@@ -16,7 +16,7 @@
 <script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -33,8 +33,6 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -47,18 +45,110 @@
   ul.task-list{list-style: none;}
     </style>
 
-<style type="text/css">code{white-space: pre;}</style>
-<script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
   }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
-
-
 
 
 
@@ -283,6 +373,12 @@ div.tocify {
   border-radius: 0px;
 }
 
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
 
 </style>
 
@@ -316,7 +412,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Verne's books analysis</a>
+      <a class="navbar-brand" href="index.html">Analiza książek Juliusza Verne'a</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -361,49 +457,58 @@ div.tocify {
 </div>
 
 
-<pre class="r"><code>library(tidytext)
-library(dplyr)
-library(textstem)
-library(wordcloud)
-library(tidyr)
-library(ggplot2)
-library(tm)
-library(stringr)
-library(quanteda)
-library(e1071)
-library(gmodels)
-library(caret)
-library(topicmodels)
-library(kableExtra)
-library(proxy)
-library(dendextend)
-library(rmdformats)
-library(knitr)</code></pre>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<p><br> Niezbędne biblioteki do całej analizy:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(textstem)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(wordcloud)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tm)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quanteda)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gmodels)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(topicmodels)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(proxy)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dendextend)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmdformats)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code></pre></div>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 <div id="wczytanie-danych" class="section level1">
 <h1>Wczytanie danych</h1>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 <p>Poddane analizie są książki Juliusza Verne’a:</p>
 <ul>
 <li><p>“W 80 dnii dookoła świata”</p></li>
 <li><p>“Wokół księżyca”</p></li>
 </ul>
 <p>Wczytywane są w podziale na rozdziały.</p>
-<pre class="r"><code>url &lt;- &quot;https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/Around_the_World_in_Eighty_Days.txt&quot;
-
-eighty_days &lt;- readLines(url) %&gt;%
-  paste(collapse = &quot; &quot;) %&gt;%
-  strsplit(split = &quot;(CHAPTER\\s+)&quot;, perl = TRUE) %&gt;%
-  unlist() %&gt;%
-  data.frame(chapter = 0:(length(.) - 1), text = ., stringsAsFactors = FALSE)
-
-eighty_days &lt;- eighty_days[-1, ]  # usunięcie pierwszego pustego wiersza
-
-
-wys &lt;- head(eighty_days$text,5)
-wyswietlenie &lt;- tibble(Chapter = 1:5, &quot;Część tekstu&quot; = paste0(substr(wys, 1, 250), &quot;[...]&quot;))
-kable(wyswietlenie, format = &quot;html&quot;, align = &quot;c&quot;, table.attr = &quot;class=&#39;table table-striped&#39;&quot;, row.names = FALSE, caption = &quot;W 80 dni dookoła świata w podziale na rozdziały&quot;) %&gt;%
-  kable_styling()</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">&quot;https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/Around_the_World_in_Eighty_Days.txt&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>eighty_days <span class="ot">&lt;-</span> <span class="fu">readLines</span>(url) <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">&quot; &quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">strsplit</span>(<span class="at">split =</span> <span class="st">&quot;(CHAPTER</span><span class="sc">\\</span><span class="st">s+)&quot;</span>, <span class="at">perl =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">chapter =</span> <span class="dv">0</span><span class="sc">:</span>(<span class="fu">length</span>(.) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">text =</span> ., <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>eighty_days <span class="ot">&lt;-</span> eighty_days[<span class="sc">-</span><span class="dv">1</span>, ]  <span class="co"># usunięcie pierwszego pustego wiersza</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>wys <span class="ot">&lt;-</span> <span class="fu">head</span>(eighty_days<span class="sc">$</span>text,<span class="dv">5</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>wyswietlenie <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Chapter =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="st">&quot;Część tekstu&quot;</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">substr</span>(wys, <span class="dv">1</span>, <span class="dv">250</span>), <span class="st">&quot;[...]&quot;</span>))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(wyswietlenie, <span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">table.attr =</span> <span class="st">&quot;class=&#39;table table-striped&#39;&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">caption =</span> <span class="st">&quot;W 80 dni dookoła świata w podziale na rozdziały&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code></pre></div>
 <table class="table table-striped table" style="margin-left: auto; margin-right: auto;">
 <caption>
 W 80 dni dookoła świata w podziale na rozdziały
@@ -482,21 +587,21 @@ spread through the Reform Club, an[…]
 </ol></li>
 </ol></li>
 </ol>
-<pre class="r"><code>url2 &lt;- &quot;https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/All_around_the_moon.txt&quot;
-
-all_moon &lt;- readLines(url2) %&gt;%
-  paste(collapse = &quot; &quot;) %&gt;%
-  strsplit(split = &quot;(CHAPTER\\s+)&quot;, perl = TRUE) %&gt;%
-  unlist() %&gt;%
-  data.frame(chapter = 1:length(.), text = ., stringsAsFactors = FALSE)
-
-wys2 &lt;- head(all_moon$text,5)
-wyswietlenie2 &lt;- tibble(Chapter = 1:5, &quot;Część tekstu&quot; = paste0(substr(wys2, 1, 250), &quot;[...]&quot;))
-kable(wyswietlenie2, format = &quot;html&quot;, align = &quot;c&quot;, table.attr = &quot;class=&#39;table table-striped&#39;&quot;, row.names = FALSE, caption = &quot;W 80 dni dookoła świata w podziale na rozdziały&quot;) %&gt;%
-  kable_styling()</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>url2 <span class="ot">&lt;-</span> <span class="st">&quot;https://raw.githubusercontent.com/ncola/Verne_books-analysis-text-mining/master/All_around_the_moon.txt&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>all_moon <span class="ot">&lt;-</span> <span class="fu">readLines</span>(url2) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="at">collapse =</span> <span class="st">&quot; &quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">strsplit</span>(<span class="at">split =</span> <span class="st">&quot;(CHAPTER</span><span class="sc">\\</span><span class="st">s+)&quot;</span>, <span class="at">perl =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">chapter =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(.), <span class="at">text =</span> ., <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>wys2 <span class="ot">&lt;-</span> <span class="fu">head</span>(all_moon<span class="sc">$</span>text,<span class="dv">5</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>wyswietlenie2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Chapter =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="st">&quot;Część tekstu&quot;</span> <span class="ot">=</span> <span class="fu">paste0</span>(<span class="fu">substr</span>(wys2, <span class="dv">1</span>, <span class="dv">250</span>), <span class="st">&quot;[...]&quot;</span>))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(wyswietlenie2, <span class="at">format =</span> <span class="st">&quot;html&quot;</span>, <span class="at">align =</span> <span class="st">&quot;c&quot;</span>, <span class="at">table.attr =</span> <span class="st">&quot;class=&#39;table table-striped&#39;&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">caption =</span> <span class="st">&quot;Wokół księżyca w podziale na rozdziały&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code></pre></div>
 <table class="table table-striped table" style="margin-left: auto; margin-right: auto;">
 <caption>
-W 80 dni dookoła świata w podziale na rozdziały
+Wokół księżyca w podziale na rozdziały
 </caption>
 <thead>
 <tr>
@@ -574,44 +679,60 @@ speaking, it was always <em>night</em> on th[…]
 </ol></li>
 </ol></li>
 </ol>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 <div id="przygotowanie-danych" class="section level1">
 <h1>Przygotowanie danych</h1>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 <div id="wstępne-czyszczenie" class="section level2">
 <h2>Wstępne czyszczenie</h2>
 <p>Z tekstu usuwamy znaki interpunkcyjne, podwójne i pojedyńcze
 cudzysłowy, apostrofy i cyfry.</p>
-<pre class="r"><code>clean_text &lt;- function(df) {
-  df$text &lt;- str_remove_all(df$text, &quot;[[:punct:]]&quot;)
-  df$text &lt;- str_remove_all(df$text, &quot;\&quot;&quot;) 
-  df$text &lt;- str_remove_all(df$text, &quot;&#39;&quot;)
-  df$text &lt;- str_replace_all(df$text, &quot;(\\b)&#39;(\\w+)&#39;(\\b)&quot;, &quot;\\1\\2\\3&quot;)
-  df$text &lt;- str_remove_all(df$text, &quot;\\d+&quot;)
-  return(df)
-}
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>clean_text <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">str_remove_all</span>(df<span class="sc">$</span>text, <span class="st">&quot;[[:punct:]]&quot;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">str_remove_all</span>(df<span class="sc">$</span>text, <span class="st">&quot;</span><span class="sc">\&quot;</span><span class="st">&quot;</span>) </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">str_remove_all</span>(df<span class="sc">$</span>text, <span class="st">&quot;&#39;&quot;</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">str_replace_all</span>(df<span class="sc">$</span>text, <span class="st">&quot;(</span><span class="sc">\\</span><span class="st">b)&#39;(</span><span class="sc">\\</span><span class="st">w+)&#39;(</span><span class="sc">\\</span><span class="st">b)&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">1</span><span class="sc">\\</span><span class="st">2</span><span class="sc">\\</span><span class="st">3&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>text <span class="ot">&lt;-</span> <span class="fu">str_remove_all</span>(df<span class="sc">$</span>text, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">d+&quot;</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>eighty_days <span class="ot">&lt;-</span> <span class="fu">clean_text</span>(eighty_days)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>all_moon <span class="ot">&lt;-</span> <span class="fu">clean_text</span>(all_moon)</span></code></pre></div>
+<br>
+<div style="border-top: 1px solid black;">
 
-eighty_days &lt;- clean_text(eighty_days)
-all_moon &lt;- clean_text(all_moon)</code></pre>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<p><br></p>
 </div>
 <div id="tokenizacja" class="section level2">
 <h2>Tokenizacja</h2>
-<pre class="r"><code>eighty_days_tokens &lt;- eighty_days %&gt;%
-  unnest_tokens(word, text)
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>eighty_days_tokens <span class="ot">&lt;-</span> eighty_days <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>all_moon_tokens <span class="ot">&lt;-</span> all_moon <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text)</span></code></pre></div>
+<br>
+<div style="border-top: 1px solid black;">
 
-all_moon_tokens &lt;- all_moon %&gt;%
-  unnest_tokens(word, text)</code></pre>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<p><br></p>
 </div>
 <div id="usunięcie-stopwords" class="section level2">
 <h2>Usunięcie stopwords</h2>
-<pre class="r"><code>stopwords &lt;- get_stopwords(source = &quot;smart&quot;) #wybieram smart ponieważ zaiwera najwięcej stop wordów
-stopwords &lt;- data.frame(Word = c(stopwords[[1]], &#39;passepartout&#39;, &#39;phileas&#39;, &#39;fogg&#39;, &#39;foggs&#39;, &#39;auouda&#39;,&#39;aouda&#39; ,&#39;francis&#39;, &#39;ardan&#39;, &#39;captain&#39;, &#39;barbican&#39;, &#39;mnicholl&#39;, &#39;mr&#39;, &#39;passepartouts&#39;, &#39;marston&#39;, &#39;fix&#39;))
-
-eighty_days_tidy &lt;- anti_join(eighty_days_tokens, stopwords, by = c(&quot;word&quot; = &quot;Word&quot;))
-all_moon_tidy &lt;- anti_join(all_moon_tokens, stopwords, by = c(&quot;word&quot; = &quot;Word&quot;))</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>stopwords <span class="ot">&lt;-</span> <span class="fu">get_stopwords</span>(<span class="at">source =</span> <span class="st">&quot;smart&quot;</span>) <span class="co">#wybieram smart ponieważ zaiwera najwięcej stop wordów</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>stopwords <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Word =</span> <span class="fu">c</span>(stopwords[[<span class="dv">1</span>]], <span class="st">&#39;passepartout&#39;</span>, <span class="st">&#39;phileas&#39;</span>, <span class="st">&#39;fogg&#39;</span>, <span class="st">&#39;foggs&#39;</span>, <span class="st">&#39;auouda&#39;</span>,<span class="st">&#39;aouda&#39;</span> ,<span class="st">&#39;francis&#39;</span>, <span class="st">&#39;ardan&#39;</span>, <span class="st">&#39;captain&#39;</span>, <span class="st">&#39;barbican&#39;</span>, <span class="st">&#39;mnicholl&#39;</span>, <span class="st">&#39;mr&#39;</span>, <span class="st">&#39;passepartouts&#39;</span>, <span class="st">&#39;marston&#39;</span>, <span class="st">&#39;fix&#39;</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>eighty_days_tidy <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(eighty_days_tokens, stopwords, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;word&quot;</span> <span class="ot">=</span> <span class="st">&quot;Word&quot;</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>all_moon_tidy <span class="ot">&lt;-</span> <span class="fu">anti_join</span>(all_moon_tokens, stopwords, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;word&quot;</span> <span class="ot">=</span> <span class="st">&quot;Word&quot;</span>))</span></code></pre></div>
 <p>Do stop words dodane zostały postacie z książek (imiona, naziwska
 itd) ponieważ zajmowały zdecydowaną część chmury, nie wnosząc nic do
 analizy. Są to:</p>
@@ -629,24 +750,24 @@ lemmatyzacja sobie nie poradziła) (“W 80 dni dookoła świata”)</p></li>
 <li><p>marston - J.K Marston, postac (“Wokół księżyca”)</p></li>
 <li><p>fix - postać (“Wokół księżyca”)</p></li>
 </ul>
-<pre class="r"><code>eighty_num &lt;- nrow(eighty_days_tokens)
-eighty_stop_num &lt;- nrow(eighty_days_tidy)
-eighty_per &lt;- (eighty_num - eighty_stop_num) / eighty_num * 100
-
-moon_num &lt;- nrow(all_moon_tokens)
-moon_stop_num &lt;- nrow(all_moon_tidy)
-moon_per &lt;- (moon_num - moon_stop_num) / moon_num * 100
-
-
-cat(&quot;&#39;W 80 dni dookoła świata&#39;\n&quot;,
-    &quot;Liczba tokenów przed usunięciem stopwords:&quot;, eighty_num, &quot;\n&quot;,
-    &quot;Liczba tokenów po usunięciu stopwords:&quot;, eighty_stop_num, &quot;\n&quot;,
-    &quot;% usuniętych:&quot;, sprintf(&quot;%.2f%%&quot;, eighty_per), &quot;\n\n&quot;,
-    &quot;&#39;Wokół księżyca&#39;\n&quot;,
-    &quot;Liczba tokenów przed usunięciem stopwords:&quot;, moon_num, &quot;\n&quot;,
-    &quot;Liczba tokenów po usunięciu stopwords:&quot;, moon_stop_num, &quot;\n&quot;,
-    &quot;% usuniętych:&quot;, sprintf(&quot;%.2f%%&quot;, moon_per), &quot;\n&quot;
-)</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>eighty_num <span class="ot">&lt;-</span> <span class="fu">nrow</span>(eighty_days_tokens)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>eighty_stop_num <span class="ot">&lt;-</span> <span class="fu">nrow</span>(eighty_days_tidy)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>eighty_per <span class="ot">&lt;-</span> (eighty_num <span class="sc">-</span> eighty_stop_num) <span class="sc">/</span> eighty_num <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>moon_num <span class="ot">&lt;-</span> <span class="fu">nrow</span>(all_moon_tokens)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>moon_stop_num <span class="ot">&lt;-</span> <span class="fu">nrow</span>(all_moon_tidy)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>moon_per <span class="ot">&lt;-</span> (moon_num <span class="sc">-</span> moon_stop_num) <span class="sc">/</span> moon_num <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;&#39;W 80 dni dookoła świata&#39;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Liczba tokenów przed usunięciem stopwords:&quot;</span>, eighty_num, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Liczba tokenów po usunięciu stopwords:&quot;</span>, eighty_stop_num, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;% usuniętych:&quot;</span>, <span class="fu">sprintf</span>(<span class="st">&quot;%.2f%%&quot;</span>, eighty_per), <span class="st">&quot;</span><span class="sc">\n\n</span><span class="st">&quot;</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&#39;Wokół księżyca&#39;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Liczba tokenów przed usunięciem stopwords:&quot;</span>, moon_num, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Liczba tokenów po usunięciu stopwords:&quot;</span>, moon_stop_num, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;% usuniętych:&quot;</span>, <span class="fu">sprintf</span>(<span class="st">&quot;%.2f%%&quot;</span>, moon_per), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## &#39;W 80 dni dookoła świata&#39;
 ##  Liczba tokenów przed usunięciem stopwords: 62659 
 ##  Liczba tokenów po usunięciu stopwords: 24361 
@@ -663,7 +784,11 @@ words.</p>
 tokenów w obu przypadkach. Pozwala to na bardziej precyzyjne
 analizowanie istotnych słów w tekście, eliminując słowa powszechnie
 używane, które nie niosą dużo informacji.</p>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 <div id="lemmatyzacja" class="section level2">
 <h2>Lemmatyzacja</h2>
@@ -678,40 +803,48 @@ lemmatyzacja jest bardziej zaawansowaną techniką, która uwzględnia
 morfologię języka i może generować bardziej dokładne wyniki. Jest
 szczególnie przydatna w przypadku analizy semantycznej, gdzie zachowanie
 znaczenia słowa jest ważne.</p>
-<pre class="r"><code>eighty_days_lem &lt;- eighty_days_tidy %&gt;%
-  mutate(word_lemma = lemmatize_words(word, language = &quot;english&quot;)) %&gt;%
-  select(chapter, word_lemma)
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>eighty_days_lem <span class="ot">&lt;-</span> eighty_days_tidy <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">word_lemma =</span> <span class="fu">lemmatize_words</span>(word, <span class="at">language =</span> <span class="st">&quot;english&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(chapter, word_lemma)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>all_moon_lem <span class="ot">&lt;-</span> all_moon_tidy <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">word_lemma =</span> <span class="fu">lemmatize_words</span>(word, <span class="at">language =</span> <span class="st">&quot;english&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(chapter, word_lemma)</span></code></pre></div>
+<br>
+<div style="border-top: 1px solid black;">
 
-all_moon_lem &lt;- all_moon_tidy %&gt;%
-  mutate(word_lemma = lemmatize_words(word, language = &quot;english&quot;)) %&gt;%
-  select(chapter, word_lemma)</code></pre>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+</div>
+<p><br></p>
 </div>
 <div id="złączenie-gotowych-tokenów" class="section level2">
 <h2>Złączenie gotowych tokenów</h2>
 <p>W celu utworzenia korpusu i dalszej analizy, oczyszczone tokeny
 zostały złączone z powrotem do ciągu tekstu jako konkretne
 rozdziały.</p>
-<pre class="r"><code>eighty_days_text &lt;- books_list &lt;- eighty_days_lem %&gt;%
-  group_by(chapter) %&gt;%
-  summarize(text = paste(word_lemma, collapse = &quot; &quot;)) %&gt;%
-  ungroup() 
-  
-all_moon_text &lt;- books_list &lt;- all_moon_lem %&gt;%
-  group_by(chapter) %&gt;%
-  summarize(text = paste(word_lemma, collapse = &quot; &quot;)) %&gt;%
-  ungroup() </code></pre>
-<p>--------------------------------------------------------------------------------------------------------------------------------------------------------</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>eighty_days_text <span class="ot">&lt;-</span> books_list <span class="ot">&lt;-</span> eighty_days_lem <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(chapter) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">text =</span> <span class="fu">paste</span>(word_lemma, <span class="at">collapse =</span> <span class="st">&quot; &quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>all_moon_text <span class="ot">&lt;-</span> books_list <span class="ot">&lt;-</span> all_moon_lem <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(chapter) <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">text =</span> <span class="fu">paste</span>(word_lemma, <span class="at">collapse =</span> <span class="st">&quot; &quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() </span></code></pre></div>
+<br>
+<div style="border-top: 1px solid black;">
+
+</div>
+<p><br></p>
 </div>
 <div id="połączenie-książek" class="section level2">
 <h2>Połączenie książek</h2>
-<pre class="r"><code>books_docs &lt;- rbind(eighty_days_text, all_moon_text)
-nrow(books_docs)</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>books_docs <span class="ot">&lt;-</span> <span class="fu">rbind</span>(eighty_days_text, all_moon_text)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(books_docs)</span></code></pre></div>
 <pre><code>## [1] 62</code></pre>
-<p>Mamy 62 rozdziały (dokumety) z dwóch książek:</p>
+<p>Mamy 62 rozdziały (dokumenty) z dwóch książek:</p>
 <ul>
-<li><p>wiersze 1:37 - “w 80 dni dookola swiata”,</p></li>
-<li><p>wiersze 38:62 - “wokół ksieżyca”</p></li>
+<li><p>wiersze 1:37 - “W 80 dni dookoła świata”,</p></li>
+<li><p>wiersze 38:62 - “Wokół ksieżyca”</p></li>
 </ul>
 </div>
 </div>
@@ -774,7 +907,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = true;
+    options.showAndHide = false;
     options.smoothScroll = true;
 
     // tocify
